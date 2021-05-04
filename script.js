@@ -1,6 +1,8 @@
-
 var game;
 var controls;
+
+var new_game = false;
+var stop_game = false;
 
 var canvas_W = 750;
 var canvas_H = 500;
@@ -9,7 +11,12 @@ var background;
 
 var height_score = 0;
 var platforms_number = 2;
-var scoreText;
+
+var heightText;
+var winningText;
+var modeText;
+
+var mode = "single";
 
 var player;
 var player2;
@@ -30,6 +37,7 @@ var config = {
     type: Phaser.CANVAS,
     width: canvas_W,
     height: canvas_H,
+    canvas: document.getElementById('canvas'),
     physics: {
         default: 'arcade',
         arcade: {
@@ -45,7 +53,7 @@ var config = {
 };
 game = new Phaser.Game(config);
 
-// -------------- PRELOAD ----------------
+// ======================== PRELOAD =========================
 function preload ()
 {
     // --------- IMAGES LOADING -----------
@@ -57,7 +65,7 @@ function preload ()
     this.load.image('platform', 'svg/platform.svg');
 }
 
-// ------------- CREATE ----------------
+// ======================== CREATE ==========================
 function create ()
 {
     // CAMERA
@@ -77,14 +85,17 @@ function create ()
     player.setCollideWorldBounds(false);
     player.body.setMass(10);
     // PLAYER 2
-    player2 = this.physics.add.sprite(canvas_W-50, 50, 'duck');
-    keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-    keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-    player2.setBounce(0.3);
-    player2.setCollideWorldBounds(false);
-    player2.body.setMass(10);
+    if (mode != "single")
+    {
+        player2 = this.physics.add.sprite(canvas_W-50, 50, 'duck');
+        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        player2.setBounce(0.3);
+        player2.setCollideWorldBounds(false);
+        player2.body.setMass(10);    
+    }
     // ---------- ANIMATIONS ------------
     // -------- ducks animation ---------
     this.anims.create({
@@ -104,13 +115,10 @@ function create ()
         frameRate: 10,
         repeat: -1
     });
-    // SCORE TEXT
-    scoreText = this.add.text(16, 16, 'platforms number: 0', { fontSize: '16px', fill: '#000' });
-
-
-    
-
-    
+    // TEXT init
+    heightText = this.add.text(16, 16, 'platforms number: 0', { fontSize: '16px', fill: '#000' });
+    winningText = this.add.text(16, 42, '', { fontSize: '16px', fill: '#000' });
+    modeText = this.add.text(16, canvas_H-32, mode, { fontSize: '16px', fill: '#000' });
     /*bread = this.physics.add.group({
         key: 'bread',
         repeat: 11,
@@ -130,71 +138,69 @@ function create ()
     //this.physics.add.collider(bread, platforms);
 
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(player2, platforms);
-    this.physics.add.collider(player, player2);
-
+    if (mode != "single")
+    {
+        this.physics.add.collider(player2, platforms);
+        this.physics.add.collider(player, player2);
+    }
 }
 
-// ------------------------------------
+// ======================= UPDATE ========================
 function update ()
 {
     height_score += 1
     updatePlatformsPosition();
-    scoreText.setText('platforms number: ' + platforms_number);
-    
+    heightText.setText('platforms number: ' + platforms_number);
+    // check if not new game
+    if (new_game)
+    {
+        this.scene.restart();
+        new_game = false;
+    }
     // PLAYER
     if (cursors.left.isDown)
     {
         player.setVelocityX(-250);
-
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(250);
-
         player.anims.play('right', true);
     }
     else
     {
         player.setVelocityX(0);
-
         player.anims.play('turn');
     }
-
     if (cursors.up.isDown && player.body.touching.down)
     {
         player.setVelocityY(-700);
     }
-
-
     // PLAYER2
-    if (keyA.isDown)
+    if (mode != "single")
     {
-        player2.setVelocityX(-250);
-
-        player2.anims.play('left', true);
+        if (keyA.isDown)
+        {
+            player2.setVelocityX(-250);
+            player2.anims.play('left', true);
+        }
+        else if (keyD.isDown)
+        {
+            player2.setVelocityX(250);
+            player2.anims.play('right', true);
+        }
+        else
+        {
+            player2.setVelocityX(0);
+            player2.anims.play('turn');
+        }
+        if (keyW.isDown && player2.body.touching.down)
+        {
+            player2.setVelocityY(-700);
+        }
     }
-    else if (keyD.isDown)
-    {
-        player2.setVelocityX(250);
-
-        player2.anims.play('right', true);
-    }
-    else
-    {
-        player2.setVelocityX(0);
-        
-        player2.anims.play('turn');
-    }
-
-    if (keyW.isDown && player2.body.touching.down)
-    {
-        player2.setVelocityY(-700);
-    }
-
-
-
+    // add next platform and remove the oldest
     if (height_score == 200)
     {
         height_score = 1;
@@ -202,18 +208,91 @@ function update ()
         addNextLevelPlatform(this, platforms_number % 3 == 0);
         removePlatformsOverMap();
     }
+    // check if players aren't alive
+    if (mode == "cooperate")
+    {
+        cooperateModeLoose();
+    }
+    else if (mode == "single")
+    {
+        singleModeLoose();
+    }
+    else
+    {
+        enemyModeLoose();
+    }
 }
-
-
-
-
 
 // ============== FUNCTIONS ===============
 /*function collectBread (player, bread)
 {
     bread.disableBody(true, true);
 }*/
-
+function restartGame()
+{
+    new_game = true;
+    height_score = 0;
+    platforms_number = 2;
+}
+function setSingleMode()
+{
+    mode = "single";
+    restartGame();
+}
+function setCooperateMode()
+{
+    mode = "cooperate";
+    restartGame();
+}
+function setEnemyMode()
+{
+    mode = "enemy";
+    restartGame();
+}
+// CHECK WHO WINS
+// -------- SINGLE MODE ----------
+function singleModeLoose()
+{
+    if (player.y > canvas_H + 10)
+    { // player 1 is over map
+        winningText.setText('YOU LOOSE');
+        restartGame();
+    }
+}
+// --------- ENEMY MODE ----------
+function enemyModeLoose()
+{
+    if (player.y > canvas_H + 10 || player2.y > canvas_H + 10)
+    { // player over map
+        if (player.y > canvas_H + 10)
+        { // player 1 is over map
+            if (player2.y > canvas_H + 10)
+            { // player 1 and 2 is over map                    
+                winningText.setText('NOBODY WON');
+                restartGame();
+            }
+            else
+            { // only player 1 is over map
+                winningText.setText('PLAYER 2 WON');                    
+                restartGame();
+            }
+        }
+        else
+        { // only player 2 is over map
+            winningText.setText('PLAYER 1 WON');
+            restartGame();
+        }
+    }
+}
+// --------- COOPERATE MODE -----------
+function cooperateModeLoose()
+{
+    if (player.y > canvas_H + 10 && player2.y > canvas_H + 10)
+    { // no more players on map
+        winningText.setText('YOU LOOSE');
+        restartGame();
+    }
+}
 // --------------- WORLD ------------------
 // world building - first platform
 function addFirstLevelPlatform(scene)
@@ -253,7 +332,7 @@ function updatePlatformsPosition()
         {
             if(child.left)
             {
-                if (child.x > 0)
+                if (child.x > 125)
                 {
                     child.x -= 2;
                 }
@@ -265,7 +344,7 @@ function updatePlatformsPosition()
             }
             else
             {
-                if (child.x < canvas_W)
+                if (child.x < canvas_W-125)
                 {
                     child.x += 2;
                 }
@@ -275,7 +354,6 @@ function updatePlatformsPosition()
                     child.left = true;
                 }
             }
-            
         }
     });
 }
@@ -288,7 +366,7 @@ function removePlatformsOverMap()
             {
                 platforms.remove(child, true);
             }        
-        } // expected Uncaught Type Error
+        } // expected UncaughtType Error
         catch(error)
         {
             ; //ignore
