@@ -1,10 +1,33 @@
+
+var game;
+var controls;
+
 var canvas_W = 750;
 var canvas_H = 500;
+
+var world_W = canvas_W;
+var world_H = canvas_H * 10;
+
+var background;
 
 var score = 0;
 var scoreText;
 
+var player;
+var player2;
+var platforms;
+var bread;
 
+var cursors;
+var cursors2;
+
+var keyW;
+var keyS;
+var keyA;
+var keyD;
+
+
+// -------------- CONFIG ---------------
 var config = {
     type: Phaser.CANVAS,
     width: canvas_W,
@@ -12,7 +35,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 },
+            gravity: { y: 1000},
             debug: false
         }
     },
@@ -22,45 +45,56 @@ var config = {
         update: update
     }
 };
+game = new Phaser.Game(config);
 
-
-var player;
-var platforms;
-var cursors;
-var bread;
-
-var game = new Phaser.Game(config);
-
+// -------------- PRELOAD ----------------
 function preload ()
 {
+    // --------- IMAGES LOADING -----------
     this.load.image('background', 'svg/background.svg');
     this.load.spritesheet('duck', 'svg/duck.svg' , { frameWidth: 50, frameHeight: 50 });
 
     this.load.image('bread', 'svg/bread.svg');
     this.load.image('block', 'svg/block.svg');
+    this.load.image('platform', 'svg/platform.svg');
 }
 
+// ------------- CREATE ----------------
 function create ()
 {
-    this.add.image(canvas_W/2, canvas_H/2, 'background');
-
-
+    // CAMERA
+    this.cameras.main.setBounds(0, 0, canvas_W, canvas_H);
+    // BACKGROUND IMAGE
+    background = this.add.image(canvas_W/2, canvas_H/2, 'background');
+    // WORLD BUILDING
     platforms = this.physics.add.staticGroup();
+    addFirstLevelPlatform()
+    platform = this.physics.add.sprite(canvas_W/2, 0, "platform");
+    platform.setCollideWorldBounds(false);
+    platform.body.setAllowGravity(false);
+    platform.setImmovable(true);
+    // ------- PLAYERS --------
+    // PLAYER 1
     player = this.physics.add.sprite(50, 50, 'duck');
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
     cursors = this.input.keyboard.createCursorKeys();
+    player.setBounce(0.3);
+    player.setCollideWorldBounds(true);
+    // PLAYER 2
+    player2 = this.physics.add.sprite(canvas_W-50, 50, 'duck');
+    keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+    keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+    keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    player2.setBounce(0.3);
+    player2.setCollideWorldBounds(true);
+    
 
     
-    addFirstLevelPlatform()
-    addLeftPlatform(175)
-    addRightPlatform(175*2)
-
-
-
-
-
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    
+    
+    
+    
 
     this.anims.create({
         key: 'left',
@@ -100,37 +134,46 @@ function create ()
     });
 
 
-    
-
-
-    
+    // PHYSICS
     this.physics.add.overlap(player, bread, collectBread, null, this);
-
-
+    this.physics.add.overlap(player2, bread, collectBread, null, this);
 
     this.physics.add.collider(player, platforms);
+    this.physics.add.collider(player2, platforms);
+    
+    this.physics.add.collider(player, player2);
+        
     this.physics.add.collider(bread, platforms);
 
 
+    this.physics.add.collider(player, platform);
+    this.physics.add.collider(player2, platform);
 
 
-    
+
+   
 
 }
 
-
+// ------------------------------------
 function update ()
 {
+    //this.cameras.main.y += 1;
+    //background.y -= 1;
+    platform.y += 1;
 
+    platforms.y -= 1;
+    
+    // PLAYER
     if (cursors.left.isDown)
     {
-        player.setVelocityX(-160);
+        player.setVelocityX(-250);
 
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
-        player.setVelocityX(160);
+        player.setVelocityX(250);
 
         player.anims.play('right', true);
     }
@@ -143,10 +186,38 @@ function update ()
 
     if (cursors.up.isDown && player.body.touching.down)
     {
-        player.setVelocityY(-330);
+        player.setVelocityY(-700);
     }
 
 
+    // PLAYER2
+    if (keyA.isDown)
+    {
+        player2.setVelocityX(-250);
+
+        player2.anims.play('left', true);
+    }
+    else if (keyD.isDown)
+    {
+        player2.setVelocityX(250);
+
+        player2.anims.play('right', true);
+    }
+    else
+    {
+        player2.setVelocityX(0);
+        
+        player2.anims.play('turn');
+    }
+
+    if (keyW.isDown && player2.body.touching.down)
+    {
+        player2.setVelocityY(-700);
+    }
+
+
+
+    
 
 }
 
@@ -154,7 +225,7 @@ function update ()
 
 
 
-
+// ------------- FUNCTIONS ----------------
 function collectBread (player, bread)
 {
     bread.disableBody(true, true);
@@ -185,6 +256,11 @@ function addRightPlatform(level)
     {
         platforms.create(canvas_W - 50*i, canvas_H-level, 'block');
     }
+}
+
+function platformsUpdatePosition()
+{
+
 }
 
 
