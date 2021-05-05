@@ -496,12 +496,24 @@ class Platform extends Phaser.Physics.Arcade.Sprite {
     poruszające się obiekty, kolizje między nimi, prosta logika.
 
     (+1) Przynajmniej część obiektów jest animowana (klatki animacji).
+         - są animowane kaczki
+         - będzie animowane tło
     (+1) Kilka typów obiektów różniących się zachowaniem 
          (np. wrogowie, pułapki i skarby).
+         - wróg
+         - platformy nieruchome i ruchome
+         - chleb
     (+1) Bardziej złożona logika i zależności między elementami 
          gry (np. AI wrogów, zarządzanie zasobami).
+         - ? platformy się ruszają?
+         - trzy tryby gry
     (+1) Kilka typów interakcji (np. walka i dialogi).
+         - wróg atakuje?
+         - różne naliczanie punktów w zależności od gry?
+         - zbieranie chlebka?
     (+1) Większy świat gry (np. scrollowana plansza, poziomy, 
          przechodzenie między ekranami pomieszczeń). 
+         - platformy generują się losowo
+         - świat nie jest zamknięty - można wyskakiwać poza i wracać xd
 */
 // ------------------------------------------------------------------
