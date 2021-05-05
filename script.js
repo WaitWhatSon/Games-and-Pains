@@ -8,12 +8,15 @@ var canvas_W = 750;
 var canvas_H = 500;
 
 var background;
+var clouds;
 
 var height_score = 0;
 var platforms_number = 2;
 
 var playerScore = 0;
 var player2Score = 0;
+
+var count = 0;
 
 var heightText;
 var winningText;
@@ -63,7 +66,10 @@ function preload ()
 {
     // --------- IMAGES LOADING -----------
     this.load.image('background', 'svg/background.svg');
+    this.load.image('clouds', 'svg/clouds.svg');
+
     this.load.spritesheet('duck', 'svg/duck.svg' , { frameWidth: 50, frameHeight: 50 });
+    this.load.spritesheet('duck2', 'svg/duck2.svg' , { frameWidth: 50, frameHeight: 50 });
     this.load.spritesheet('enemy', 'svg/enemy.svg' , { frameWidth: 85, frameHeight: 40 });
 
     this.load.image('bread', 'svg/bread.svg');
@@ -78,6 +84,7 @@ function create ()
     this.cameras.main.setBounds(0, 0, canvas_W, canvas_H);
     // BACKGROUND IMAGE
     background = this.add.image(canvas_W/2, canvas_H/2, 'background');
+    clouds = this.add.image(canvas_W/2, canvas_H/2, 'clouds');
     // WORLD BUILDING
     platforms = this.physics.add.group();
     addFirstLevelPlatform(this)
@@ -93,7 +100,7 @@ function create ()
     // PLAYER 2
     if (mode != "single")
     {
-        player2 = this.physics.add.sprite(canvas_W-50, 50, 'duck');
+        player2 = this.physics.add.sprite(canvas_W-50, 50, 'duck2');
         player2.setBounce(0.3);
         player2.setCollideWorldBounds(false);
         player2.body.setMass(10);    
@@ -123,6 +130,23 @@ function create ()
     this.anims.create({
         key: 'right',
         frames: this.anims.generateFrameNumbers('duck', { start: 3, end: 5 }),
+        frameRate: 10,
+        repeat: -1
+    });
+    this.anims.create({
+        key: 'left2',
+        frames: this.anims.generateFrameNumbers('duck2', { start: 0, end: 2 }),
+        frameRate: 10,
+        repeat: -1
+    });
+    this.anims.create({
+        key: 'turn2',
+        frames: [ { key: 'duck2', frame: 2 } ],
+        frameRate: 20
+    });
+    this.anims.create({
+        key: 'right2',
+        frames: this.anims.generateFrameNumbers('duck2', { start: 3, end: 5 }),
         frameRate: 10,
         repeat: -1
     });
@@ -188,6 +212,15 @@ function create ()
 // ======================= UPDATE ========================
 function update ()
 {
+    // background update
+    count += 0.005
+
+    clouds.x = clouds.x + Math.sin(count);
+    clouds.y = clouds.y + Math.cos(count);
+    
+    //clouds.tilePosition.x += 1;
+    //clouds.tilePosition.y += 1;
+
     height_score += 1
     enemy.y += 1;
     enemy.x += 3;
@@ -225,17 +258,17 @@ function update ()
         if (keyA.isDown)
         {
             player2.setVelocityX(-250);
-            player2.anims.play('left', true);
+            player2.anims.play('left2', true);
         }
         else if (keyD.isDown)
         {
             player2.setVelocityX(250);
-            player2.anims.play('right', true);
+            player2.anims.play('right2', true);
         }
         else
         {
             player2.setVelocityX(0);
-            player2.anims.play('turn');
+            player2.anims.play('turn2');
         }
         if (keyW.isDown && player2.body.touching.down)
         {
@@ -497,7 +530,6 @@ class Platform extends Phaser.Physics.Arcade.Sprite {
 
     (+1) Przynajmniej część obiektów jest animowana (klatki animacji).
          - są animowane kaczki
-         - będzie animowane tło
     (+1) Kilka typów obiektów różniących się zachowaniem 
          (np. wrogowie, pułapki i skarby).
          - wróg
