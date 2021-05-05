@@ -12,8 +12,13 @@ var background;
 var height_score = 0;
 var platforms_number = 2;
 
+var playerScore = 0;
+var player2Score = 0;
+
 var heightText;
 var winningText;
+var playerScoreText;
+var player2ScoreText;
 var modeText;
 
 var mode = "single";
@@ -21,7 +26,8 @@ var mode = "single";
 var player;
 var player2;
 var platforms;
-//var bread;
+var enemy;
+var bread;
 
 var cursors;
 var cursors2;
@@ -30,7 +36,6 @@ var keyW;
 var keyS;
 var keyA;
 var keyD;
-
 
 // -------------- CONFIG ---------------
 var config = {
@@ -59,8 +64,9 @@ function preload ()
     // --------- IMAGES LOADING -----------
     this.load.image('background', 'svg/background.svg');
     this.load.spritesheet('duck', 'svg/duck.svg' , { frameWidth: 50, frameHeight: 50 });
+    this.load.spritesheet('enemy', 'svg/enemy.svg' , { frameWidth: 85, frameHeight: 40 });
 
-    //this.load.image('bread', 'svg/bread.svg');
+    this.load.image('bread', 'svg/bread.svg');
     this.load.image('block', 'svg/block.svg');
     this.load.image('platform', 'svg/platform.svg');
 }
@@ -88,14 +94,19 @@ function create ()
     if (mode != "single")
     {
         player2 = this.physics.add.sprite(canvas_W-50, 50, 'duck');
+        player2.setBounce(0.3);
+        player2.setCollideWorldBounds(false);
+        player2.body.setMass(10);    
         keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        player2.setBounce(0.3);
-        player2.setCollideWorldBounds(false);
-        player2.body.setMass(10);    
     }
+    // ENEMY
+    enemy = this.physics.add.sprite(-25, 0, 'enemy');
+    enemy.setCollideWorldBounds(false);
+    enemy.body.setAllowGravity(false);
+    enemy.setImmovable(true);    
     // ---------- ANIMATIONS ------------
     // -------- ducks animation ---------
     this.anims.create({
@@ -115,33 +126,62 @@ function create ()
         frameRate: 10,
         repeat: -1
     });
-    // TEXT init
-    heightText = this.add.text(16, 16, 'platforms number: 0', { fontSize: '16px', fill: '#000' });
-    winningText = this.add.text(16, 42, '', { fontSize: '16px', fill: '#000' });
-    modeText = this.add.text(16, canvas_H-32, mode, { fontSize: '16px', fill: '#000' });
-    /*bread = this.physics.add.group({
+    this.anims.create({
+        key: 'fly',
+        frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 2 }),
+        frameRate: 10,
+        repeat: 20
+    });
+    this.anims.create({
+        key: 'enemy_atack',
+        frames: this.anims.generateFrameNumbers('enemy', { start: 3, end: 4 }),
+        frameRate: 10,
+        repeat: 10
+    });
+    enemy.anims.play('fly', true);
+    // BREAD
+    bread = this.physics.add.group({
         key: 'bread',
         repeat: 11,
         setXY: { x: 12, y: 0, stepX: 70 }
     });
-    
     bread.children.iterate(function (child) {
-    
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-    
-    });*/
-
-
+        child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.4));
+    });
+    // TEXT init
+    heightText = this.add.text(16, 16, 'platforms number: 0', { fontSize: '16px', fill: '#000' });
+    if (mode == "single")
+    {
+        playerScoreText = this.add.text(16, 48, 'PLAYER score: ' + playerScore, { fontSize: '16px', fill: '#000' });
+        player2ScoreText = this.add.text(16, 60, '', { fontSize: '16px', fill: '#000' });
+    }
+    else if (mode == "cooperate")
+    {
+        playerScoreText = this.add.text(16, 48, 'PLAYERS score: ' + playerScore, { fontSize: '16px', fill: '#000' });
+        player2ScoreText = this.add.text(16, 60, '', { fontSize: '16px', fill: '#000' });
+    }
+    else
+    {
+        playerScoreText = this.add.text(16, 48, 'PLAYER 1 score: ' + playerScore, { fontSize: '16px', fill: '#000' });
+        player2ScoreText = this.add.text(16, 60, 'PLAYER 2 score: ' + player2Score, { fontSize: '16px', fill: '#000' });
+    }
+    winningText = this.add.text(16, 42, '', { fontSize: '16px', fill: '#000' });
+    winningText = this.add.text(16, 42, '', { fontSize: '16px', fill: '#000' });
+    modeText = this.add.text(16, canvas_H-32, mode, { fontSize: '16px', fill: '#000' });
     // PHYSICS
-    //this.physics.add.overlap(player, bread, collectBread, null, this);
-    //this.physics.add.overlap(player2, bread, collectBread, null, this);
-    //this.physics.add.collider(bread, platforms);
+    this.physics.add.overlap(player, bread, collectBread, null, this);
+    this.physics.add.collider(bread, platforms);
 
     this.physics.add.collider(player, platforms);
+    this.physics.add.collider(player, enemy);
+    this.physics.add.overlap(player, enemy, enemyAttack, null, this);
     if (mode != "single")
     {
         this.physics.add.collider(player2, platforms);
         this.physics.add.collider(player, player2);
+        this.physics.add.collider(player2, enemy);
+        this.physics.add.overlap(player2, bread, collectBread, null, this);
+        this.physics.add.overlap(player2, enemy, enemyAttack, null, this);
     }
 }
 
@@ -149,6 +189,8 @@ function create ()
 function update ()
 {
     height_score += 1
+    enemy.y += 1;
+    enemy.x += 3;
     updatePlatformsPosition();
     heightText.setText('platforms number: ' + platforms_number);
     // check if not new game
@@ -201,12 +243,20 @@ function update ()
         }
     }
     // add next platform and remove the oldest
+    
     if (height_score == 200)
     {
         height_score = 1;
         platforms_number += 1;
         addNextLevelPlatform(this, platforms_number % 3 == 0);
         removePlatformsOverMap();
+        if (platforms_number % 4 == 0)
+        {
+            enemy.y = -50;
+            enemy.x = -200;
+            enemy.anims.play('fly', true);
+            breadDrop(this);
+        }
     }
     // check if players aren't alive
     if (mode == "cooperate")
@@ -224,15 +274,63 @@ function update ()
 }
 
 // ============== FUNCTIONS ===============
-/*function collectBread (player, bread)
+function breadDrop(scene)
+{
+    // BREAD GROUP
+    bread = scene.physics.add.group({
+        key: 'bread',
+        repeat: 11,
+        setXY: { x: 12, y: 0, stepX: 70 }
+    });
+    bread.children.iterate(function (child) {
+        child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.4));
+    });
+    scene.physics.add.overlap(player, bread, collectBread, null, this);
+    scene.physics.add.collider(bread, platforms);
+    if (mode != "single")
+    {
+        scene.physics.add.overlap(player2, bread, collectBread, null, this);
+    }
+}
+function collectBread (_player, bread)
 {
     bread.disableBody(true, true);
-}*/
+    if (mode == "enemy")
+    {
+        if (_player == player)
+        {
+            playerScore += 1;
+            playerScoreText.setText('PLAYER 1 score: ' + playerScore);
+        }
+        else
+        {
+            player2Score += 1;
+            player2ScoreText.setText('PLAYER 2 score: ' + player2Score);
+        }
+    }
+    else if (mode == "single")
+    {
+        playerScore += 1;
+        playerScoreText.setText('PLAYER score: ' + playerScore);
+    }
+    else
+    {
+        playerScore += 1;
+        playerScoreText.setText('PLAYERS score: ' + playerScore);
+    }      
+}
+function enemyAttack(player, enemy)
+{
+    player.y = canvas_H + 50;
+    enemy.anims.play('enemy_atack', true);
+}
 function restartGame()
 {
     new_game = true;
     height_score = 0;
     platforms_number = 2;
+    playerScore = 0;
+    player2Score = 0;
 }
 function setSingleMode()
 {

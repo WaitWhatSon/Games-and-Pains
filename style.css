@@ -1,24 +1,24 @@
 body {
-    margin: 10 px;
     display: flex;
     float: left;
 }
 
-#game {
-    padding: 10 px;
+#game {    
+    margin: 10px;
     float: left;
 }
 
 #right-panel {
-    height: 500;
-    background-color: antiquewhite;
+    margin: 10px;
+    background-image: url("svg/rightside_image.svg");
+    width: 300px;
 }
 
 button {
     margin: auto;
     border-radius: 15px;
     background:  goldenrod;
-    width: 200px;
+    width: 230px;
     height: 30px;
 }
 
