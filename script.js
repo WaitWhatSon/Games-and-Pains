@@ -32,6 +32,7 @@ var player;
 var player2;
 var platforms;
 var enemy;
+var enemy_2;
 var bread;
 
 var cursors;
@@ -96,6 +97,11 @@ function preload() {
         frameHeight: 40
     });
 
+    this.load.spritesheet('enemy_2', 'svg/enemy.svg', {
+        frameWidth: 85,
+        frameHeight: 40
+    });
+
     this.load.image('bread', 'svg/bread.svg');
     this.load.image('block', 'svg/block.svg');
     this.load.image('platform', 'svg/platform.svg');
@@ -136,6 +142,13 @@ function create() {
     enemy.setCollideWorldBounds(false);
     enemy.body.setAllowGravity(false);
     enemy.setImmovable(true);
+
+    enemy_2 = this.physics.add.sprite(1000, 0, 'enemy_2');
+    enemy_2.setCollideWorldBounds(false);
+    enemy_2.body.setAllowGravity(false);
+    enemy_2.setImmovable(true);
+    enemy_2.angle = 30;
+    enemy_2.setSize(20, 60);
     // ---------- ANIMATIONS ------------
     // -------- ducks animation ---------
     this.anims.create({
@@ -208,7 +221,28 @@ function create() {
         frameRate: 10,
         repeat: 10
     });
+
+    this.anims.create({
+        key: 'fly_2',
+        frames: this.anims.generateFrameNumbers('enemy_2', {
+            start: 0,
+            end: 2
+        }),
+        frameRate: 10,
+        repeat: 20
+    });
+    this.anims.create({
+        key: 'enemy_atack_2',
+        frames: this.anims.generateFrameNumbers('enemy_2', {
+            start: 3,
+            end: 4
+        }),
+        frameRate: 10,
+        repeat: 10
+    });
+
     enemy.anims.play('fly', true);
+    enemy_2.anims.play('fly_2', true);
     // BREAD
     bread = this.physics.add.group({
         key: 'bread',
@@ -279,6 +313,7 @@ function create() {
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(player, enemy, killEnemy);
     this.physics.add.overlap(player, enemy, enemyAttack, null, this);
+    this.physics.add.overlap(player, enemy_2, enemyAttack, null, this);
     if (mode != "single") {
         this.physics.add.collider(player2, platforms);
         this.physics.add.collider(player, player2);
@@ -307,6 +342,10 @@ function update() {
         height_score += 1
         enemy.y += 1 * y_step;
         enemy.x += 3;
+
+        enemy_2.y += 9;
+        enemy_2.x += 15;
+
         updatePlatformsPosition();
         heightText.setText('platforms number: ' + platforms_number);
     }
@@ -315,27 +354,6 @@ function update() {
     if (new_game) {
         this.scene.restart();
         new_game = false;
-    }
-    // PLAYER
-    if (cursors.left.isDown) {
-        player.setVelocityX(-250);
-        player.anims.play('left', true);
-    } else if (cursors.right.isDown) {
-        player.setVelocityX(250);
-        player.anims.play('right', true);
-    } else {
-        player.setVelocityX(0);
-        player.anims.play('turn');
-    }
-
-    // Jumping w/ double jump
-    if (cursors.up.isDown && player.body.touching.down && jump_stage_p1 == 0) {
-        player.setVelocityY(-700);
-        jump_stage_p1 = 1
-    } else if (!cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 1) {
-        jump_stage_p1 = 2;
-    } else if (cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 2) {
-        player.setVelocityY(-700);
         jump_stage_p1 = 3
     } else if (player.body.touching.down && jump_stage_p1 != 0) {
         jump_stage_p1 = 0;
@@ -383,7 +401,12 @@ function update() {
 
         if (platforms_number % 5 == 0) {
             y_step += 0.1
-            console.log(y_step);
+        }
+
+        if (platforms_number % 2 == 0) {
+            enemy_2.y = 0
+            enemy_2.x = 0
+            enemy_2.anims.play('fly_2', true);
         }
     }
 
@@ -486,6 +509,7 @@ function endGame() {
 
     try {
         enemy.destroy()
+        enemy_2.destroy()
         clouds.destroy()
     } catch {}
 
