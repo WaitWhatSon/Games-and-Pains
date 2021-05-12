@@ -457,28 +457,28 @@ function endGame() {
     gameEnded = true;
     document.getElementById("new_game").classList.add("glowing-button")
     // cleaning sprites off screen
-    console.log(platforms.length);
-    console.log(platforms)
+    console.log(platforms);
+
+
+
+    console.log(platforms);
+
     platforms.children.iterate((child) => {
-        try {
-            platforms.remove(child, true);
-            // child.destroy()
-        } catch (e) {
-            console.log("usuwanie");
-            console.log(e)
-        }
+        console.log(child);
+        child.x = 5000;
+        // child.destroy()
         // platforms.remove(child, true);
     });
 
+    updatePlatformsPosition()
+    platforms.clear()
 
-    console.log(platforms)
 
     try {
         enemy.destroy()
         clouds.destroy()
     } catch {}
 
-    updatePlatformsPosition()
 
     y_step = 0.5;
 }
