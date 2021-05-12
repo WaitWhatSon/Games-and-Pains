@@ -97,7 +97,7 @@ function preload() {
         frameHeight: 40
     });
 
-    this.load.spritesheet('enemy_2', 'svg/enemy.svg', {
+    this.load.spritesheet('enemy_2', 'svg/enemy2.svg', {
         frameWidth: 85,
         frameHeight: 40
     });
@@ -147,8 +147,11 @@ function create() {
     enemy_2.setCollideWorldBounds(false);
     enemy_2.body.setAllowGravity(false);
     enemy_2.setImmovable(true);
-    enemy_2.angle = 30;
+    enemy_2.angle = 0;
+    enemy_2.angle_r = 0;
     enemy_2.setSize(20, 60);
+    enemy_2.dir = 0;
+    enemy_2.speed = 7;
     // ---------- ANIMATIONS ------------
     // -------- ducks animation ---------
     this.anims.create({
@@ -313,6 +316,7 @@ function create() {
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(player, enemy, killEnemy);
     this.physics.add.overlap(player, enemy, enemyAttack, null, this);
+    this.physics.add.collider(player, enemy_2);
     this.physics.add.overlap(player, enemy_2, enemyAttack, null, this);
     if (mode != "single") {
         this.physics.add.collider(player2, platforms);
@@ -343,8 +347,10 @@ function update() {
         enemy.y += 1 * y_step;
         enemy.x += 3;
 
-        enemy_2.y += 9;
-        enemy_2.x += 15;
+        // enemy_2.y += enemy_2.speed;
+        // enemy_2.x += enemy_2.speed * enemy_2.dir;
+        enemy_2.y += Math.cos(enemy_2.angle_r) * enemy_2.speed;
+        enemy_2.x += Math.sin(enemy_2.angle_r) * enemy_2.speed;
 
         updatePlatformsPosition();
         heightText.setText('platforms number: ' + platforms_number);
@@ -354,6 +360,27 @@ function update() {
     if (new_game) {
         this.scene.restart();
         new_game = false;
+    }
+    // PLAYER
+    if (cursors.left.isDown) {
+        player.setVelocityX(-250);
+        player.anims.play('left', true);
+    } else if (cursors.right.isDown) {
+        player.setVelocityX(250);
+        player.anims.play('right', true);
+    } else {
+        player.setVelocityX(0);
+        player.anims.play('turn');
+    }
+
+    // Jumping w/ double jump
+    if (cursors.up.isDown && player.body.touching.down && jump_stage_p1 == 0) {
+        player.setVelocityY(-700);
+        jump_stage_p1 = 1
+    } else if (!cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 1) {
+        jump_stage_p1 = 2;
+    } else if (cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 2) {
+        player.setVelocityY(-700);
         jump_stage_p1 = 3
     } else if (player.body.touching.down && jump_stage_p1 != 0) {
         jump_stage_p1 = 0;
@@ -403,10 +430,33 @@ function update() {
             y_step += 0.1
         }
 
-        if (platforms_number % 2 == 0) {
-            enemy_2.y = 0
-            enemy_2.x = 0
-            enemy_2.anims.play('fly_2', true);
+        // enemy_2 spawning
+        if (true) { //platforms_number > 10 && (platforms_number - 10) % 3 == 0) {
+            let target
+            if (mode != "single" && Math.random() < 0.5)
+                target = player2
+            else
+                target = player
+
+            if (Math.random() < 0.5) {
+                enemy_2.y = 0
+                enemy_2.x = 0
+                enemy_2.anims.play('fly_2', true);
+
+                enemy_2.dir = (target.x) / (target.y)
+                enemy_2.angle_r = Math.atan(enemy_2.dir)
+                enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
+                enemy_2.flipY = false
+            } else {
+                enemy_2.y = 0
+                enemy_2.x = canvas_W
+                enemy_2.anims.play('fly_2', true);
+
+                enemy_2.dir = (canvas_W - target.x) / (target.y)
+                enemy_2.angle_r = Math.atan(enemy_2.dir) - Math.PI / 2
+                enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
+                enemy_2.flipY = true
+            }
         }
     }
 
@@ -465,16 +515,14 @@ function collectBread(_player, bread) {
     }
 }
 
-function enemyAttack(_player, enemy) {
+function enemyAttack(_player, _enemy) {
     _player.y = canvas_H + 50;
-    enemy.anims.play('enemy_atack', true);
+    _enemy.anims.play('enemy_atack', true);
 }
 
 function killEnemy(_player, _enemy) {
 
-    // console.log("Kill");
     if (Math.floor(_player.y + 45) == Math.floor(_enemy.y)) {
-        console.log("Killed");
         _enemy.x = 5000;
         if (_player == player) {
             playerScore += 10;
@@ -499,7 +547,6 @@ function endGame() {
     document.getElementById("new_game").classList.add("glowing-button")
     // cleaning sprites off screen
     platforms.children.iterate((child) => {
-        console.log(child);
         child.x = 5000;
     });
 
@@ -546,8 +593,6 @@ function singleModeLoose() {
     if (player.y > canvas_H + 10) { // player 1 is over map
         winningText.setText('YOU LOOSE');
         endScoreText.setText('YOUR SCORE: ' + playerScore);
-        // gamePaused = true;
-        // restartGame();
         background.setTexture('background_single')
         endGame()
     }
@@ -558,19 +603,15 @@ function enemyModeLoose() {
         if (player.y > canvas_H + 10) { // player 1 is over map
             if (player2.y > canvas_H + 10) { // player 1 and 2 is over map                    
                 winningText.setText('NOBODY WON');
-                // restartGame();
                 background.setTexture('background_nobody_won')
             } else { // only player 1 is over map
                 winningText.setText('PLAYER 2 WON');
-                // restartGame();
                 background.setTexture('background_player2_won')
             }
         } else { // only player 2 is over map
             winningText.setText('PLAYER 1 WON');
-            // restartGame();
             background.setTexture('background_player1_won')
         }
-        // gamePaused = true;
         endGame()
     }
 }
