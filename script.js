@@ -121,7 +121,7 @@ function create() {
         keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     }
     // ENEMY
-    enemy = this.physics.add.sprite(-25, 0, 'enemy');
+    enemy = this.physics.add.sprite(1000, 0, 'enemy');
     enemy.setCollideWorldBounds(false);
     enemy.body.setAllowGravity(false);
     enemy.setImmovable(true);
