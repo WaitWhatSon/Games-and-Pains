@@ -306,7 +306,7 @@ function create() {
             fill: '#000'
         });
     }
-    winningText = this.add.text(canvas_W / 2 - 150, canvas_H / 2 - 80, '', {
+    /*winningText = this.add.text(canvas_W / 2 - 150, canvas_H / 2 - 80, '', {
         fontSize: '40px',
         fill: '#000'
     });
@@ -317,7 +317,23 @@ function create() {
     endScoreText = this.add.text(canvas_W / 2 - 150, canvas_H / 2, '', {
         fontSize: '40px',
         fill: '#000'
+    });*/ // -----------------------------------------------------
+    winningText = this.add.text(canvas_W / 2 - 150, 60 , '', {
+        fontSize: '50px',
+        fill: '#fff',
+        strokeThickness: 10,
+        stroke: '#000',
+        shadowStroke: true,
+        fontStyle: "bold"
     });
+    endScoreText = this.add.text(120, canvas_H - 80, '', {
+        fontSize: '50px',
+        fill: '#fff',
+        strokeThickness: 10,
+        stroke: '#000',
+        shadowStroke: true,
+        fontStyle: "bold"
+    }); // ------------------------------------------------------
     modeText = this.add.text(16, canvas_H - 32, mode, {
         fontSize: '16px',
         fill: '#000'
