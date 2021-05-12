@@ -20,6 +20,8 @@ var count = 0;
 
 var heightText;
 var winningText;
+var winningText2;
+var endScoreText;
 var playerScoreText;
 var player2ScoreText;
 var modeText;
@@ -70,8 +72,13 @@ game = new Phaser.Game(config);
 function preload() {
     // --------- IMAGES LOADING -----------
     this.load.image('background', 'svg/background.svg');
-    this.load.image('clouds', 'svg/clouds.svg');
+    this.load.image('background_single', 'svg/background_single.svg');
+    this.load.image('background_cooperative', 'svg/background_cooperative.svg');
+    this.load.image('background_nobody_won', 'svg/background_nobody_won.svg');
+    this.load.image('background_player1_won', 'svg/background_player1_won.svg');
+    this.load.image('background_player2_won', 'svg/background_player2_won.svg');
 
+    this.load.image('clouds', 'svg/clouds.svg');
     this.load.spritesheet('duck', 'svg/duck.svg', {
         frameWidth: 50,
         frameHeight: 50
@@ -244,18 +251,23 @@ function create() {
             fill: '#000'
         });
     }
-    winningText = this.add.text(16, 42, '', {
-        fontSize: '16px',
+    winningText = this.add.text(canvas_W/2 - 150, canvas_H/2 - 80, '', {
+        fontSize: '40px',
         fill: '#000'
     });
-    winningText = this.add.text(16, 42, '', {
-        fontSize: '16px',
+    winningText2 = this.add.text(canvas_W/2 - 150, canvas_H/2 - 40, '', { // zapasowy?
+        fontSize: '40px',
+        fill: '#000'
+    });
+    endScoreText = this.add.text(canvas_W/2 - 150, canvas_H/2, '', {
+        fontSize: '40px',
         fill: '#000'
     });
     modeText = this.add.text(16, canvas_H - 32, mode, {
         fontSize: '16px',
         fill: '#000'
     });
+
     // PHYSICS
     this.physics.add.overlap(player, bread, collectBread, null, this);
     this.physics.add.collider(bread, platforms);
@@ -439,8 +451,10 @@ function setEnemyMode() {
 function singleModeLoose() {
     if (player.y > canvas_H + 10) { // player 1 is over map
         winningText.setText('YOU LOOSE');
+        endScoreText.setText('YOUR SCORE: ' + playerScore);
         // gamePaused = true;
         // restartGame();
+        background.setTexture('background_single')
         pauseGame()
     }
 }
@@ -451,13 +465,16 @@ function enemyModeLoose() {
             if (player2.y > canvas_H + 10) { // player 1 and 2 is over map                    
                 winningText.setText('NOBODY WON');
                 // restartGame();
+                background.setTexture('background_nobody_won')
             } else { // only player 1 is over map
                 winningText.setText('PLAYER 2 WON');
                 // restartGame();
+                background.setTexture('background_player2_won')
             }
         } else { // only player 2 is over map
             winningText.setText('PLAYER 1 WON');
             // restartGame();
+            background.setTexture('background_player1_won')
         }
         // gamePaused = true;
         pauseGame()
@@ -467,8 +484,10 @@ function enemyModeLoose() {
 function cooperateModeLoose() {
     if (player.y > canvas_H + 10 && player2.y > canvas_H + 10) { // no more players on map
         winningText.setText('YOU LOOSE');
+        endScoreText.setText('YOUR SCORE: ' + playerScore);
         // gamePaused = true;
         // restartGame();
+        background.setTexture('background_cooperative')
         pauseGame()
     }
 }
