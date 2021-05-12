@@ -432,14 +432,14 @@ function update() {
         }
 
         // enemy_2 spawning
-        if (true) { //platforms_number > 10 && (platforms_number - 10) % 3 == 0) {
+        if (platforms_number > 10 && (platforms_number - 10) % 3 == 0) {
             let target
             if (mode != "single" && Math.random() < 0.5)
                 target = player2
             else
                 target = player
 
-            if (Math.random() < 0) {
+            if (Math.random() < 0.5) {
                 enemy_2.y = 0
                 enemy_2.x = 0
                 enemy_2.anims.play('fly_2', true);
