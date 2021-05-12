@@ -277,12 +277,12 @@ function create() {
     this.physics.add.collider(bread, platforms);
 
     this.physics.add.collider(player, platforms);
-    this.physics.add.collider(player, enemy);
+    this.physics.add.collider(player, enemy, killEnemy);
     this.physics.add.overlap(player, enemy, enemyAttack, null, this);
     if (mode != "single") {
         this.physics.add.collider(player2, platforms);
         this.physics.add.collider(player, player2);
-        this.physics.add.collider(player2, enemy);
+        this.physics.add.collider(player2, enemy, killEnemy);
         this.physics.add.overlap(player2, bread, collectBread, null, this);
         this.physics.add.overlap(player2, enemy, enemyAttack, null, this);
     }
@@ -442,9 +442,27 @@ function collectBread(_player, bread) {
     }
 }
 
-function enemyAttack(player, enemy) {
-    player.y = canvas_H + 50;
+function enemyAttack(_player, enemy) {
+    _player.y = canvas_H + 50;
     enemy.anims.play('enemy_atack', true);
+}
+
+function killEnemy(_player, _enemy) {
+
+    // console.log("Kill");
+    if (Math.floor(_player.y + 45) == Math.floor(_enemy.y)) {
+        console.log("Killed");
+        _enemy.x = 5000;
+        if (_player == player) {
+            playerScore += 10;
+            playerScoreText.setText('PLAYER 1 score: ' + playerScore);
+        } else {
+            player2Score += 1;
+            player2ScoreText.setText('PLAYER 2 score: ' + player2Score);
+        }
+
+    }
+
 }
 
 
@@ -457,17 +475,9 @@ function endGame() {
     gameEnded = true;
     document.getElementById("new_game").classList.add("glowing-button")
     // cleaning sprites off screen
-    console.log(platforms);
-
-
-
-    console.log(platforms);
-
     platforms.children.iterate((child) => {
         console.log(child);
         child.x = 5000;
-        // child.destroy()
-        // platforms.remove(child, true);
     });
 
     updatePlatformsPosition()
