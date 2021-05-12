@@ -592,13 +592,17 @@ function setEnemyMode() {
 // -------- SINGLE MODE ----------
 function singleModeLoose() {
     if (player.y > canvas_H + 10) { // player 1 is over map
+
+        let score = playerScore * (platforms_number - 2)
+
         winningText.setText('YOU LOOSE');
-        endScoreText.setText('YOUR SCORE: ' + playerScore);
+        endScoreText.setText('YOUR SCORE: ' + score);
         background.setTexture('background_single')
         if (localStorage.highScore == undefined)
             localStorage.highScore = 0
-        if (localStorage.highScore < playerScore) {
-            localStorage.highScore = playerScore
+
+        if (localStorage.highScore < score) {
+            localStorage.highScore = score
             background.setTexture('background_single_new_high')
         }
 
