@@ -42,7 +42,11 @@ var keyS;
 var keyA;
 var keyD;
 
-var gamePaused = false;
+var gameEnded = false;
+var y_step = 0.5;
+
+let jump_stage_p1 = 0;
+let jump_stage_p2 = 0;
 
 
 // -------------- CONFIG ---------------
@@ -113,13 +117,13 @@ function create() {
     // PLAYER 1
     player = this.physics.add.sprite(50, 50, 'duck');
     cursors = this.input.keyboard.createCursorKeys();
-    player.setBounce(0.3);
+    player.setBounce(0.2);
     player.setCollideWorldBounds(false);
     player.body.setMass(10);
     // PLAYER 2
     if (mode != "single") {
         player2 = this.physics.add.sprite(canvas_W - 50, 50, 'duck2');
-        player2.setBounce(0.3);
+        player2.setBounce(0.2);
         player2.setCollideWorldBounds(false);
         player2.body.setMass(10);
         keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -251,15 +255,15 @@ function create() {
             fill: '#000'
         });
     }
-    winningText = this.add.text(canvas_W/2 - 150, canvas_H/2 - 80, '', {
+    winningText = this.add.text(canvas_W / 2 - 150, canvas_H / 2 - 80, '', {
         fontSize: '40px',
         fill: '#000'
     });
-    winningText2 = this.add.text(canvas_W/2 - 150, canvas_H/2 - 40, '', { // zapasowy?
+    winningText2 = this.add.text(canvas_W / 2 - 150, canvas_H / 2 - 40, '', { // zapasowy?
         fontSize: '40px',
         fill: '#000'
     });
-    endScoreText = this.add.text(canvas_W/2 - 150, canvas_H/2, '', {
+    endScoreText = this.add.text(canvas_W / 2 - 150, canvas_H / 2, '', {
         fontSize: '40px',
         fill: '#000'
     });
@@ -284,13 +288,13 @@ function create() {
     }
 
     // Starts animations, removes glowing button
-    gamePaused = false;
+    gameEnded = false;
     document.getElementById("new_game").classList.remove("glowing-button")
 }
 
 // ======================= UPDATE ========================
 function update() {
-    if (!gamePaused) {
+    if (!gameEnded) {
         // background update
         count += 0.005
 
@@ -301,7 +305,7 @@ function update() {
         //clouds.tilePosition.y += 1;
 
         height_score += 1
-        enemy.y += 1;
+        enemy.y += 1 * y_step;
         enemy.x += 3;
         updatePlatformsPosition();
         heightText.setText('platforms number: ' + platforms_number);
@@ -323,9 +327,21 @@ function update() {
         player.setVelocityX(0);
         player.anims.play('turn');
     }
-    if (cursors.up.isDown && player.body.touching.down) {
+
+    // Jumping w/ double jump
+    if (cursors.up.isDown && player.body.touching.down && jump_stage_p1 == 0) {
         player.setVelocityY(-700);
+        jump_stage_p1 = 1
+    } else if (!cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 1) {
+        jump_stage_p1 = 2;
+    } else if (cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 2) {
+        player.setVelocityY(-700);
+        jump_stage_p1 = 3
+    } else if (player.body.touching.down && jump_stage_p1 != 0) {
+        jump_stage_p1 = 0;
     }
+
+
     // PLAYER2
     if (mode != "single") {
         if (keyA.isDown) {
@@ -338,13 +354,22 @@ function update() {
             player2.setVelocityX(0);
             player2.anims.play('turn2');
         }
-        if (keyW.isDown && player2.body.touching.down) {
+        if (keyW.isDown && player2.body.touching.down && jump_stage_p2 == 0) {
             player2.setVelocityY(-700);
+            jump_stage_p2 = 1
+        } else if (!keyW.isDown && !player2.body.touching.down && jump_stage_p2 == 1) {
+            jump_stage_p2 = 2;
+        } else if (keyW.isDown && !player2.body.touching.down && jump_stage_p2 == 2) {
+            player2.setVelocityY(-700);
+            jump_stage_p2 = 3
+        } else if (player2.body.touching.down && jump_stage_p2 != 0) {
+            jump_stage_p2 = 0;
         }
+
     }
     // add next platform and remove the oldest
 
-    if (height_score == 100) {
+    if (height_score * y_step >= 100) {
         height_score = 1;
         platforms_number += 1;
         addNextLevelPlatform(this, platforms_number % 3 == 0);
@@ -355,14 +380,24 @@ function update() {
             enemy.anims.play('fly', true);
             breadDrop(this);
         }
+
+        if (platforms_number % 5 == 0) {
+            y_step += 0.1
+            console.log(y_step);
+        }
     }
+
+
+
     // check if players aren't alive
-    if (mode == "cooperate") {
-        cooperateModeLoose();
-    } else if (mode == "single") {
-        singleModeLoose();
-    } else {
-        enemyModeLoose();
+    if (!gameEnded) {
+        if (mode == "single") {
+            singleModeLoose();
+        } else if (mode == "cooperate") {
+            cooperateModeLoose();
+        } else {
+            enemyModeLoose();
+        }
     }
 }
 
@@ -418,9 +453,34 @@ function startNewGame() {
 }
 
 
-function pauseGame() {
-    gamePaused = true;
+function endGame() {
+    gameEnded = true;
     document.getElementById("new_game").classList.add("glowing-button")
+    // cleaning sprites off screen
+    console.log(platforms.length);
+    console.log(platforms)
+    platforms.children.iterate((child) => {
+        try {
+            platforms.remove(child, true);
+            // child.destroy()
+        } catch (e) {
+            console.log("usuwanie");
+            console.log(e)
+        }
+        // platforms.remove(child, true);
+    });
+
+
+    console.log(platforms)
+
+    try {
+        enemy.destroy()
+        clouds.destroy()
+    } catch {}
+
+    updatePlatformsPosition()
+
+    y_step = 0.5;
 }
 
 function restartGame() {
@@ -455,7 +515,7 @@ function singleModeLoose() {
         // gamePaused = true;
         // restartGame();
         background.setTexture('background_single')
-        pauseGame()
+        endGame()
     }
 }
 // --------- ENEMY MODE ----------
@@ -477,7 +537,7 @@ function enemyModeLoose() {
             background.setTexture('background_player1_won')
         }
         // gamePaused = true;
-        pauseGame()
+        endGame()
     }
 }
 // --------- COOPERATE MODE -----------
@@ -488,7 +548,7 @@ function cooperateModeLoose() {
         // gamePaused = true;
         // restartGame();
         background.setTexture('background_cooperative')
-        pauseGame()
+        endGame()
     }
 }
 // --------------- WORLD ------------------
@@ -521,7 +581,7 @@ function addNextLevelPlatform(scene, moving) {
 // update all platforms
 function updatePlatformsPosition() {
     platforms.children.each((child) => {
-        child.y += 1;
+        child.y += y_step;
         if (child.moving) {
             if (child.left) {
                 if (child.x > 125) {
