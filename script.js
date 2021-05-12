@@ -78,6 +78,7 @@ function preload() {
     // --------- IMAGES LOADING -----------
     this.load.image('background', 'svg/background.svg');
     this.load.image('background_single', 'svg/background_single.svg');
+    this.load.image('background_single_new_high', 'svg/background_single_new_high.svg');
     this.load.image('background_cooperative', 'svg/background_cooperative.svg');
     this.load.image('background_nobody_won', 'svg/background_nobody_won.svg');
     this.load.image('background_player1_won', 'svg/background_player1_won.svg');
@@ -438,7 +439,7 @@ function update() {
             else
                 target = player
 
-            if (Math.random() < 0.5) {
+            if (Math.random() < 0) {
                 enemy_2.y = 0
                 enemy_2.x = 0
                 enemy_2.anims.play('fly_2', true);
@@ -452,8 +453,8 @@ function update() {
                 enemy_2.x = canvas_W
                 enemy_2.anims.play('fly_2', true);
 
-                enemy_2.dir = (canvas_W - target.x) / (target.y)
-                enemy_2.angle_r = Math.atan(enemy_2.dir) - Math.PI / 2
+                enemy_2.dir = (target.x - canvas_W) / (target.y)
+                enemy_2.angle_r = Math.atan(enemy_2.dir)
                 enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
                 enemy_2.flipY = true
             }
@@ -594,6 +595,13 @@ function singleModeLoose() {
         winningText.setText('YOU LOOSE');
         endScoreText.setText('YOUR SCORE: ' + playerScore);
         background.setTexture('background_single')
+        if (localStorage.highScore == undefined)
+            localStorage.highScore = 0
+        if (localStorage.highScore < playerScore) {
+            localStorage.highScore = playerScore
+            background.setTexture('background_single_new_high')
+        }
+
         endGame()
     }
 }
