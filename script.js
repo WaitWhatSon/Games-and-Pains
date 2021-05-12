@@ -325,6 +325,8 @@ function create() {
         this.physics.add.collider(player2, enemy, killEnemy);
         this.physics.add.overlap(player2, bread, collectBread, null, this);
         this.physics.add.overlap(player2, enemy, enemyAttack, null, this);
+        this.physics.add.collider(player2, enemy_2);
+        this.physics.add.overlap(player2, enemy_2, enemyAttack, null, this);
     }
 
     // Starts animations, removes glowing button
