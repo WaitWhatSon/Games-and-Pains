@@ -19,3 +19,10 @@ Pomysły
  * Jakiś wróg chodzący po platformie, można go zabić skokiem z góry
  * lepsze ziarno - więcej punktów 
  * double jump
+
+## Credits
+### Development:
+* [JanekKar](https://github.com/JanekKar)
+* [WaitWhatSon](https://github.com/WaitWhatSon)
+### Artwork:
+-[WaitWhatSon](https://github.com/WaitWhatSon)
