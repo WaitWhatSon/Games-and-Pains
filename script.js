@@ -111,7 +111,6 @@ function preload() {
 
 // ======================== CREATE ==========================
 function create() {
-
     // CAMERA
     this.cameras.main.setBounds(0, 0, canvas_W, canvas_H);
     // BACKGROUND IMAGE
@@ -133,6 +132,7 @@ function create() {
     game.players[0].max_platform = 0
     game.players[0].score = 0
     game.players[0].jump_stage = 0
+    game.players[0].dead = false
     // PLAYER 2
     if (game.mode != "single") {
         game.players[1] = this.physics.add.sprite(canvas_W - 50, 50, 'duck2');
@@ -142,6 +142,7 @@ function create() {
         game.players[1].max_platform = 0
         game.players[1].score = 0
         game.players[1].jump_stage = 0
+        game.players[1].dead = false
         WASDKeys.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         WASDKeys.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         WASDKeys.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -162,6 +163,7 @@ function create() {
     enemy_2.setSize(20, 60);
     enemy_2.dir = 0;
     enemy_2.speed = 7;
+
     // ---------- ANIMATIONS ------------
     // -------- ducks animation ---------
     this.anims.create({
@@ -319,18 +321,6 @@ function create() {
             fontStyle: "bold"
         });
     }
-    /*winningText = this.add.text(canvas_W / 2 - 150, canvas_H / 2 - 80, '', {
-        fontSize: '40px',
-        fill: '#000'
-    });
-    winningText2 = this.add.text(canvas_W / 2 - 150, canvas_H / 2 - 40, '', { // zapasowy?
-        fontSize: '40px',
-        fill: '#000'
-    });
-    endScoreText = this.add.text(canvas_W / 2 - 150, canvas_H / 2, '', {
-        fontSize: '40px',
-        fill: '#000'
-    });*/ // -----------------------------------------------------
     winningText = this.add.text(canvas_W / 2 - 150, 60, '', {
         fontSize: '50px',
         fill: '#fff',
@@ -348,7 +338,7 @@ function create() {
         fontStyle: "bold"
     }); // ------------------------------------------------------
     modeText = this.add.text(16, canvas_H - 32, game.mode, {
-        fontSize: '16px',
+        fontSize: '18px',
         fill: '#000'
     });
 
@@ -491,32 +481,7 @@ function update() {
 
         // enemy_2 spawning
         if (game.platforms_amount > 10 && (game.platforms_amount - 10) % 3 == 0) {
-            let target
-            if (game.mode != "single" && Math.random() < 0.5)
-                target = game.players[1]
-            else
-                target = game.players[0]
-
-            if (Math.random() < 0.5) {
-                enemy_2.y = 0
-                enemy_2.x = 0
-                enemy_2.anims.play('fly_2', true);
-
-                enemy_2.dir = (target.x) / (target.y)
-                enemy_2.angle_r = Math.atan(enemy_2.dir)
-                enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
-                enemy_2.flipY = false
-            } else {
-                enemy_2.y = 0
-                enemy_2.x = canvas_W
-                enemy_2.anims.play('fly_2', true);
-
-                enemy_2.dir = (target.x - canvas_W) / (target.y)
-                enemy_2.angle_r = Math.atan(enemy_2.dir)
-                enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
-                enemy_2.flipY = true
-            }
-            enemy_2_sound.play();
+            spawnEnemy2();
         }
     }
 
@@ -577,6 +542,7 @@ function collectBread(_player, bread) {
 
 function enemyAttack(_player, _enemy) {
     _player.y = canvas_H + 50;
+    _player.dead = true
     _enemy.anims.play('enemy_atack', true);
     enemy_1_sound.play();
 }
@@ -654,7 +620,9 @@ function restartGame() {
     game.height = 0;
     game.platforms_amount = 0;
     game.players[0].score = 0;
-    game.players[1].score = 0;
+    try {
+        game.players[1].score = 0;
+    } catch {}
     music.stop();
 }
 
@@ -690,6 +658,7 @@ function singleModeLoose() {
             background.setTexture('background_single_new_high')
         }
 
+        game.players[0].dead = true
         endGame()
     }
 }
@@ -697,7 +666,9 @@ function singleModeLoose() {
 function enemyModeLoose() {
     if (game.players[0].y > canvas_H + 10 || game.players[1].y > canvas_H + 10) { // player over map
         if (game.players[0].y > canvas_H + 10) { // player 1 is over map
-            if (game.players[1].y > canvas_H + 10) { // player 1 and 2 is over map                    
+            game.players[0].dead = true;
+            if (game.players[1].y > canvas_H + 10) { // player 1 and 2 is over map
+                game.players[1].dead = true;
                 winningText.setText('NOBODY WON');
                 background.setTexture('background_nobody_won')
             } else { // only player 1 is over map
@@ -705,6 +676,7 @@ function enemyModeLoose() {
                 background.setTexture('background_player2_won')
             }
         } else { // only player 2 is over map
+            game.players[1].dead = true;
             winningText.setText('PLAYER 1 WON');
             background.setTexture('background_player1_won')
         }
@@ -720,8 +692,23 @@ function cooperateModeLoose() {
         else
             endScoreText.setText('TOTAL SCORE: ' + ((game.players[0].score + game.players[1].score) * game.players[1].max_platform));
         background.setTexture('background_cooperative')
+        game.players[0].dead = true;
+        game.players[1].dead = true;
         endGame()
+        return
     }
+    if (game.players[0].y > canvas_H + 10 || game.players[1].y > canvas_H + 10) { // player over map
+        if (game.players[0].y > canvas_H + 10) { // player 1 is over map
+            game.players[0].dead = true;
+            if (game.players[1].y > canvas_H + 10) { // player 1 and 2 is over map
+                game.players[1].dead = true;
+            } else { // only player 1 is over map
+            }
+        } else { // only player 2 is over map
+            game.players[1].dead = true;
+        }
+    }
+
 }
 // --------------- WORLD ------------------
 // world building - first platform
@@ -753,6 +740,42 @@ function addNextLevelPlatform(scene, moving) {
     platform.setImmovable(true);
     platform.number = game.platforms_amount++;
 }
+
+//Spawns enemy 2
+function spawnEnemy2() {
+    let target_id
+    if (game.mode != "single" && Math.random() < 0.5)
+        target_id = 1
+    else
+        target_id = 0
+
+    if (game.players[target_id]) {
+        target_id = (target_id + 1) % 2
+    }
+    let target = game.players[target_id]
+
+    if (Math.random() < 0.5) {
+        enemy_2.y = 0
+        enemy_2.x = 0
+        enemy_2.anims.play('fly_2', true);
+
+        enemy_2.dir = (target.x) / (target.y)
+        enemy_2.angle_r = Math.atan(enemy_2.dir)
+        enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
+        enemy_2.flipY = false
+    } else {
+        enemy_2.y = 0
+        enemy_2.x = canvas_W
+        enemy_2.anims.play('fly_2', true);
+
+        enemy_2.dir = (target.x - canvas_W) / (target.y)
+        enemy_2.angle_r = Math.atan(enemy_2.dir)
+        enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
+        enemy_2.flipY = true
+    }
+    enemy_2_sound.play();
+}
+
 // update all platforms
 function updatePlatformsPosition() {
     platforms.children.each((child) => {
