@@ -1,17 +1,10 @@
 var game;
 
-var new_game = false;
-
 var canvas_W = 750;
 var canvas_H = 500;
 
 var background;
 var clouds;
-
-var height = 0;
-var platforms_amount = 0;
-
-var count = 0;
 
 var heightText;
 var heightText2;
@@ -22,25 +15,14 @@ var playerScoreText;
 var player2ScoreText;
 var modeText;
 
-var mode = "single";
-
-var player;
-var player2;
 var platforms;
+var bread;
 var enemy;
 var enemy_2;
-var bread;
 
 var cursors;
-var cursors2;
 
-var keyW;
-var keyS;
-var keyA;
-var keyD;
-
-var gameEnded = false;
-var y_step = 0.5;
+var WASDKeys = {};
 
 // ----- sounds -----
 var squeek1;
@@ -73,6 +55,15 @@ var config = {
     }
 };
 game = new Phaser.Game(config);
+
+game.height = 0;
+game.platforms_amount = 0;
+game.new = false;
+game.ended = false;
+game.mode = "single";
+game.players = [];
+game.y_step = 0.5;
+
 
 // ======================== PRELOAD =========================
 function preload() {
@@ -120,11 +111,13 @@ function preload() {
 
 // ======================== CREATE ==========================
 function create() {
+
     // CAMERA
     this.cameras.main.setBounds(0, 0, canvas_W, canvas_H);
     // BACKGROUND IMAGE
     background = this.add.image(canvas_W / 2, canvas_H / 2, 'background');
     clouds = this.add.image(canvas_W / 2, canvas_H / 2, 'clouds');
+    clouds.count = 0
     // WORLD BUILDING
     platforms = this.physics.add.group();
     addFirstLevelPlatform(this)
@@ -132,27 +125,27 @@ function create() {
     // next platforms create in update()
     // ------- PLAYERS --------
     // PLAYER 1
-    player = this.physics.add.sprite(50, 50, 'duck');
+    game.players[0] = this.physics.add.sprite(50, 50, 'duck');
     cursors = this.input.keyboard.createCursorKeys();
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(false);
-    player.body.setMass(10);
-    player.max_platform = 0
-    player.score = 0
-    player.jump_stage = 0
+    game.players[0].setBounce(0.2);
+    game.players[0].setCollideWorldBounds(false);
+    game.players[0].body.setMass(10);
+    game.players[0].max_platform = 0
+    game.players[0].score = 0
+    game.players[0].jump_stage = 0
     // PLAYER 2
-    if (mode != "single") {
-        player2 = this.physics.add.sprite(canvas_W - 50, 50, 'duck2');
-        player2.setBounce(0.2);
-        player2.setCollideWorldBounds(false);
-        player2.body.setMass(10);
-        player2.max_platform = 0
-        player2.score = 0
-        player2.jump_stage = 0
-        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    if (game.mode != "single") {
+        game.players[1] = this.physics.add.sprite(canvas_W - 50, 50, 'duck2');
+        game.players[1].setBounce(0.2);
+        game.players[1].setCollideWorldBounds(false);
+        game.players[1].body.setMass(10);
+        game.players[1].max_platform = 0
+        game.players[1].score = 0
+        game.players[1].jump_stage = 0
+        WASDKeys.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        WASDKeys.keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        WASDKeys.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        WASDKeys.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     }
     // ENEMY
     enemy = this.physics.add.sprite(1000, 0, 'enemy');
@@ -277,8 +270,8 @@ function create() {
         child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.4));
     });
     // TEXT init
-    if (mode == "single") {
-        playerScoreText = this.add.text(16, 48, 'PLAYER score: ' + player.score, {
+    if (game.mode == "single") {
+        playerScoreText = this.add.text(16, 48, 'PLAYER score: ' + game.players[0].score, {
             fontSize: '16px',
             fill: '#000',
             fontStyle: "bold"
@@ -288,8 +281,8 @@ function create() {
             fill: '#000',
             fontStyle: "bold"
         });
-    } else if (mode == "cooperate") {
-        playerScoreText = this.add.text(16, 48, 'PLAYERS score: ' + player.score, {
+    } else if (game.mode == "cooperate") {
+        playerScoreText = this.add.text(16, 48, 'PLAYERS score: ' + game.players[0].score, {
             fontSize: '16px',
             fill: '#000',
             fontStyle: "bold"
@@ -305,12 +298,12 @@ function create() {
             fontStyle: "bold"
         });
     } else {
-        playerScoreText = this.add.text(16, 48, 'PLAYER 1 score: ' + player.score, {
+        playerScoreText = this.add.text(16, 48, 'PLAYER 1 score: ' + game.players[0].score, {
             fontSize: '16px',
             fill: '#000',
             fontStyle: "bold"
         });
-        player2ScoreText = this.add.text(16, 60, 'PLAYER 2 score: ' + player2.score, {
+        player2ScoreText = this.add.text(16, 60, 'PLAYER 2 score: ' + game.players[1].score, {
             fontSize: '16px',
             fill: '#000',
             fontStyle: "bold"
@@ -354,32 +347,32 @@ function create() {
         shadowStroke: true,
         fontStyle: "bold"
     }); // ------------------------------------------------------
-    modeText = this.add.text(16, canvas_H - 32, mode, {
+    modeText = this.add.text(16, canvas_H - 32, game.mode, {
         fontSize: '16px',
         fill: '#000'
     });
 
     // PHYSICS
-    this.physics.add.overlap(player, bread, collectBread, null, this);
+    this.physics.add.overlap(game.players[0], bread, collectBread, null, this);
     this.physics.add.collider(bread, platforms);
 
-    this.physics.add.collider(player, platforms, platformCollision);
-    this.physics.add.collider(player, enemy, killEnemy);
-    this.physics.add.overlap(player, enemy, enemyAttack, null, this);
-    this.physics.add.collider(player, enemy_2);
-    this.physics.add.overlap(player, enemy_2, enemyAttack, null, this);
-    if (mode != "single") {
-        this.physics.add.collider(player2, platforms, platformCollision);
-        this.physics.add.collider(player, player2);
-        this.physics.add.collider(player2, enemy, killEnemy);
-        this.physics.add.overlap(player2, bread, collectBread, null, this);
-        this.physics.add.overlap(player2, enemy, enemyAttack, null, this);
-        this.physics.add.collider(player2, enemy_2);
-        this.physics.add.overlap(player2, enemy_2, enemyAttack, null, this);
+    this.physics.add.collider(game.players[0], platforms, platformCollision);
+    this.physics.add.collider(game.players[0], enemy, killEnemy);
+    this.physics.add.overlap(game.players[0], enemy, enemyAttack, null, this);
+    this.physics.add.collider(game.players[0], enemy_2);
+    this.physics.add.overlap(game.players[0], enemy_2, enemyAttack, null, this);
+    if (game.mode != "single") {
+        this.physics.add.collider(game.players[1], platforms, platformCollision);
+        this.physics.add.collider(game.players[0], game.players[1]);
+        this.physics.add.collider(game.players[1], enemy, killEnemy);
+        this.physics.add.overlap(game.players[1], bread, collectBread, null, this);
+        this.physics.add.overlap(game.players[1], enemy, enemyAttack, null, this);
+        this.physics.add.collider(game.players[1], enemy_2);
+        this.physics.add.overlap(game.players[1], enemy_2, enemyAttack, null, this);
     }
 
     // Starts animations, removes glowing button
-    gameEnded = false;
+    game.ended = false;
     document.getElementById("new_game").classList.remove("glowing-button")
 
     // ------------ SOUNDS ---------------
@@ -398,15 +391,15 @@ function create() {
 
 // ======================= UPDATE ========================
 function update() {
-    if (!gameEnded) {
+    if (!game.ended) {
         // background update
-        count += 0.005
+        clouds.count += 0.005
 
-        clouds.x = clouds.x + Math.sin(count);
-        clouds.y = clouds.y + Math.cos(count);
+        clouds.x = clouds.x + Math.sin(clouds.count);
+        clouds.y = clouds.y + Math.cos(clouds.count);
 
-        height += 1
-        enemy.y += 1 * y_step;
+        game.height += 1
+        enemy.y += 1 * game.y_step;
         enemy.x += 3;
 
         enemy_2.y += Math.cos(enemy_2.angle_r) * enemy_2.speed;
@@ -416,63 +409,63 @@ function update() {
     }
 
     // check if not new game
-    if (new_game) {
+    if (game.new) {
         this.scene.restart();
-        new_game = false;
+        game.new = false;
     }
     // PLAYER
     if (cursors.left.isDown) {
-        player.setVelocityX(-250);
-        player.anims.play('left', true);
+        game.players[0].setVelocityX(-250);
+        game.players[0].anims.play('left', true);
     } else if (cursors.right.isDown) {
-        player.setVelocityX(250);
-        player.anims.play('right', true);
+        game.players[0].setVelocityX(250);
+        game.players[0].anims.play('right', true);
     } else {
-        player.setVelocityX(0);
-        player.anims.play('turn');
+        game.players[0].setVelocityX(0);
+        game.players[0].anims.play('turn');
     }
 
     // Jumping w/ double jump
-    if (cursors.up.isDown && player.body.touching.down && player.jump_stage == 0) {
-        player.setVelocityY(-700);
-        player.jump_stage = 1;
+    if (cursors.up.isDown && game.players[0].body.touching.down && game.players[0].jump_stage == 0) {
+        game.players[0].setVelocityY(-700);
+        game.players[0].jump_stage = 1;
         squeek1.play();
-    } else if (!cursors.up.isDown && !player.body.touching.down && player.jump_stage == 1) {
-        player.jump_stage = 2;
-    } else if (cursors.up.isDown && !player.body.touching.down && player.jump_stage == 2) {
-        player.setVelocityY(-700);
-        player.jump_stage = 3;
+    } else if (!cursors.up.isDown && !game.players[0].body.touching.down && game.players[0].jump_stage == 1) {
+        game.players[0].jump_stage = 2;
+    } else if (cursors.up.isDown && !game.players[0].body.touching.down && game.players[0].jump_stage == 2) {
+        game.players[0].setVelocityY(-700);
+        game.players[0].jump_stage = 3;
         squeek1.play();
-    } else if (player.body.touching.down && player.jump_stage != 0) {
-        player.jump_stage = 0;
+    } else if (game.players[0].body.touching.down && game.players[0].jump_stage != 0) {
+        game.players[0].jump_stage = 0;
     }
 
 
     // PLAYER2
     try {
-        if (mode != "single") {
-            if (keyA.isDown) {
-                player2.setVelocityX(-250);
-                player2.anims.play('left2', true);
-            } else if (keyD.isDown) {
-                player2.setVelocityX(250);
-                player2.anims.play('right2', true);
+        if (game.mode != "single") {
+            if (WASDKeys.keyA.isDown) {
+                game.players[1].setVelocityX(-250);
+                game.players[1].anims.play('left2', true);
+            } else if (WASDKeys.keyD.isDown) {
+                game.players[1].setVelocityX(250);
+                game.players[1].anims.play('right2', true);
             } else {
-                player2.setVelocityX(0);
-                player2.anims.play('turn2');
+                game.players[1].setVelocityX(0);
+                game.players[1].anims.play('turn2');
             }
-            if (keyW.isDown && player2.body.touching.down && player2.jump_stage == 0) {
-                player2.setVelocityY(-700);
-                player2.jump_stage = 1;
+            if (WASDKeys.keyW.isDown && game.players[1].body.touching.down && game.players[1].jump_stage == 0) {
+                game.players[1].setVelocityY(-700);
+                game.players[1].jump_stage = 1;
                 squeek2.play();
-            } else if (!keyW.isDown && !player2.body.touching.down && player2.jump_stage == 1) {
-                player2.jump_stage = 2;
-            } else if (keyW.isDown && !player2.body.touching.down && player2.jump_stage == 2) {
-                player2.setVelocityY(-700);
-                player2.jump_stage = 3;
+            } else if (!WASDKeys.keyW.isDown && !game.players[1].body.touching.down && game.players[1].jump_stage == 1) {
+                game.players[1].jump_stage = 2;
+            } else if (WASDKeys.keyW.isDown && !game.players[1].body.touching.down && game.players[1].jump_stage == 2) {
+                game.players[1].setVelocityY(-700);
+                game.players[1].jump_stage = 3;
                 squeek2.play();
-            } else if (player2.body.touching.down && player2.jump_stage != 0) {
-                player2.jump_stage = 0;
+            } else if (game.players[1].body.touching.down && game.players[1].jump_stage != 0) {
+                game.players[1].jump_stage = 0;
             }
 
         }
@@ -481,28 +474,28 @@ function update() {
     }
 
     // add next platform and remove the oldest
-    if (height * y_step >= 100) {
-        height = 1;
-        addNextLevelPlatform(this, platforms_amount % 3 == 0);
+    if (game.height * game.y_step >= 100) {
+        game.height = 1;
+        addNextLevelPlatform(this, game.platforms_amount % 3 == 0);
         removePlatformsOverMap();
-        if (platforms_amount % 4 == 0) {
+        if (game.platforms_amount % 4 == 0) {
             enemy.y = -50;
             enemy.x = -200;
             enemy.anims.play('fly', true);
             breadDrop(this);
         }
 
-        if (platforms_amount % 5 == 0) {
-            y_step += 0.1
+        if (game.platforms_amount % 5 == 0) {
+            game.y_step = game.y_step + 0.1
         }
 
         // enemy_2 spawning
-        if (platforms_amount > 10 && (platforms_amount - 10) % 3 == 0) {
+        if (game.platforms_amount > 10 && (game.platforms_amount - 10) % 3 == 0) {
             let target
-            if (mode != "single" && Math.random() < 0.5)
-                target = player2
+            if (game.mode != "single" && Math.random() < 0.5)
+                target = game.players[1]
             else
-                target = player
+                target = game.players[0]
 
             if (Math.random() < 0.5) {
                 enemy_2.y = 0
@@ -530,10 +523,10 @@ function update() {
 
 
     // check if players aren't alive
-    if (!gameEnded) {
-        if (mode == "single") {
+    if (!game.ended) {
+        if (game.mode == "single") {
             singleModeLoose();
-        } else if (mode == "cooperate") {
+        } else if (game.mode == "cooperate") {
             cooperateModeLoose();
         } else {
             enemyModeLoose();
@@ -556,29 +549,29 @@ function breadDrop(scene) {
     bread.children.iterate(function (child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.4));
     });
-    scene.physics.add.overlap(player, bread, collectBread, null, this);
+    scene.physics.add.overlap(game.players[0], bread, collectBread, null, this);
     scene.physics.add.collider(bread, platforms);
-    if (mode != "single") {
-        scene.physics.add.overlap(player2, bread, collectBread, null, this);
+    if (game.mode != "single") {
+        scene.physics.add.overlap(game.players[1], bread, collectBread, null, this);
     }
 }
 
 function collectBread(_player, bread) {
     bread.disableBody(true, true);
-    if (mode == "enemy") {
-        if (_player == player) {
-            player.score += 1;
-            playerScoreText.setText('PLAYER 1 score: ' + player.score);
+    if (game.mode == "enemy") {
+        if (_player == game.players[0]) {
+            game.players[0].score += 1;
+            playerScoreText.setText('PLAYER 1 score: ' + game.players[0].score);
         } else {
-            player2.score += 1;
-            player2ScoreText.setText('PLAYER 2 score: ' + player2.score);
+            game.players[1].score += 1;
+            player2ScoreText.setText('PLAYER 2 score: ' + game.players[1].score);
         }
-    } else if (mode == "single") {
-        player.score += 1;
-        playerScoreText.setText('PLAYER score: ' + player.score);
+    } else if (game.mode == "single") {
+        game.players[0].score += 1;
+        playerScoreText.setText('PLAYER score: ' + game.players[0].score);
     } else {
-        player.score += 1;
-        playerScoreText.setText('PLAYERS score: ' + (player.score + player2.score));
+        game.players[0].score += 1;
+        playerScoreText.setText('PLAYERS score: ' + (game.players[0].score + game.players[1].score));
     }
 }
 
@@ -592,16 +585,16 @@ function killEnemy(_player, _enemy) {
 
     if (Math.floor(_player.y + 45) == Math.floor(_enemy.y)) {
         _enemy.x = 5000;
-        if (_player == player) {
-            player.score += 10;
-            playerScoreText.setText('PLAYER 1 score: ' + player.score);
+        if (_player == game.players[0]) {
+            game.players[0].score += 10;
+            playerScoreText.setText('PLAYER 1 score: ' + game.players[0].score);
         } else {
-            player2.score += 10; // dodałam 0 bo było 1
-            if (mode == "cooperate")
-                playerScoreText.setText('PLAYER 2 score: ' + (player2.score + player.score));
+            game.players[1].score += 10; // dodałam 0 bo było 1
+            if (game.mode == "cooperate")
+                playerScoreText.setText('PLAYER 2 score: ' + (game.players[1].score + game.players[0].score));
             else
                 try {
-                    player2ScoreText.setText('PLAYER 2 score: ' + player2.score);
+                    player2ScoreText.setText('PLAYER 2 score: ' + game.players[1].score);
                 } catch {}
         }
         enemy_die.play();
@@ -615,15 +608,15 @@ function platformCollision(_player, platform) {
         }
     }
 
-    if (mode != "single") {
-        heightText.setText('Player 1 platforms: ' + player.max_platform);
+    if (game.mode != "single") {
+        heightText.setText('Player 1 platforms: ' + game.players[0].max_platform);
         try {
-            heightText2.setText('Player 2 platforms: ' + player2.max_platform);
+            heightText2.setText('Player 2 platforms: ' + game.players[1].max_platform);
         } catch (e) {
             console.log('there is no player 2 yet');
         }
     } else {
-        heightText.setText('Platforms: ' + player.max_platform);
+        heightText.setText('Platforms: ' + game.players[0].max_platform);
     }
 }
 
@@ -634,7 +627,7 @@ function startNewGame() {
 
 
 function endGame() {
-    gameEnded = true;
+    game.ended = true;
     document.getElementById("new_game").classList.add("glowing-button")
     // cleaning sprites off screen
     platforms.children.iterate((child) => {
@@ -651,40 +644,40 @@ function endGame() {
         clouds.destroy()
     } catch {}
 
-    y_step = 0.5;
+    game.y_step = 0.5;
 
     music.stop();
 }
 
 function restartGame() {
-    new_game = true;
-    height = 0;
-    platforms_amount = 0;
-    player.score = 0;
-    player2.score = 0;
+    game.new = true;
+    game.height = 0;
+    game.platforms_amount = 0;
+    game.players[0].score = 0;
+    game.players[1].score = 0;
     music.stop();
 }
 
 function setSingleMode() {
-    mode = "single";
+    game.mode = "single";
     restartGame();
 }
 
 function setCooperateMode() {
-    mode = "cooperate";
+    game.mode = "cooperate";
     restartGame();
 }
 
 function setEnemyMode() {
-    mode = "enemy";
+    game.mode = "enemy";
     restartGame();
 }
 // CHECK WHO WINS
 // -------- SINGLE MODE ----------
 function singleModeLoose() {
-    if (player.y > canvas_H + 10) { // player 1 is over map
+    if (game.players[0].y > canvas_H + 10) { // player 1 is over map
 
-        let score = player.score * (player.max_platform)
+        let score = game.players[0].score * (game.players[0].max_platform)
 
         winningText.setText('GAME OVER');
         endScoreText.setText('TOTAL SCORE: ' + score);
@@ -702,9 +695,9 @@ function singleModeLoose() {
 }
 // --------- ENEMY MODE ----------
 function enemyModeLoose() {
-    if (player.y > canvas_H + 10 || player2.y > canvas_H + 10) { // player over map
-        if (player.y > canvas_H + 10) { // player 1 is over map
-            if (player2.y > canvas_H + 10) { // player 1 and 2 is over map                    
+    if (game.players[0].y > canvas_H + 10 || game.players[1].y > canvas_H + 10) { // player over map
+        if (game.players[0].y > canvas_H + 10) { // player 1 is over map
+            if (game.players[1].y > canvas_H + 10) { // player 1 and 2 is over map                    
                 winningText.setText('NOBODY WON');
                 background.setTexture('background_nobody_won')
             } else { // only player 1 is over map
@@ -720,12 +713,12 @@ function enemyModeLoose() {
 }
 // --------- COOPERATE MODE -----------
 function cooperateModeLoose() {
-    if (player.y > canvas_H + 10 && player2.y > canvas_H + 10) { // no more players on map
+    if (game.players[0].y > canvas_H + 10 && game.players[1].y > canvas_H + 10) { // no more players on map
         winningText.setText('GAME OVER');
-        if (player.max_platform > player2.max_platform)
-            endScoreText.setText('TOTAL SCORE: ' + ((player.score + player2.score) * player.max_platform));
+        if (game.players[0].max_platform > game.players[1].max_platform)
+            endScoreText.setText('TOTAL SCORE: ' + ((game.players[0].score + game.players[1].score) * game.players[0].max_platform));
         else
-            endScoreText.setText('TOTAL SCORE: ' + ((player.score + player2.score) * player2.max_platform));
+            endScoreText.setText('TOTAL SCORE: ' + ((game.players[0].score + game.players[1].score) * game.players[1].max_platform));
         background.setTexture('background_cooperative')
         endGame()
     }
@@ -738,7 +731,7 @@ function addFirstLevelPlatform(scene) {
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = platforms_amount++;
+    platform.number = game.platforms_amount++;
 }
 // second platform
 function addSecondLevelPlatform(scene) {
@@ -747,7 +740,7 @@ function addSecondLevelPlatform(scene) {
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = platforms_amount++;
+    platform.number = game.platforms_amount++;
 }
 // next platforms
 function addNextLevelPlatform(scene, moving) {
@@ -758,12 +751,12 @@ function addNextLevelPlatform(scene, moving) {
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = platforms_amount++;
+    platform.number = game.platforms_amount++;
 }
 // update all platforms
 function updatePlatformsPosition() {
     platforms.children.each((child) => {
-        child.y += y_step;
+        child.y += game.y_step;
         if (child.moving) {
             if (child.left) {
                 if (child.x > 125) {
