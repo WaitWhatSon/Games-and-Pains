@@ -342,7 +342,7 @@ function create() {
         fontSize: '40px',
         fill: '#000'
     });*/ // -----------------------------------------------------
-    winningText = this.add.text(canvas_W / 2 - 150, 60 , '', {
+    winningText = this.add.text(canvas_W / 2 - 150, 60, '', {
         fontSize: '50px',
         fill: '#fff',
         strokeThickness: 10,
@@ -480,9 +480,10 @@ function update() {
             }
 
         }
+    } catch (e) {
+        console.log('there is no player2 yet');
     }
-    catch (e) { console.log('there is no player2 yet'); }
-    
+
     // add next platform and remove the oldest
     if (height_score * y_step >= 100) {
         height_score = 1;
@@ -581,7 +582,7 @@ function collectBread(_player, bread) {
         playerScoreText.setText('PLAYER score: ' + playerScore);
     } else {
         playerScore += 1;
-        playerScoreText.setText('PLAYERS score: ' + playerScore);
+        playerScoreText.setText('PLAYERS score: ' + (playerScore + player2Score));
     }
 }
 
@@ -600,7 +601,12 @@ function killEnemy(_player, _enemy) {
             playerScoreText.setText('PLAYER 1 score: ' + playerScore);
         } else {
             player2Score += 10; // dodałam 0 bo było 1
-            player2ScoreText.setText('PLAYER 2 score: ' + player2Score);
+            if (mode == "cooperate")
+                playerScoreText.setText('PLAYER 2 score: ' + (player2Score + playerScore));
+            else
+                try {
+                    player2ScoreText.setText('PLAYER 2 score: ' + player2Score);
+                } catch {}
         }
         enemy_die.play();
     }
@@ -615,9 +621,11 @@ function platformCollision(_player, platform) {
 
     if (mode != "single") {
         heightText.setText('Player 1 platforms: ' + player.max_platform);
-        try {heightText2.setText('Player 2 platforms: ' + player2.max_platform);}
-        catch (e)
-        { console.log('there is no player 2 yet'); }
+        try {
+            heightText2.setText('Player 2 platforms: ' + player2.max_platform);
+        } catch (e) {
+            console.log('there is no player 2 yet');
+        }
     } else {
         heightText.setText('Platforms: ' + player.max_platform);
     }
