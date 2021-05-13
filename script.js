@@ -690,8 +690,8 @@ function singleModeLoose() {
 
         let score = playerScore * (player.max_platform)
 
-        winningText.setText('YOU LOOSE');
-        endScoreText.setText('YOUR SCORE: ' + score);
+        winningText.setText('GAME OVER');
+        endScoreText.setText('TOTAL SCORE: ' + score);
         background.setTexture('background_single')
         if (localStorage.highScore == undefined)
             localStorage.highScore = 0
@@ -725,8 +725,11 @@ function enemyModeLoose() {
 // --------- COOPERATE MODE -----------
 function cooperateModeLoose() {
     if (player.y > canvas_H + 10 && player2.y > canvas_H + 10) { // no more players on map
-        winningText.setText('YOU LOOSE');
-        endScoreText.setText('YOUR SCORE: ' + playerScore);
+        winningText.setText('GAME OVER');
+        if (player.max_platform > player2.max_platform)
+            endScoreText.setText('TOTAL SCORE: ' + ((playerScore + player2Score) * player.max_platform));
+        else
+            endScoreText.setText('TOTAL SCORE: ' + ((playerScore + player2Score) * player2.max_platform));
         background.setTexture('background_cooperative')
         endGame()
     }
