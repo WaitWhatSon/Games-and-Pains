@@ -1,8 +1,6 @@
 var game;
-var controls;
 
 var new_game = false;
-var stop_game = false;
 
 var canvas_W = 750;
 var canvas_H = 500;
@@ -10,11 +8,8 @@ var canvas_H = 500;
 var background;
 var clouds;
 
-var height_score = 0;
-var platforms_number = 0;
-
-var playerScore = 0;
-var player2Score = 0;
+var height = 0;
+var platforms_amount = 0;
 
 var count = 0;
 
@@ -46,9 +41,6 @@ var keyD;
 
 var gameEnded = false;
 var y_step = 0.5;
-
-let jump_stage_p1 = 0;
-let jump_stage_p2 = 0;
 
 // ----- sounds -----
 var squeek1;
@@ -146,6 +138,8 @@ function create() {
     player.setCollideWorldBounds(false);
     player.body.setMass(10);
     player.max_platform = 0
+    player.score = 0
+    player.jump_stage = 0
     // PLAYER 2
     if (mode != "single") {
         player2 = this.physics.add.sprite(canvas_W - 50, 50, 'duck2');
@@ -153,6 +147,8 @@ function create() {
         player2.setCollideWorldBounds(false);
         player2.body.setMass(10);
         player2.max_platform = 0
+        player2.score = 0
+        player2.jump_stage = 0
         keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -282,7 +278,7 @@ function create() {
     });
     // TEXT init
     if (mode == "single") {
-        playerScoreText = this.add.text(16, 48, 'PLAYER score: ' + playerScore, {
+        playerScoreText = this.add.text(16, 48, 'PLAYER score: ' + player.score, {
             fontSize: '16px',
             fill: '#000',
             fontStyle: "bold"
@@ -293,7 +289,7 @@ function create() {
             fontStyle: "bold"
         });
     } else if (mode == "cooperate") {
-        playerScoreText = this.add.text(16, 48, 'PLAYERS score: ' + playerScore, {
+        playerScoreText = this.add.text(16, 48, 'PLAYERS score: ' + player.score, {
             fontSize: '16px',
             fill: '#000',
             fontStyle: "bold"
@@ -309,12 +305,12 @@ function create() {
             fontStyle: "bold"
         });
     } else {
-        playerScoreText = this.add.text(16, 48, 'PLAYER 1 score: ' + playerScore, {
+        playerScoreText = this.add.text(16, 48, 'PLAYER 1 score: ' + player.score, {
             fontSize: '16px',
             fill: '#000',
             fontStyle: "bold"
         });
-        player2ScoreText = this.add.text(16, 60, 'PLAYER 2 score: ' + player2Score, {
+        player2ScoreText = this.add.text(16, 60, 'PLAYER 2 score: ' + player2.score, {
             fontSize: '16px',
             fill: '#000',
             fontStyle: "bold"
@@ -409,7 +405,7 @@ function update() {
         clouds.x = clouds.x + Math.sin(count);
         clouds.y = clouds.y + Math.cos(count);
 
-        height_score += 1
+        height += 1
         enemy.y += 1 * y_step;
         enemy.x += 3;
 
@@ -437,18 +433,18 @@ function update() {
     }
 
     // Jumping w/ double jump
-    if (cursors.up.isDown && player.body.touching.down && jump_stage_p1 == 0) {
+    if (cursors.up.isDown && player.body.touching.down && player.jump_stage == 0) {
         player.setVelocityY(-700);
-        jump_stage_p1 = 1;
+        player.jump_stage = 1;
         squeek1.play();
-    } else if (!cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 1) {
-        jump_stage_p1 = 2;
-    } else if (cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 2) {
+    } else if (!cursors.up.isDown && !player.body.touching.down && player.jump_stage == 1) {
+        player.jump_stage = 2;
+    } else if (cursors.up.isDown && !player.body.touching.down && player.jump_stage == 2) {
         player.setVelocityY(-700);
-        jump_stage_p1 = 3;
+        player.jump_stage = 3;
         squeek1.play();
-    } else if (player.body.touching.down && jump_stage_p1 != 0) {
-        jump_stage_p1 = 0;
+    } else if (player.body.touching.down && player.jump_stage != 0) {
+        player.jump_stage = 0;
     }
 
 
@@ -465,18 +461,18 @@ function update() {
                 player2.setVelocityX(0);
                 player2.anims.play('turn2');
             }
-            if (keyW.isDown && player2.body.touching.down && jump_stage_p2 == 0) {
+            if (keyW.isDown && player2.body.touching.down && player2.jump_stage == 0) {
                 player2.setVelocityY(-700);
-                jump_stage_p2 = 1;
+                player2.jump_stage = 1;
                 squeek2.play();
-            } else if (!keyW.isDown && !player2.body.touching.down && jump_stage_p2 == 1) {
-                jump_stage_p2 = 2;
-            } else if (keyW.isDown && !player2.body.touching.down && jump_stage_p2 == 2) {
+            } else if (!keyW.isDown && !player2.body.touching.down && player2.jump_stage == 1) {
+                player2.jump_stage = 2;
+            } else if (keyW.isDown && !player2.body.touching.down && player2.jump_stage == 2) {
                 player2.setVelocityY(-700);
-                jump_stage_p2 = 3;
+                player2.jump_stage = 3;
                 squeek2.play();
-            } else if (player2.body.touching.down && jump_stage_p2 != 0) {
-                jump_stage_p2 = 0;
+            } else if (player2.body.touching.down && player2.jump_stage != 0) {
+                player2.jump_stage = 0;
             }
 
         }
@@ -485,23 +481,23 @@ function update() {
     }
 
     // add next platform and remove the oldest
-    if (height_score * y_step >= 100) {
-        height_score = 1;
-        addNextLevelPlatform(this, platforms_number % 3 == 0);
+    if (height * y_step >= 100) {
+        height = 1;
+        addNextLevelPlatform(this, platforms_amount % 3 == 0);
         removePlatformsOverMap();
-        if (platforms_number % 4 == 0) {
+        if (platforms_amount % 4 == 0) {
             enemy.y = -50;
             enemy.x = -200;
             enemy.anims.play('fly', true);
             breadDrop(this);
         }
 
-        if (platforms_number % 5 == 0) {
+        if (platforms_amount % 5 == 0) {
             y_step += 0.1
         }
 
         // enemy_2 spawning
-        if (platforms_number > 10 && (platforms_number - 10) % 3 == 0) {
+        if (platforms_amount > 10 && (platforms_amount - 10) % 3 == 0) {
             let target
             if (mode != "single" && Math.random() < 0.5)
                 target = player2
@@ -571,18 +567,18 @@ function collectBread(_player, bread) {
     bread.disableBody(true, true);
     if (mode == "enemy") {
         if (_player == player) {
-            playerScore += 1;
-            playerScoreText.setText('PLAYER 1 score: ' + playerScore);
+            player.score += 1;
+            playerScoreText.setText('PLAYER 1 score: ' + player.score);
         } else {
-            player2Score += 1;
-            player2ScoreText.setText('PLAYER 2 score: ' + player2Score);
+            player2.score += 1;
+            player2ScoreText.setText('PLAYER 2 score: ' + player2.score);
         }
     } else if (mode == "single") {
-        playerScore += 1;
-        playerScoreText.setText('PLAYER score: ' + playerScore);
+        player.score += 1;
+        playerScoreText.setText('PLAYER score: ' + player.score);
     } else {
-        playerScore += 1;
-        playerScoreText.setText('PLAYERS score: ' + (playerScore + player2Score));
+        player.score += 1;
+        playerScoreText.setText('PLAYERS score: ' + (player.score + player2.score));
     }
 }
 
@@ -597,15 +593,15 @@ function killEnemy(_player, _enemy) {
     if (Math.floor(_player.y + 45) == Math.floor(_enemy.y)) {
         _enemy.x = 5000;
         if (_player == player) {
-            playerScore += 10;
-            playerScoreText.setText('PLAYER 1 score: ' + playerScore);
+            player.score += 10;
+            playerScoreText.setText('PLAYER 1 score: ' + player.score);
         } else {
-            player2Score += 10; // dodałam 0 bo było 1
+            player2.score += 10; // dodałam 0 bo było 1
             if (mode == "cooperate")
-                playerScoreText.setText('PLAYER 2 score: ' + (player2Score + playerScore));
+                playerScoreText.setText('PLAYER 2 score: ' + (player2.score + player.score));
             else
                 try {
-                    player2ScoreText.setText('PLAYER 2 score: ' + player2Score);
+                    player2ScoreText.setText('PLAYER 2 score: ' + player2.score);
                 } catch {}
         }
         enemy_die.play();
@@ -662,10 +658,10 @@ function endGame() {
 
 function restartGame() {
     new_game = true;
-    height_score = 0;
-    platforms_number = 0;
-    playerScore = 0;
-    player2Score = 0;
+    height = 0;
+    platforms_amount = 0;
+    player.score = 0;
+    player2.score = 0;
     music.stop();
 }
 
@@ -688,7 +684,7 @@ function setEnemyMode() {
 function singleModeLoose() {
     if (player.y > canvas_H + 10) { // player 1 is over map
 
-        let score = playerScore * (player.max_platform)
+        let score = player.score * (player.max_platform)
 
         winningText.setText('GAME OVER');
         endScoreText.setText('TOTAL SCORE: ' + score);
@@ -727,9 +723,9 @@ function cooperateModeLoose() {
     if (player.y > canvas_H + 10 && player2.y > canvas_H + 10) { // no more players on map
         winningText.setText('GAME OVER');
         if (player.max_platform > player2.max_platform)
-            endScoreText.setText('TOTAL SCORE: ' + ((playerScore + player2Score) * player.max_platform));
+            endScoreText.setText('TOTAL SCORE: ' + ((player.score + player2.score) * player.max_platform));
         else
-            endScoreText.setText('TOTAL SCORE: ' + ((playerScore + player2Score) * player2.max_platform));
+            endScoreText.setText('TOTAL SCORE: ' + ((player.score + player2.score) * player2.max_platform));
         background.setTexture('background_cooperative')
         endGame()
     }
@@ -742,7 +738,7 @@ function addFirstLevelPlatform(scene) {
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = platforms_number++;
+    platform.number = platforms_amount++;
 }
 // second platform
 function addSecondLevelPlatform(scene) {
@@ -751,7 +747,7 @@ function addSecondLevelPlatform(scene) {
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = platforms_number++;
+    platform.number = platforms_amount++;
 }
 // next platforms
 function addNextLevelPlatform(scene, moving) {
@@ -762,7 +758,7 @@ function addNextLevelPlatform(scene, moving) {
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = platforms_number++;
+    platform.number = platforms_amount++;
 }
 // update all platforms
 function updatePlatformsPosition() {
@@ -812,35 +808,3 @@ class Platform extends Phaser.Physics.Arcade.Sprite {
         this.right = true;
     }
 }
-
-// ------------------------------------------------------------------
-// TODO 
-/*  
-    Celem projektu jest stworzenie prostej gry działającej 
-    w elemencie canvas (liczby w nawiasach oznaczają punktację, 
-    maksymalnie za projekt można otrzymać 5 punktów).
-
-    Podstawa na zaliczenie (1): sterowanie myszą lub/i klawiaturą, 
-    poruszające się obiekty, kolizje między nimi, prosta logika.
-
-    (+1) Przynajmniej część obiektów jest animowana (klatki animacji).
-         - są animowane kaczki
-    (+1) Kilka typów obiektów różniących się zachowaniem 
-         (np. wrogowie, pułapki i skarby).
-         - wróg
-         - platformy nieruchome i ruchome
-         - chleb
-    (+1) Bardziej złożona logika i zależności między elementami 
-         gry (np. AI wrogów, zarządzanie zasobami).
-         - ? platformy się ruszają?
-         - trzy tryby gry
-    (+1) Kilka typów interakcji (np. walka i dialogi).
-         - wróg atakuje?
-         - różne naliczanie punktów w zależności od gry?
-         - zbieranie chlebka?
-    (+1) Większy świat gry (np. scrollowana plansza, poziomy, 
-         przechodzenie między ekranami pomieszczeń). 
-         - platformy generują się losowo
-         - świat nie jest zamknięty - można wyskakiwać poza i wracać xd
-*/
-// ------------------------------------------------------------------
