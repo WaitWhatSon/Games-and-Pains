@@ -50,7 +50,14 @@ var y_step = 0.5;
 let jump_stage_p1 = 0;
 let jump_stage_p2 = 0;
 
-
+// ----- sounds -----
+var squeek1;
+var squeek2;
+var music;
+var musicConfig;
+var enemy_2_sound;
+var enemy_1_sound;
+var enemy_die;
 
 // -------------- CONFIG ---------------
 var config = {
@@ -108,6 +115,15 @@ function preload() {
     this.load.image('bread', 'svg/bread.svg');
     this.load.image('block', 'svg/block.svg');
     this.load.image('platform', 'svg/platform.svg');
+
+    // SOUNDS: https://freesound.org
+    this.load.audio('squeek1', 'mp3/squeek1.mp3');
+    this.load.audio('squeek2', 'mp3/squeek2.mp3');
+    //this.load.audio('music', 'mp3/tambourine.mp3');
+    this.load.audio('music', 'mp3/best_music_ever.mp3');
+    this.load.audio('enemy_1_sound', 'mp3/passive_aggressive.mp3');
+    this.load.audio('enemy_2_sound', 'mp3/airplane.mp3');
+    this.load.audio('enemy_die', 'mp3/enemy_die.mp3');
 }
 
 // ======================== CREATE ==========================
@@ -265,45 +281,53 @@ function create() {
         child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.4));
     });
     // TEXT init
-
     if (mode == "single") {
         playerScoreText = this.add.text(16, 48, 'PLAYER score: ' + playerScore, {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
         heightText = this.add.text(16, 16, 'Platforms: 0', {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
     } else if (mode == "cooperate") {
         playerScoreText = this.add.text(16, 48, 'PLAYERS score: ' + playerScore, {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
         heightText = this.add.text(16, 16, 'Player 1 platforms: 0', {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
         heightText2 = this.add.text(16, 30, 'Player 2 platforms: 0', {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
     } else {
         playerScoreText = this.add.text(16, 48, 'PLAYER 1 score: ' + playerScore, {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
         player2ScoreText = this.add.text(16, 60, 'PLAYER 2 score: ' + player2Score, {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
         heightText = this.add.text(16, 16, 'Player 1 platforms: 0', {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
         heightText2 = this.add.text(16, 30, 'Player 2 platforms: 0', {
             fontSize: '16px',
-            fill: '#000'
+            fill: '#000',
+            fontStyle: "bold"
         });
     }
     /*winningText = this.add.text(canvas_W / 2 - 150, canvas_H / 2 - 80, '', {
@@ -361,6 +385,19 @@ function create() {
     // Starts animations, removes glowing button
     gameEnded = false;
     document.getElementById("new_game").classList.remove("glowing-button")
+
+    // ------------ SOUNDS ---------------
+    squeek1 = this.sound.add('squeek1');
+    squeek2 = this.sound.add('squeek2');
+    music = this.sound.add('music');
+    musicConfig = {
+        mute: false,
+        loop: true
+    };
+    music.play(musicConfig);
+    enemy_1_sound = this.sound.add('enemy_1_sound');
+    enemy_2_sound = this.sound.add('enemy_2_sound');
+    enemy_die = this.sound.add('enemy_die');
 }
 
 // ======================= UPDATE ========================
@@ -402,44 +439,51 @@ function update() {
     // Jumping w/ double jump
     if (cursors.up.isDown && player.body.touching.down && jump_stage_p1 == 0) {
         player.setVelocityY(-700);
-        jump_stage_p1 = 1
+        jump_stage_p1 = 1;
+        squeek1.play();
     } else if (!cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 1) {
         jump_stage_p1 = 2;
     } else if (cursors.up.isDown && !player.body.touching.down && jump_stage_p1 == 2) {
         player.setVelocityY(-700);
-        jump_stage_p1 = 3
+        jump_stage_p1 = 3;
+        squeek1.play();
     } else if (player.body.touching.down && jump_stage_p1 != 0) {
         jump_stage_p1 = 0;
     }
 
 
     // PLAYER2
-    if (mode != "single") {
-        if (keyA.isDown) {
-            player2.setVelocityX(-250);
-            player2.anims.play('left2', true);
-        } else if (keyD.isDown) {
-            player2.setVelocityX(250);
-            player2.anims.play('right2', true);
-        } else {
-            player2.setVelocityX(0);
-            player2.anims.play('turn2');
-        }
-        if (keyW.isDown && player2.body.touching.down && jump_stage_p2 == 0) {
-            player2.setVelocityY(-700);
-            jump_stage_p2 = 1
-        } else if (!keyW.isDown && !player2.body.touching.down && jump_stage_p2 == 1) {
-            jump_stage_p2 = 2;
-        } else if (keyW.isDown && !player2.body.touching.down && jump_stage_p2 == 2) {
-            player2.setVelocityY(-700);
-            jump_stage_p2 = 3
-        } else if (player2.body.touching.down && jump_stage_p2 != 0) {
-            jump_stage_p2 = 0;
-        }
+    try {
+        if (mode != "single") {
+            if (keyA.isDown) {
+                player2.setVelocityX(-250);
+                player2.anims.play('left2', true);
+            } else if (keyD.isDown) {
+                player2.setVelocityX(250);
+                player2.anims.play('right2', true);
+            } else {
+                player2.setVelocityX(0);
+                player2.anims.play('turn2');
+            }
+            if (keyW.isDown && player2.body.touching.down && jump_stage_p2 == 0) {
+                player2.setVelocityY(-700);
+                jump_stage_p2 = 1;
+                squeek2.play();
+            } else if (!keyW.isDown && !player2.body.touching.down && jump_stage_p2 == 1) {
+                jump_stage_p2 = 2;
+            } else if (keyW.isDown && !player2.body.touching.down && jump_stage_p2 == 2) {
+                player2.setVelocityY(-700);
+                jump_stage_p2 = 3;
+                squeek2.play();
+            } else if (player2.body.touching.down && jump_stage_p2 != 0) {
+                jump_stage_p2 = 0;
+            }
 
+        }
     }
+    catch (e) { console.log('there is no player2 yet'); }
+    
     // add next platform and remove the oldest
-
     if (height_score * y_step >= 100) {
         height_score = 1;
         addNextLevelPlatform(this, platforms_number % 3 == 0);
@@ -482,6 +526,7 @@ function update() {
                 enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
                 enemy_2.flipY = true
             }
+            enemy_2_sound.play();
         }
     }
 
@@ -543,6 +588,7 @@ function collectBread(_player, bread) {
 function enemyAttack(_player, _enemy) {
     _player.y = canvas_H + 50;
     _enemy.anims.play('enemy_atack', true);
+    enemy_1_sound.play();
 }
 
 function killEnemy(_player, _enemy) {
@@ -553,9 +599,10 @@ function killEnemy(_player, _enemy) {
             playerScore += 10;
             playerScoreText.setText('PLAYER 1 score: ' + playerScore);
         } else {
-            player2Score += 1;
+            player2Score += 10; // dodałam 0 bo było 1
             player2ScoreText.setText('PLAYER 2 score: ' + player2Score);
         }
+        enemy_die.play();
     }
 }
 
@@ -568,7 +615,9 @@ function platformCollision(_player, platform) {
 
     if (mode != "single") {
         heightText.setText('Player 1 platforms: ' + player.max_platform);
-        heightText2.setText('Player 2 platforms: ' + player2.max_platform);
+        try {heightText2.setText('Player 2 platforms: ' + player2.max_platform);}
+        catch (e)
+        { console.log('there is no player 2 yet'); }
     } else {
         heightText.setText('Platforms: ' + player.max_platform);
     }
@@ -598,8 +647,9 @@ function endGame() {
         clouds.destroy()
     } catch {}
 
-
     y_step = 0.5;
+
+    music.stop();
 }
 
 function restartGame() {
@@ -608,6 +658,7 @@ function restartGame() {
     platforms_number = 0;
     playerScore = 0;
     player2Score = 0;
+    music.stop();
 }
 
 function setSingleMode() {
