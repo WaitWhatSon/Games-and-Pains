@@ -15,11 +15,6 @@ var playerScoreText;
 var player2ScoreText;
 var modeText;
 
-var platforms;
-var bread;
-var enemy;
-var enemy_2;
-
 var cursors;
 
 var WASDKeys = {};
@@ -57,12 +52,13 @@ var config = {
 game = new Phaser.Game(config);
 
 game.height = 0;
-game.platforms_amount = 0;
+game.platform_count = 0;
 game.new = false;
 game.ended = false;
 game.mode = "single";
 game.players = [];
 game.y_step = 0.5;
+
 
 
 // ======================== PRELOAD =========================
@@ -118,7 +114,7 @@ function create() {
     clouds = this.add.image(canvas_W / 2, canvas_H / 2, 'clouds');
     clouds.count = 0
     // WORLD BUILDING
-    platforms = this.physics.add.group();
+    game.platforms = this.physics.add.group();
     addFirstLevelPlatform(this)
     addSecondLevelPlatform(this)
     // next platforms create in update()
@@ -149,20 +145,20 @@ function create() {
         WASDKeys.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     }
     // ENEMY
-    enemy = this.physics.add.sprite(1000, 0, 'enemy');
-    enemy.setCollideWorldBounds(false);
-    enemy.body.setAllowGravity(false);
-    enemy.setImmovable(true);
+    game.enemy = this.physics.add.sprite(1000, 0, 'enemy');
+    game.enemy.setCollideWorldBounds(false);
+    game.enemy.body.setAllowGravity(false);
+    game.enemy.setImmovable(true);
 
-    enemy_2 = this.physics.add.sprite(1000, 0, 'enemy_2');
-    enemy_2.setCollideWorldBounds(false);
-    enemy_2.body.setAllowGravity(false);
-    enemy_2.setImmovable(true);
-    enemy_2.angle = 0;
-    enemy_2.angle_r = 0;
-    enemy_2.setSize(20, 60);
-    enemy_2.dir = 0;
-    enemy_2.speed = 7;
+    game.enemy_2 = this.physics.add.sprite(1000, 0, 'enemy_2');
+    game.enemy_2.setCollideWorldBounds(false);
+    game.enemy_2.body.setAllowGravity(false);
+    game.enemy_2.setImmovable(true);
+    game.enemy_2.angle = 0;
+    game.enemy_2.angle_r = 0;
+    game.enemy_2.setSize(20, 60);
+    game.enemy_2.dir = 0;
+    game.enemy_2.speed = 7;
 
     // ---------- ANIMATIONS ------------
     // -------- ducks animation ---------
@@ -256,10 +252,10 @@ function create() {
         repeat: 10
     });
 
-    enemy.anims.play('fly', true);
-    enemy_2.anims.play('fly_2', true);
+    game.enemy.anims.play('fly', true);
+    game.enemy_2.anims.play('fly_2', true);
     // BREAD
-    bread = this.physics.add.group({
+    game.bread = this.physics.add.group({
         key: 'bread',
         repeat: 11,
         setXY: {
@@ -268,7 +264,7 @@ function create() {
             stepX: 70
         }
     });
-    bread.children.iterate(function (child) {
+    game.bread.children.iterate(function (child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.4));
     });
     // TEXT init
@@ -343,23 +339,25 @@ function create() {
     });
 
     // PHYSICS
-    this.physics.add.overlap(game.players[0], bread, collectBread, null, this);
-    this.physics.add.collider(bread, platforms);
+    this.physics.add.overlap(game.players[0], game.bread, collectBread, null, this);
+    this.physics.add.collider(game.bread, game.platforms);
 
-    this.physics.add.collider(game.players[0], platforms, platformCollision);
-    this.physics.add.collider(game.players[0], enemy, killEnemy);
-    this.physics.add.overlap(game.players[0], enemy, enemyAttack, null, this);
-    this.physics.add.collider(game.players[0], enemy_2);
-    this.physics.add.overlap(game.players[0], enemy_2, enemyAttack, null, this);
+    this.physics.add.collider(game.players[0], game.platforms, platformCollision);
+    this.physics.add.collider(game.players[0], game.enemy, killEnemy);
+    this.physics.add.overlap(game.players[0], game.enemy, enemyAttack, null, this);
+    this.physics.add.collider(game.players[0], game.enemy_2);
+    this.physics.add.overlap(game.players[0], game.enemy_2, enemyAttack, null, this);
     if (game.mode != "single") {
-        this.physics.add.collider(game.players[1], platforms, platformCollision);
+        this.physics.add.collider(game.players[1], game.platforms, platformCollision);
         this.physics.add.collider(game.players[0], game.players[1]);
-        this.physics.add.collider(game.players[1], enemy, killEnemy);
-        this.physics.add.overlap(game.players[1], bread, collectBread, null, this);
-        this.physics.add.overlap(game.players[1], enemy, enemyAttack, null, this);
-        this.physics.add.collider(game.players[1], enemy_2);
-        this.physics.add.overlap(game.players[1], enemy_2, enemyAttack, null, this);
+        this.physics.add.collider(game.players[1], game.enemy, killEnemy);
+        this.physics.add.overlap(game.players[1], game.bread, collectBread, null, this);
+        this.physics.add.overlap(game.players[1], game.enemy, enemyAttack, null, this);
+        this.physics.add.collider(game.players[1], game.enemy_2);
+        this.physics.add.overlap(game.players[1], game.enemy_2, enemyAttack, null, this);
     }
+
+    console.log(game.players[1]);
 
     // Starts animations, removes glowing button
     game.ended = false;
@@ -389,11 +387,11 @@ function update() {
         clouds.y = clouds.y + Math.cos(clouds.count);
 
         game.height += 1
-        enemy.y += 1 * game.y_step;
-        enemy.x += 3;
+        game.enemy.y += 1 * game.y_step;
+        game.enemy.x += 3;
 
-        enemy_2.y += Math.cos(enemy_2.angle_r) * enemy_2.speed;
-        enemy_2.x += Math.sin(enemy_2.angle_r) * enemy_2.speed;
+        game.enemy_2.y += Math.cos(game.enemy_2.angle_r) * game.enemy_2.speed;
+        game.enemy_2.x += Math.sin(game.enemy_2.angle_r) * game.enemy_2.speed;
 
         updatePlatformsPosition();
     }
@@ -466,21 +464,21 @@ function update() {
     // add next platform and remove the oldest
     if (game.height * game.y_step >= 100) {
         game.height = 1;
-        addNextLevelPlatform(this, game.platforms_amount % 3 == 0);
+        addNextLevelPlatform(this, game.platform_count % 3 == 0);
         removePlatformsOverMap();
-        if (game.platforms_amount % 4 == 0) {
-            enemy.y = -50;
-            enemy.x = -200;
-            enemy.anims.play('fly', true);
+        if (game.platform_count % 4 == 0) {
+            game.enemy.y = -50;
+            game.enemy.x = -200;
+            game.enemy.anims.play('fly', true);
             breadDrop(this);
         }
 
-        if (game.platforms_amount % 5 == 0) {
+        if (game.platform_count % 5 == 0) {
             game.y_step = game.y_step + 0.1
         }
 
         // enemy_2 spawning
-        if (game.platforms_amount > 10 && (game.platforms_amount - 10) % 3 == 0) {
+        if (game.platform_count > 10 && (game.platform_count - 10) % 3 == 0) {
             spawnEnemy2();
         }
     }
@@ -502,7 +500,7 @@ function update() {
 // ============== FUNCTIONS ===============
 function breadDrop(scene) {
     // BREAD GROUP
-    bread = scene.physics.add.group({
+    game.bread = scene.physics.add.group({
         key: 'bread',
         repeat: 11,
         setXY: {
@@ -511,13 +509,13 @@ function breadDrop(scene) {
             stepX: 70
         }
     });
-    bread.children.iterate(function (child) {
+    game.bread.children.iterate(function (child) {
         child.setBounceY(Phaser.Math.FloatBetween(0.1, 0.4));
     });
-    scene.physics.add.overlap(game.players[0], bread, collectBread, null, this);
-    scene.physics.add.collider(bread, platforms);
+    scene.physics.add.overlap(game.players[0], game.bread, collectBread, null, this);
+    scene.physics.add.collider(game.bread, game.platforms);
     if (game.mode != "single") {
-        scene.physics.add.overlap(game.players[1], bread, collectBread, null, this);
+        scene.physics.add.overlap(game.players[1], game.bread, collectBread, null, this);
     }
 }
 
@@ -596,17 +594,17 @@ function endGame() {
     game.ended = true;
     document.getElementById("new_game").classList.add("glowing-button")
     // cleaning sprites off screen
-    platforms.children.iterate((child) => {
+    game.platforms.children.iterate((child) => {
         child.x = 5000;
     });
 
     updatePlatformsPosition()
-    platforms.clear()
+    game.platforms.clear()
 
 
     try {
-        enemy.destroy()
-        enemy_2.destroy()
+        game.enemy.destroy()
+        game.enemy_2.destroy()
         clouds.destroy()
     } catch {}
 
@@ -618,7 +616,7 @@ function endGame() {
 function restartGame() {
     game.new = true;
     game.height = 0;
-    game.platforms_amount = 0;
+    game.platform_count = 0;
     game.players[0].score = 0;
     try {
         game.players[1].score = 0;
@@ -714,31 +712,31 @@ function cooperateModeLoose() {
 // world building - first platform
 function addFirstLevelPlatform(scene) {
     let platform = new Platform(scene, canvas_W / 2, canvas_H / 3, 'block', false);
-    this.platforms.add(platform)
+    game.platforms.add(platform)
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = game.platforms_amount++;
+    platform.number = game.platform_count++;
 }
 // second platform
 function addSecondLevelPlatform(scene) {
     let platform = new Platform(scene, canvas_W / 2, 40, 'platform', false);
-    this.platforms.add(platform)
+    game.platforms.add(platform)
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = game.platforms_amount++;
+    platform.number = game.platform_count++;
 }
 // next platforms
 function addNextLevelPlatform(scene, moving) {
     // randomize x position of platform
     x_w = Math.floor(Math.random() * (canvas_W - 250 / 2 - 250 / 2)) + 250 / 2;
     let platform = new Platform(scene, x_w, 0, 'platform', moving);
-    this.platforms.add(platform)
+    game.platforms.add(platform)
     platform.setCollideWorldBounds(false);
     platform.body.setAllowGravity(false);
     platform.setImmovable(true);
-    platform.number = game.platforms_amount++;
+    platform.number = game.platform_count++;
 }
 
 //Spawns enemy 2
@@ -749,36 +747,36 @@ function spawnEnemy2() {
     else
         target_id = 0
 
-    if (game.players[target_id]) {
+    if (game.players[target_id].dead) {
         target_id = (target_id + 1) % 2
     }
     let target = game.players[target_id]
 
     if (Math.random() < 0.5) {
-        enemy_2.y = 0
-        enemy_2.x = 0
-        enemy_2.anims.play('fly_2', true);
+        game.enemy_2.y = 0
+        game.enemy_2.x = 0
+        game.enemy_2.anims.play('fly_2', true);
 
-        enemy_2.dir = (target.x) / (target.y)
-        enemy_2.angle_r = Math.atan(enemy_2.dir)
-        enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
-        enemy_2.flipY = false
+        game.enemy_2.dir = (target.x) / (target.y)
+        game.enemy_2.angle_r = Math.atan(game.enemy_2.dir)
+        game.enemy_2.angle = 90 - (game.enemy_2.angle_r * 180) / Math.PI
+        game.enemy_2.flipY = false
     } else {
-        enemy_2.y = 0
-        enemy_2.x = canvas_W
-        enemy_2.anims.play('fly_2', true);
+        game.enemy_2.y = 0
+        game.enemy_2.x = canvas_W
+        game.enemy_2.anims.play('fly_2', true);
 
-        enemy_2.dir = (target.x - canvas_W) / (target.y)
-        enemy_2.angle_r = Math.atan(enemy_2.dir)
-        enemy_2.angle = 90 - (enemy_2.angle_r * 180) / Math.PI
-        enemy_2.flipY = true
+        game.enemy_2.dir = (target.x - canvas_W) / (target.y)
+        game.enemy_2.angle_r = Math.atan(game.enemy_2.dir)
+        game.enemy_2.angle = 90 - (game.enemy_2.angle_r * 180) / Math.PI
+        game.enemy_2.flipY = true
     }
     enemy_2_sound.play();
 }
 
 // update all platforms
 function updatePlatformsPosition() {
-    platforms.children.each((child) => {
+    game.platforms.children.each((child) => {
         child.y += game.y_step;
         if (child.moving) {
             if (child.left) {
@@ -801,10 +799,10 @@ function updatePlatformsPosition() {
 }
 // remove platforms over map
 function removePlatformsOverMap() {
-    platforms.children.iterate((child) => {
+    game.platforms.children.iterate((child) => {
         try {
             if (child.y > canvas_H + 10) {
-                platforms.remove(child, true);
+                game.platforms.remove(child, true);
             }
         } // expected UncaughtType Error
         catch (error) {
