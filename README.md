@@ -1,5 +1,10 @@
 # random-duck
 drugi miniprojekt na JS
+
+ ________________
+
+![](./svg/background_cooperative.svg)
+
 ___________________
 Celem projektu jest stworzenie prostej gry działającej w elemencie canvas (5 punktów).
 
@@ -9,7 +14,7 @@ Podstawa na zaliczenie (1): sterowanie myszą lub/i klawiaturą, poruszające si
  - [x] (+1) Bardziej złożona logika i zależności między elementami gry (np. AI wrogów, zarządzanie zasobami).
  - [x] (+1) Kilka typów interakcji (np. walka i dialogi).
  - [x] (+1) Większy świat gry (np. scrollowana plansza, poziomy, przechodzenie między ekranami pomieszczeń).
- ________________
+ _________________
 
 ## Credits
 ### Development:
