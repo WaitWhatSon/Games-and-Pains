@@ -1,0 +1,29 @@
+body {
+    margin: 10px;
+}
+
+.tool_bar {
+    background-color: gray;
+    padding: 5px;
+}
+
+.tool_bar_section {
+    display: flex;
+}
+
+.tool_bar button {
+    background-color: gray;
+    border-radius: 5px;
+    padding: 5px;
+    min-height: 24px;
+    min-width: 24px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto;
+  }
+
+
+
+

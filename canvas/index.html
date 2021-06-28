@@ -1,0 +1,73 @@
+<html>
+
+    <head>
+        <title>canvas</title>
+        <script src="canvas_script.js"></script>
+        <link rel="stylesheet" href="canvas_style.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.9.55/css/materialdesignicons.min.css" rel="stylesheet"/>
+    </head>
+
+    <body>
+
+        <div style="display: flex">
+
+            <canvas id="myCanvas" style="border: 1px solid black;" height="512" width="512"></canvas>
+
+            <div id="tool_bar" class="tool_bar">
+
+                <span class="mdi mdi-duck mdi-24px"></span>
+
+                <hr />
+
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="brush_size_slider"  min="0" max="20"list="tickmarks"/>
+                        
+                        <datalist id="tickmarks">
+                            <option value="0"/>     <option value="1"/>     <option value="2"/>
+                            <option value="3"/>     <option value="4"/>     <option value="5"/>
+                            <option value="6"/>     <option value="7"/>     <option value="8"/>
+                            <option value="9"/>     <option value="10"/>    <option value="11"/>
+                            <option value="12"/>    <option value="13"/>    <option value="14"/>
+                            <option value="15"/>    <option value="16"/>    <option value="17"/>
+                            <option value="18"/>    <option value="19"/>    <option value="20"/>
+                        </datalist>
+
+                <hr/>
+
+                <div class="tool_bar_section">
+                    <button id="clear_canvas"><i class="fa fa-trash fa-2x"  aria-hidden="true"></i></button>
+                    <button id="apple_image" ><i class="fa fa-apple fa-2x"  aria-hidden="true"></i></button>
+                    <button id="lenna_image"> <i class="fa fa-female fa-2x" aria-hidden="true"></i></button>
+                </div>
+
+                <hr/>
+
+                <div id="color_bar" class="tool_bar_section">
+                    <button id="color_button_black"     style="background-color: #000000"/>
+                    <button id="color_button_white"     style="background-color: #ffffff"/>
+                    <button id="color_button_red"       style="background-color: #ff0000"/>
+                    <button id="color_button_green"     style="background-color: #00ff00"/>
+                    <button id="color_button_blue"      style="background-color: #0000ff"/>
+                    <button id="color_button_yellow"    style="background-color: #ffff00"/>
+                    <button id="color_button_custom"    style="background-color: #888888"/>
+                </div>
+
+                <hr />
+
+                <div class="grid-container">
+                    <div><span class="mdi mdi-alpha-r-circle mdi-24px" style="color: #ff0000"></span> <input type="range" id="red_color_slider"   style="background-color: red"   min="0" max="255"/></div>
+                    <div><span class="mdi mdi-alpha-g-circle mdi-24px" style="color: #00ff00"></span> <input type="range" id="green_color_slider" style="background-color: green" min="0" max="255"/></div>
+                    <div><span class="mdi mdi-alpha-b-circle mdi-24px" style="color: #0000ff"></span> <input type="range" id="blue_color_slider"  style="background-color: blue"  min="0" max="255"/></div>
+                </div>
+
+                <hr />
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
