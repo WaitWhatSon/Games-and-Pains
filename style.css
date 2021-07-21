@@ -9,16 +9,25 @@ body {
     text-shadow: 4px 4px 4px #aaa;
 }
 
-h1 {
-    font-family: 'Pricedown', pricedown;
-}
-
 ul {
     list-style-type: none;
 }
 
 li {
     margin: 10px;
+}
+
+h1 {
+    margin: auto; 
+    text-align:center;
+}
+
+h3 {
+    font-family: 'Comic Sans MS', comicsans;
+}
+
+.gta {
+    font-family: 'Pricedown', pricedown;
 }
 
 .link_image_button {
@@ -38,4 +47,14 @@ li {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.grid-container-row {
+    /* add */
+    color: black;
 }
