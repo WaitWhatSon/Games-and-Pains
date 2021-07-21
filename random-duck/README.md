@@ -21,4 +21,6 @@ Podstawa na zaliczenie (1): sterowanie myszą lub/i klawiaturą, poruszające si
 * [JanekKar](https://github.com/JanekKar)
 * [WaitWhatSon](https://github.com/WaitWhatSon)
 ### Artwork:
--[WaitWhatSon](https://github.com/WaitWhatSon)
+* [WaitWhatSon](https://github.com/WaitWhatSon)
+### Sounds:
+* [freesound](https://freesound.org/) library
