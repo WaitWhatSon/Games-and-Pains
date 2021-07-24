@@ -22,9 +22,9 @@
                 <fieldset>
                     <legend>brush</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <input type="range" id="brush_size_slider"  min="0" max="20"list="tickmarks"/>
+                    <input type="range" id="brush_size_slider"  min="1" max="20"list="tickmarks"/>
                     <datalist id="tickmarks">
-                        <option value="0"/>     <option value="1"/>     <option value="2"/>
+                        <option value="1"/>     <option value="2"/>
                         <option value="3"/>     <option value="4"/>     <option value="5"/>
                         <option value="6"/>     <option value="7"/>     <option value="8"/>
                         <option value="9"/>     <option value="10"/>    <option value="11"/>
@@ -43,28 +43,15 @@
 
                 <fieldset id="color_bar" class="tool_bar_section">
                     <legend>colors</legend>
-                    <button id="color_button_black"     style="background-color: #000000"   class="color_button_format"/>
-                    <button id="color_button_white"     style="background-color: #ffffff"   class="color_button_format"/>
-                    <button id="color_button_red"       style="background-color: #ff0000"   class="color_button_format"/>
-                    <button id="color_button_green"     style="background-color: #00ff00"   class="color_button_format"/>
-                    <button id="color_button_blue"      style="background-color: #0000ff"   class="color_button_format"/>
-                    <button id="color_button_yellow"    style="background-color: #ffff00"   class="color_button_format"/>
-                    <button id="color_button_custom"    style="background-color: #888888"   class="color_button_format"/>
-
-                    <input type="color"   class="color_button_format"/>
+                    <input type="button"    id="color_button_black"     class="color_format"    style="background-color: #000000"/>
+                    <input type="button"    id="color_button_white"     class="color_format"    style="background-color: #ffffff"/>
+                    <input type="button"    id="color_button_red"       class="color_format"    style="background-color: #ff0000"/>
+                    <input type="button"    id="color_button_green"     class="color_format"    style="background-color: #00ff00"/>
+                    <input type="button"    id="color_button_blue"      class="color_format"    style="background-color: #0000ff"/>
+                    <input type="button"    id="color_button_yellow"    class="color_format"    style="background-color: #ffff00"/>
+                    <input type="color"     id="custom_color_input"     class="color_format"    />
                 </fieldset>
 
-
-
-                <hr />
-
-                <div class="grid-container">
-                    <div><span class="mdi mdi-alpha-r-circle mdi-24px" style="color: #ff0000"></span> <input type="range" id="red_color_slider"   style="background-color: red"   min="0" max="255"/></div>
-                    <div><span class="mdi mdi-alpha-g-circle mdi-24px" style="color: #00ff00"></span> <input type="range" id="green_color_slider" style="background-color: green" min="0" max="255"/></div>
-                    <div><span class="mdi mdi-alpha-b-circle mdi-24px" style="color: #0000ff"></span> <input type="range" id="blue_color_slider"  style="background-color: blue"  min="0" max="255"/></div>
-                </div>
-
-                <hr />
 
             </div>
 

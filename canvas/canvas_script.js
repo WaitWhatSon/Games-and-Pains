@@ -18,12 +18,9 @@ window.addEventListener("load", () => {
     const color_button_blue     = document.getElementById("color_button_blue"  );
     const color_button_yellow   = document.getElementById("color_button_yellow");
     const color_button_custom   = document.getElementById("color_button_custom");
+    const color_input_custom    = document.getElementById("custom_color_input" );
 
     const brush_size_slider = document.getElementById("brush_size_slider");
-
-    const red_color_slider      = document.getElementById("red_color_slider");
-    const green_color_slider    = document.getElementById("green_color_slider");
-    const blue_color_slider     = document.getElementById("blue_color_slider");
 
     // --------------------------------------------------------------------
     // variables
@@ -31,12 +28,7 @@ window.addEventListener("load", () => {
     let painting;
     let brush_size = 10;
     brush_size_slider.value = brush_size;
-    let red_level   = 128;
-    let green_level = 128;
-    let blue_level  = 128;
-    red_color_slider.value      = red_level;
-    green_color_slider.value    = green_level;
-    blue_color_slider.value     = blue_level;
+    let current_color = "#000000";
 
     function startPosition(e)
     {
@@ -126,12 +118,8 @@ window.addEventListener("load", () => {
     color_button_green .addEventListener("click", function(){changeColor("#00ff00")});
     color_button_blue  .addEventListener("click", function(){changeColor("#0000ff")});
     color_button_yellow.addEventListener("click", function(){changeColor("#ffff00")});
-    color_button_custom.addEventListener("click", function(){changeColor(rgbToHex(red_level, green_level, blue_level))});
-
+    color_input_custom .addEventListener("change", function(){changeColor(color_input_custom.value)});
+    
     brush_size_slider.addEventListener("change", changeBrushSize);
-
-    red_color_slider    .addEventListener("change", function(){ red_level   = red_color_slider.value;   changeCustomColor()});
-    green_color_slider  .addEventListener("change", function(){ green_level = green_color_slider.value; changeCustomColor()});
-    blue_color_slider   .addEventListener("change", function(){ blue_level  = blue_color_slider.value;  changeCustomColor()});
-
+    
 })
