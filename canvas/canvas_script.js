@@ -28,7 +28,6 @@ window.addEventListener("load", () => {
     let painting;
     let brush_size = 10;
     brush_size_slider.value = brush_size;
-    let current_color = "#000000";
 
     function startPosition(e)
     {
@@ -121,5 +120,21 @@ window.addEventListener("load", () => {
     color_input_custom .addEventListener("change", function(){changeColor(color_input_custom.value)});
     
     brush_size_slider.addEventListener("change", changeBrushSize);
+
+    // ------------------------------------------------------------------------------------------
+    // js filters section
+
+    const blur_slider       = document.getElementById("blur_slider");
+    const brightness_slider = document.getElementById("brightness_slider");
+    const contrast_slider   = document.getElementById("contrast_slider");
+    const grayscale_slider  = document.getElementById("grayscale_slider");
+    const invert_slider     = document.getElementById("invert_slider");
+    const opacity_slider    = document.getElementById("opacity_slider");
+    const saturate_slider   = document.getElementById("saturate_slider");
+    const sepia_slider      = document.getElementById("sepia_slider");
+
+
+
+
     
 })

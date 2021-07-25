@@ -15,9 +15,10 @@
 
             <canvas id="myCanvas" style="border: 1px solid black;" height="512" width="512"></canvas>
 
+            <!-- BASICS -->
             <div id="tool_bar" class="tool_bar">
 
-                <span class="mdi mdi-duck mdi-24px"></span>
+                <span class="mdi mdi-duck mdi-24px"> basics</span>
 
                 <fieldset>
                     <legend>brush</legend>
@@ -52,6 +53,69 @@
                     <input type="color"     id="custom_color_input"     class="color_format"    />
                 </fieldset>
 
+
+            </div>
+
+            <!-- JS FILTERS -->
+            <div id="tool_bar" class="tool_bar">
+
+                <span class="mdi mdi-language-javascript mdi-24px"> canvas filters</span>
+
+                <fieldset>
+                    <legend>Gaussian blur</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="blur_slider"  min="0" max="100" value="0" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>0%</output>
+                </fieldset>
+
+                <fieldset>
+                    <legend>brightness</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="brightness_slider"  min="0" max="200" value="100" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>100%</output>
+                </fieldset>
+
+                <fieldset>
+                    <legend>contrast</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="contrast_slider"  min="0" max="200" value="100" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>100%</output>
+                </fieldset>
+
+                <fieldset>
+                    <legend>grayscale</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="grayscale_slider"  min="0" max="100" value="0" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>0%</output>
+                </fieldset>
+
+                <fieldset>
+                    <legend>invert</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="invert_slider"  min="0" max="100" value="0" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>0%</output>
+                </fieldset>
+
+                <fieldset>
+                    <legend>opacity</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="opacity_slider"  min="0" max="100" value="100" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>100%</output>
+                </fieldset>
+
+                <fieldset>
+                    <legend>saturate</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="saturate_slider"  min="0" max="100" value="100" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>100%</output>
+                </fieldset>
+
+                <fieldset>
+                    <legend>sepia</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <input type="range" id="sepia_slider"  min="0" max="100" value="100" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>100%</output>
+                </fieldset>
 
             </div>
 
