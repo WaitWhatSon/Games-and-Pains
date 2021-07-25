@@ -64,8 +64,8 @@ h3 {
     /* add */
     color: black;
     display: flex;
-  justify-content: center;
-  align-items: center;
+    justify-content: center;
+    align-items: center;
 }
 
 legend {
