@@ -2,7 +2,8 @@
 
     <head>
         <title>canvas</title>
-        <script src="canvas_script.js"></script>
+        <script src="canvas_basics.js"></script>
+        <script src="canvas_filters.js"></script>
         <link rel="stylesheet" href="canvas_style.css"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
@@ -59,7 +60,7 @@
             <!-- JS FILTERS -->
             <div id="tool_bar" class="tool_bar">
 
-                <span class="mdi mdi-language-javascript mdi-24px"> canvas filters</span>
+                <span class="mdi mdi-language-javascript mdi-24px"> filters</span>
 
                 <fieldset>
                     <legend>Gaussian blur</legend>
@@ -94,13 +95,6 @@
                     <span class="mdi mdi-brush mdi-24px"></span>
                     <input type="range" id="invert_slider"  min="0" max="100" value="0" oninput="this.nextElementSibling.value = this.value + '%'">
                     <output>0%</output>
-                </fieldset>
-
-                <fieldset>
-                    <legend>opacity</legend>
-                    <span class="mdi mdi-brush mdi-24px"></span>
-                    <input type="range" id="opacity_slider"  min="0" max="100" value="100" oninput="this.nextElementSibling.value = this.value + '%'">
-                    <output>100%</output>
                 </fieldset>
 
                 <fieldset>

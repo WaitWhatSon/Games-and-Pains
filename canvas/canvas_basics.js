@@ -17,7 +17,6 @@ window.addEventListener("load", () => {
     const color_button_green    = document.getElementById("color_button_green" );
     const color_button_blue     = document.getElementById("color_button_blue"  );
     const color_button_yellow   = document.getElementById("color_button_yellow");
-    const color_button_custom   = document.getElementById("color_button_custom");
     const color_input_custom    = document.getElementById("custom_color_input" );
 
     const brush_size_slider = document.getElementById("brush_size_slider");
@@ -28,6 +27,9 @@ window.addEventListener("load", () => {
     let painting;
     let brush_size = 10;
     brush_size_slider.value = brush_size;
+
+    // -------------------------------------------------------------------
+    // functions
 
     function startPosition(e)
     {
@@ -82,24 +84,6 @@ window.addEventListener("load", () => {
         brush_size = brush_size_slider.value;
     }
 
-    function changeCustomColor() {
-        let hex_color = rgbToHex(red_level, green_level, blue_level) 
-        console.log(hex_color)
-        color_button_custom.style.background = hex_color
-    }
-
-    // https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-    function componentToHex(c) {
-        var hex = c.toString(16);
-        return hex.length == 1 ? "0" + hex : hex;
-    }
-
-    function rgbToHex(r, g, b) {
-        return "#" + componentToHex(+r) + componentToHex(+g) + componentToHex(+b);
-    }
-    // ______________________________________________________________________
-
-
     // -----------------------------------------------------------------------------------------
     // controls
 
@@ -121,20 +105,4 @@ window.addEventListener("load", () => {
     
     brush_size_slider.addEventListener("change", changeBrushSize);
 
-    // ------------------------------------------------------------------------------------------
-    // js filters section
-
-    const blur_slider       = document.getElementById("blur_slider");
-    const brightness_slider = document.getElementById("brightness_slider");
-    const contrast_slider   = document.getElementById("contrast_slider");
-    const grayscale_slider  = document.getElementById("grayscale_slider");
-    const invert_slider     = document.getElementById("invert_slider");
-    const opacity_slider    = document.getElementById("opacity_slider");
-    const saturate_slider   = document.getElementById("saturate_slider");
-    const sepia_slider      = document.getElementById("sepia_slider");
-
-
-
-
-    
 })
