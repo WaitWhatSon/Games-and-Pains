@@ -40,96 +40,154 @@ window.addEventListener("load", () => {
 
     }
 
+	// ----------------------------------
+	// utils
 
-
-
-
-
-
-
-
-
-
-
-
-/*Function: Two-dimensional Gaussian kernel generation
- //kernel: Store the generated Gaussian kernel
- //size: the size of the core
- //sigma: standard deviation of normal distribution
-*/
-
-function get_gau_kernel(size, sigma)
-{
-	if (size <= 0 || sigma == 0)
-		return;
- 
-	var x, y;
-	var m = size / 2;
-	var sum = 0;
-    var kernel = [[],[],[]];
- 
-	//get kernel
-	for (y = 0; y < size; y++)
+	function sum_in_channels(values, channels_number)
 	{
-		for (x = 0; x < size; x++)
+		let sum = new Array(channels_number).fill(0);
+		for(let i = 0; i < values.length; i += channels_number)
 		{
-			kernel[y][x] = (1 / (2 * PI * sigma * sigma)) * exp(-((x - m) * (x - m) + (y - m) * (y - m)) / (2 * sigma * sigma));
-			sum += kernel[y][x];
-		}
-	}
- 
-	//normal
-	for (y = 0; y < size; y++)
-	{
-		for (x = 0; x < size; x++)
-		{
-			kernel[y][x] /= sum;
-		}
-	}
-
-    return kernel;
-}
- 
- 
-// https://www.programmersought.com/article/91255056564/
-
- /*Function: Gaussian Blur
- //src: input original image
- //dst: Blurred image
- //size: the size of the core
- //sigma: standard deviation of normal distribution
-*/
-
-
-function gaussian(src, dst, size, sigma)
-{
-	kernel = get_gau_kernel(3, sigma);
- 
-	 //gaussian convolution, the boundary is not processed at this time
-	for (y = m; y <  h - m ; y++)
-	{
-		for (x = m; x < w - m; x++)
-		{
- 
-			let value = 0;
-			let k = 0;
-			for (j = -m; j < m;j++)
+			for(let j = 0; j < channels_number; j++)
 			{
-				for (i = -m; i < m; i++)
-				{
-					temp = src_ptr[(y + j) * w + (x + i)];
-					temp1 = kernel_vec[k++];
-					value += temp * temp1;
-				}
+				sum[j] += values[i+j];
 			}
- 
-			dst_ptr[x] = (uchar)(value);
 		}
- 
-		dst_ptr += w;
+		return sum;
 	}
 
-}
+	function mean_value_in_channels(values, channels_number)
+	{
+		let sum = sum_in_channels(values, channels_number);
+		let mean = new Array(channels_number).fill(0);
+		for(let i = 0; i < channels_number; i++)
+		{
+			mean[i] = sum[i]/(values.length/channels_number);
+		}
+		return mean;
+	}
+
+	function variance_in_channels(values, channels_number)
+	{
+		let mean = mean_value_in_channels(values, channels_number);
+		let value_minus_mean_squared = new Array(values.length).fill(0);
+		for(let i = 0; i < values.length; i += channels_number)
+		{
+			for(let j = 0; j < channels_number; j++)
+			{
+				value_minus_mean_squared[i+j] += (values[i+j]-mean[j])**2;
+			}
+		}
+		var sum = sum_in_channels(value_minus_mean_squared, channels_number);
+		var variance = new Array(channels_number).fill(0);
+		for(let i = 0; i < channels_number; i++)
+		{
+			variance[i] = sum[i]/(values.length/channels_number);
+		}
+		return variance;
+	}
+
+	function standard_deviation_in_channels(values, channels_number)
+	{
+		var variance = variance_in_channels(values, channels_number);
+		var standard_deviation = new Array(channels_number).fill(0);
+		for(let i = 0; i < channels_number; i++)
+		{
+			standard_deviation[i] = Math.sqrt(variance[i])
+		}
+		return standard_deviation;
+	}
+
+
+	console.log(standard_deviation_in_channels([1, 2, 3, 4, 5], 1))
+	console.log(standard_deviation_in_channels([23, 4, 6, 457, 65, 7, 45, 8], 1))
+
+
+
+
+
+
+
+
+
+	/*Function: Two-dimensional Gaussian kernel generation
+	//kernel: Store the generated Gaussian kernel
+	//size: the size of the core
+	//sigma: standard deviation of normal distribution
+	*/
+
+	function get_gau_kernel(size, sigma)
+	{
+		if (size <= 0 || sigma == 0)
+			return;
+	
+		var x, y;
+		var m = size / 2;
+		var sum = 0;
+		var kernel = [[],[],[]];
+	
+		//get kernel
+		for (y = 0; y < size; y++)
+		{
+			for (x = 0; x < size; x++)
+			{
+				kernel[y][x] = (1 / (2 * PI * sigma * sigma)) * exp(-((x - m) * (x - m) + (y - m) * (y - m)) / (2 * sigma * sigma));
+				sum += kernel[y][x];
+			}
+		}
+	
+		//normal
+		for (y = 0; y < size; y++)
+		{
+			for (x = 0; x < size; x++)
+			{
+				kernel[y][x] /= sum;
+			}
+		}
+
+		return kernel;
+	}
+	
+	
+	// https://www.programmersought.com/article/91255056564/
+
+	/*Function: Gaussian Blur
+	//src: input original image
+	//dst: Blurred image
+	//size: the size of the core
+	//sigma: standard deviation of normal distribution
+	*/
+
+
+	function gaussian(src, dst, size, sigma)
+	{
+		kernel = get_gau_kernel(3, sigma);
+	
+		//gaussian convolution, the boundary is not processed at this time
+		for (y = m; y <  h - m ; y++)
+		{
+			for (x = m; x < w - m; x++)
+			{
+	
+				let value = 0;
+				let k = 0;
+				for (j = -m; j < m;j++)
+				{
+					for (i = -m; i < m; i++)
+					{
+						temp = src_ptr[(y + j) * w + (x + i)];
+						temp1 = kernel_vec[k++];
+						value += temp * temp1;
+					}
+				}
+	
+				dst_ptr[x] = (uchar)(value);
+			}
+	
+			dst_ptr += w;
+		}
+
+	}
 
 
 
