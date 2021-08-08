@@ -14,34 +14,17 @@ window.addEventListener("load", () => {
     // --------------------------------------------------------------------
     // functions
     
-    function apply_filter(kernel)
-    {
-        console.log(kernel)
-        
-        var imgData = ctx.getImageData(0, 0, 512, 512);
-        var tempData = ctx.getImageData(0, 0, 512, 512);
-        
-        // invert colors
-        var i;
-        for (i = 0; i < imgData.data.length; i += 4) {
-            imgData.data[i] = 255 - imgData.data[i];
-            imgData.data[i+1] = 225 - imgData.data[i+1];
-            imgData.data[i+2] = 255 - imgData.data[i+2];
-            imgData.data[i+3] = 255;
-        }
-        ctx.putImageData(imgData, 0, 0);
-    
-    }
-
     function apply_gaussian_blur(value)
     {
-		let kernel = get_gaussian_kernel_in_channels([1, 1, 1, 1], 4);
-		//convolve_canvas_with_kernel(kernel);
-		//apply_given_treshhold_in_channels([100,100,100,100]);
+		let sigma = [value/100, value/100, value/100, value/100];
+		let kernel = get_gaussian_kernel_in_channels(sigma, 4);
 		convolve_canvas_with_kernel(kernel);
-
-
     }
+
+	function apply_brightness_effect(value)
+	{
+		multiply_canvas_by_value(value/100);
+	}
 
 	// ----------------------------------
 	// utils
@@ -248,7 +231,52 @@ window.addEventListener("load", () => {
 		}
         ctx.putImageData(imgData, 0, 0);
 	}
+
+	function multiply_canvas_by_value(value)
+	{   
+        var imgData = ctx.getImageData(0, 0, 512, 512);
+		for(let x = 0; x < imgData.data.length/(512*4); x++)
+		{	
+			for(let y = 0; y < imgData.data.length/512; y+=4)
+			{
+				imgData.data[(x*512*4)+(y+0)] = imgData.data[(x*512*4)+(y+0)] * value;
+				imgData.data[(x*512*4)+(y+1)] = imgData.data[(x*512*4)+(y+1)] * value;
+				imgData.data[(x*512*4)+(y+2)] = imgData.data[(x*512*4)+(y+2)] * value;
+			}
+		}
+        ctx.putImageData(imgData, 0, 0);
+	}
+
+	function add_given_value(value)
+	{   
+        var imgData = ctx.getImageData(0, 0, 512, 512);
+		for(let x = 0; x < imgData.data.length/(512*4); x++)
+		{	
+			for(let y = 0; y < imgData.data.length/512; y+=4)
+			{
+				imgData.data[(x*512*4)+(y+0)] = Math.max(imgData.data[(x*512*4)+(y+0)] + value, 255);
+				imgData.data[(x*512*4)+(y+1)] = Math.max(imgData.data[(x*512*4)+(y+1)] + value, 255);
+				imgData.data[(x*512*4)+(y+2)] = Math.max(imgData.data[(x*512*4)+(y+2)] + value, 255);
+			}
+		}
+        ctx.putImageData(imgData, 0, 0);
+	}
 	
+	function apply_filter(kernel)
+    {
+        console.log(kernel)
+        
+        var imgData = ctx.getImageData(0, 0, 512, 512);
+        // invert colors
+        var i;
+        for (i = 0; i < imgData.data.length; i += 4) {
+            imgData.data[i] = 255 - imgData.data[i];
+            imgData.data[i+1] = 225 - imgData.data[i+1];
+            imgData.data[i+2] = 255 - imgData.data[i+2];
+            imgData.data[i+3] = 255;
+        }
+        ctx.putImageData(imgData, 0, 0);
+    }
 
     // -----------------------------------------------------------------------------------------
     // controls
@@ -263,7 +291,7 @@ window.addEventListener("load", () => {
 
 
     blur_slider         .addEventListener("change", function(){apply_gaussian_blur(blur_slider.value)});
-    brightness_slider   .addEventListener("change", function(){apply_filter(brightness_slider.value)});
+    brightness_slider   .addEventListener("change", function(){apply_brightness_effect(brightness_slider.value)});
     contrast_slider     .addEventListener("change", function(){apply_filter(contrast_slider.value)});
     grayscale_slider    .addEventListener("change", function(){apply_filter(grayscale_slider.value)});
     invert_slider       .addEventListener("change", function(){apply_filter(invert_slider.value)});
