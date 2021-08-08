@@ -78,8 +78,8 @@ window.addEventListener("load", () => {
 				value_minus_mean_squared[i+j] += (values[i+j]-mean[j])**2;
 			}
 		}
-		var sum = sum_in_channels(value_minus_mean_squared, channels_number);
-		var variance = new Array(channels_number).fill(0);
+		let sum = sum_in_channels(value_minus_mean_squared, channels_number);
+		let variance = new Array(channels_number).fill(0);
 		for(let i = 0; i < channels_number; i++)
 		{
 			variance[i] = sum[i]/(values.length/channels_number);
@@ -89,8 +89,8 @@ window.addEventListener("load", () => {
 
 	function standard_deviation_in_channels(values, channels_number)
 	{
-		var variance = variance_in_channels(values, channels_number);
-		var standard_deviation = new Array(channels_number).fill(0);
+		let variance = variance_in_channels(values, channels_number);
+		let standard_deviation = new Array(channels_number).fill(0);
 		for(let i = 0; i < channels_number; i++)
 		{
 			standard_deviation[i] = Math.sqrt(variance[i])
@@ -99,105 +99,51 @@ window.addEventListener("load", () => {
 	}
 
 
-	console.log(standard_deviation_in_channels([1, 2, 3, 4, 5], 1))
-	console.log(standard_deviation_in_channels([23, 4, 6, 457, 65, 7, 45, 8], 1))
-
-
-
-
-
-
-
-
-
-	/*Function: Two-dimensional Gaussian kernel generation
-	//kernel: Store the generated Gaussian kernel
-	//size: the size of the core
-	//sigma: standard deviation of normal distribution
-	*/
-
-	function get_gau_kernel(size, sigma)
+	function get_gaussian_kernel(sigma)
 	{
-		if (size <= 0 || sigma == 0)
-			return;
-	
-		var x, y;
-		var m = size / 2;
-		var sum = 0;
-		var kernel = [[],[],[]];
-	
-		//get kernel
-		for (y = 0; y < size; y++)
+		let kernel = new Array(3).fill(0).map(() => new Array(3).fill(0));
+		let two_sigma_squared = 2.0 * sigma * sigma;
+		let sum = 0;
+		for(let x = -1; x <= 1; x ++)
 		{
-			for (x = 0; x < size; x++)
+			for(let y = -1; y <= 1; y++)
 			{
-				kernel[y][x] = (1 / (2 * PI * sigma * sigma)) * exp(-((x - m) * (x - m) + (y - m) * (y - m)) / (2 * sigma * sigma));
-				sum += kernel[y][x];
+				let x_squared_plus_y_squared = x * x + y * y;
+				let e_power = Math.exp(- x_squared_plus_y_squared / two_sigma_squared);
+				kernel[x + 1][y + 1] = e_power / (two_sigma_squared * Math.PI);
+				sum += kernel[x + 1][y + 1];
 			}
 		}
-	
-		//normal
-		for (y = 0; y < size; y++)
+		for (let i = 0; i < 3; ++i)
 		{
-			for (x = 0; x < size; x++)
+			for (let j = 0; j < 3; ++j)
 			{
-				kernel[y][x] /= sum;
+				kernel[i][j] /= sum;
 			}
 		}
-
 		return kernel;
 	}
-	
-	
-	// https://www.programmersought.com/article/91255056564/
 
-	/*Function: Gaussian Blur
-	//src: input original image
-	//dst: Blurred image
-	//size: the size of the core
-	//sigma: standard deviation of normal distribution
-	*/
-
-
-	function gaussian(src, dst, size, sigma)
+	function get_gaussian_kernel_in_channels(sigma, channels_number)
 	{
-		kernel = get_gau_kernel(3, sigma);
-	
-		//gaussian convolution, the boundary is not processed at this time
-		for (y = m; y <  h - m ; y++)
+		let kernel_in_channels = new Array(channels_number).fill(0);
+		for(let i = 0; i < channels_number; i++)
 		{
-			for (x = m; x < w - m; x++)
-			{
-	
-				let value = 0;
-				let k = 0;
-				for (j = -m; j < m;j++)
-				{
-					for (i = -m; i < m; i++)
-					{
-						temp = src_ptr[(y + j) * w + (x + i)];
-						temp1 = kernel_vec[k++];
-						value += temp * temp1;
-					}
-				}
-	
-				dst_ptr[x] = (uchar)(value);
-			}
-	
-			dst_ptr += w;
+			let kernel = get_gaussian_kernel(sigma[i]);
+			kernel_in_channels[i] = kernel;
 		}
 
+		return kernel_in_channels;
 	}
 
-
-
-
-
-
-
-
-
-
+	console.log(get_gaussian_kernel(1));
+	console.log(get_gaussian_kernel(0.85));
+	console.log(get_gaussian_kernel_in_channels([0.85], 1));
+	console.log(get_gaussian_kernel_in_channels([0.85, 1, 0.85], 3));
+	
+	
+	
+	
 
 
     // -----------------------------------------------------------------------------------------
@@ -222,121 +168,3 @@ window.addEventListener("load", () => {
 
 
 })
-
-
-
-
-
-
-
-
-
-
-/*Function: Two-dimensional Gaussian kernel generation
- //kernel: Store the generated Gaussian kernel
- //size: the size of the core
- //sigma: standard deviation of normal distribution
-*/
-
-/* 
-void get_gau_kernel(float **kernel, int size, float sigma)
-{
-	if (size <= 0 || sigma == 0)
-		return;
- 
-	int x, y;
-	int m = size / 2;
-	float sum = 0;
- 
-	//get kernel
-	for (y = 0; y < size; y++)
-	{
-		for (x = 0; x < size; x++)
-		{
-			kernel[y][x] = (1 / (2 * PI * sigma * sigma)) * exp(-((x - m) * (x - m) + (y - m) * (y - m)) / (2 * sigma * sigma));
-			sum += kernel[y][x];
-		}
-	}
- 
-	//normal
-	for (y = 0; y < size; y++)
-	{
-		for (x = 0; x < size; x++)
-		{
-			kernel[y][x] /= sum;
-		}
-	}
-}
- 
- 
-// https://www.programmersought.com/article/91255056564/
-
- /*Function: Gaussian Blur
- //src: input original image
- //dst: Blurred image
- //size: the size of the core
- //sigma: standard deviation of normal distribution
-*/
-
-/*
-void gaussian(image_t *src, image_t *dst, int size, float sigma)
-{
-	if (src->w == 0 || src->h == 0)
-		return;
- 
-	int y, x;
-	int i, j;
-	int m = size / 2;
-	float value;
- 
-	float **kernel = (float**)malloc(size * sizeof(float*));
-	for (i = 0; i < size; i++)
-		kernel[i] = (float*)malloc(size * sizeof(float));
- 
-	get_gau_kernel(kernel,size,sigma);
- 
-	float *kernel_vec = (float*)malloc(size * size * sizeof(float));
- 
-	 //kernel two-dimensional to one-dimensional
-	int k = 0;
-	for (j = 0; j < size; j++)
-	{
-		for (i = 0; i < size; i++)
-		{
-			kernel_vec[k++] = kernel[j][i];
-		}
-	}
- 
-	uchar *src_ptr = src->data + m * src -> w;
-	uchar *dst_ptr = dst->data + m * dst -> w;
-	 //gaussian convolution, the boundary is not processed at this time
-	for (y = m; y < src -> h - m ; y++)
-	{
-		for (x = m; x < src->w - m; x++)
-		{
- 
-			value = 0;
-			k = 0;
-			for (j = -m; j < m;j++)
-			{
-				for (i = -m; i < m; i++)
-				{
-					uchar temp = src_ptr[(y + j) * src->w + (x + i)];
-					float temp1 = kernel_vec[k++];
-					value += temp * temp1;
-				}
-			}
- 
-			dst_ptr[x] = (uchar)(value);
-		}
- 
-		dst_ptr += dst->w;
-	}
- 
-	free(kernel_vec);
-	for (i = 0; i < size; i++)
-		free(kernel[i]);
-	free(kernel);
-}
-
-*/
