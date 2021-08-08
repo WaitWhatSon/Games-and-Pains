@@ -35,8 +35,11 @@ window.addEventListener("load", () => {
 
     function apply_gaussian_blur(value)
     {
+		let kernel = get_gaussian_kernel_in_channels([1, 1, 1, 1], 4);
+		//convolve_canvas_with_kernel(kernel);
+		//apply_given_treshhold_in_channels([100,100,100,100]);
+		convolve_canvas_with_kernel(kernel);
 
-        console.log(value)
 
     }
 
@@ -98,7 +101,6 @@ window.addEventListener("load", () => {
 		return standard_deviation;
 	}
 
-
 	function get_gaussian_kernel(sigma)
 	{
 		let kernel = new Array(3).fill(0).map(() => new Array(3).fill(0));
@@ -136,15 +138,117 @@ window.addEventListener("load", () => {
 		return kernel_in_channels;
 	}
 
-	console.log(get_gaussian_kernel(1));
-	console.log(get_gaussian_kernel(0.85));
-	console.log(get_gaussian_kernel_in_channels([0.85], 1));
-	console.log(get_gaussian_kernel_in_channels([0.85, 1, 0.85], 3));
-	
-	
-	
-	
+	function convolve_canvas_with_kernel(kernel)
+	{   
+		
+		console.log(kernel);
 
+        let imgData = ctx.getImageData(0, 0, 512, 512);
+        let tempData = ctx.getImageData(0, 0, 512, 512);
+		for(let x = 0; x < imgData.data.length/(512*4); x++)
+		{	
+			for(let y = 0; y < imgData.data.length/512; y+=4)
+			{
+				let new_pixel_value_r = 0;
+				let new_pixel_value_g = 0;
+				let new_pixel_value_b = 0;
+				let new_pixel_value_a = 0;
+				// pixel 1 // -1 -1
+				new_pixel_value_r += tempData.data[((x-1)*512*4)+((y-4)+0)] * kernel[0][0][0];
+				new_pixel_value_g += tempData.data[((x-1)*512*4)+((y-4)+1)] * kernel[1][0][0];
+				new_pixel_value_b += tempData.data[((x-1)*512*4)+((y-4)+2)] * kernel[2][0][0];
+				new_pixel_value_a += tempData.data[((x-1)*512*4)+((y-4)+3)] * kernel[3][0][0];
+				// pixel 2 // -1  0
+				new_pixel_value_r += tempData.data[((x-1)*512*4)+((y+0)+0)] * kernel[0][0][1];
+				new_pixel_value_g += tempData.data[((x-1)*512*4)+((y+0)+1)] * kernel[1][0][1];
+				new_pixel_value_b += tempData.data[((x-1)*512*4)+((y+0)+2)] * kernel[2][0][1];
+				new_pixel_value_a += tempData.data[((x-1)*512*4)+((y+0)+3)] * kernel[3][0][1];
+				// pixel 3 // -1  1
+				new_pixel_value_r += tempData.data[((x-1)*512*4)+((y+4)+0)] * kernel[0][0][2];
+				new_pixel_value_g += tempData.data[((x-1)*512*4)+((y+4)+1)] * kernel[1][0][2];
+				new_pixel_value_b += tempData.data[((x-1)*512*4)+((y+4)+2)] * kernel[2][0][2];
+				new_pixel_value_a += tempData.data[((x-1)*512*4)+((y+4)+3)] * kernel[3][0][2];
+				// pixel 4 //  0 -1
+				new_pixel_value_r += tempData.data[((x+0)*512*4)+((y-4)+0)] * kernel[0][1][0];
+				new_pixel_value_g += tempData.data[((x+0)*512*4)+((y-4)+1)] * kernel[1][1][0];
+				new_pixel_value_b += tempData.data[((x+0)*512*4)+((y-4)+2)] * kernel[2][1][0];
+				new_pixel_value_a += tempData.data[((x+0)*512*4)+((y-4)+3)] * kernel[3][1][0];
+				// pixel 5 //  0  0
+				new_pixel_value_r += tempData.data[((x+0)*512*4)+((y+0)+0)] * kernel[0][1][1];
+				new_pixel_value_g += tempData.data[((x+0)*512*4)+((y+0)+1)] * kernel[1][1][1];
+				new_pixel_value_b += tempData.data[((x+0)*512*4)+((y+0)+2)] * kernel[2][1][1];
+				new_pixel_value_a += tempData.data[((x+0)*512*4)+((y+0)+3)] * kernel[3][1][1];
+				// pixel 6 //  0  1
+				new_pixel_value_r += tempData.data[((x+0)*512*4)+((y+4)+0)] * kernel[0][1][2];
+				new_pixel_value_g += tempData.data[((x+0)*512*4)+((y+4)+1)] * kernel[1][1][2];
+				new_pixel_value_b += tempData.data[((x+0)*512*4)+((y+4)+2)] * kernel[2][1][2];
+				new_pixel_value_a += tempData.data[((x+0)*512*4)+((y+4)+3)] * kernel[3][1][2];
+				// pixel 7 //  1 -1
+				new_pixel_value_r += tempData.data[((x+1)*512*4)+((y-4)+0)] * kernel[0][2][0];
+				new_pixel_value_g += tempData.data[((x+1)*512*4)+((y-4)+1)] * kernel[1][2][0];
+				new_pixel_value_b += tempData.data[((x+1)*512*4)+((y-4)+2)] * kernel[2][2][0];
+				new_pixel_value_a += tempData.data[((x+1)*512*4)+((y-4)+3)] * kernel[3][2][0];
+				// pixel 8 //  1  0
+				new_pixel_value_r += tempData.data[((x+1)*512*4)+((y+0)+0)] * kernel[0][2][1];
+				new_pixel_value_g += tempData.data[((x+1)*512*4)+((y+0)+1)] * kernel[1][2][1];
+				new_pixel_value_b += tempData.data[((x+1)*512*4)+((y+0)+2)] * kernel[2][2][1];
+				new_pixel_value_a += tempData.data[((x+1)*512*4)+((y+0)+3)] * kernel[3][2][1];
+				// pixel 9 //  1  1
+				new_pixel_value_r += tempData.data[((x+1)*512*4)+((y+4)+0)] * kernel[0][2][2];
+				new_pixel_value_g += tempData.data[((x+1)*512*4)+((y+4)+1)] * kernel[1][2][2];
+				new_pixel_value_b += tempData.data[((x+1)*512*4)+((y+4)+2)] * kernel[2][2][2];
+				new_pixel_value_a += tempData.data[((x+1)*512*4)+((y+4)+3)] * kernel[3][2][2];
+				// set new values
+				imgData.data[(x*512*4)+(y+0)] = new_pixel_value_r;
+				imgData.data[(x*512*4)+(y+1)] = new_pixel_value_g;
+				imgData.data[(x*512*4)+(y+2)] = new_pixel_value_b;
+				imgData.data[(x*512*4)+(y+3)] = new_pixel_value_a;
+			}
+		}
+        ctx.putImageData(imgData, 0, 0);
+	}
+
+	function temp_filter()
+	{   
+        var imgData = ctx.getImageData(0, 0, 512, 512);
+        var tempData = ctx.getImageData(0, 0, 512, 512);
+        
+		for(let x = 0; x < imgData.data.length/(512*4); x++)
+		{	
+			for(let y = 0; y < imgData.data.length/512; y+=4)
+			{
+				imgData.data[(x*512*4)+(y+0)] = 255 - tempData.data[(x*512*4)+(y+0)];
+				imgData.data[(x*512*4)+(y+1)] = 225 - tempData.data[(x*512*4)+(y+1)];
+				imgData.data[(x*512*4)+(y+2)] = 255 - tempData.data[(x*512*4)+(y+2)];
+				imgData.data[(x*512*4)+(y+3)] = 255;
+			}
+		}
+        ctx.putImageData(imgData, 0, 0);
+	}
+
+	function apply_given_treshhold_in_channels(treshhold)
+	{   
+        var imgData = ctx.getImageData(0, 0, 512, 512);
+		for(let x = 0; x < imgData.data.length/(512*4); x++)
+		{	
+			for(let y = 0; y < imgData.data.length/512; y+=4)
+			{
+				for(let c = 0; c < treshhold.length; c++)
+				{
+					if(imgData.data[(x*512*4)+(y+c)] >= treshhold[c])
+					{
+						imgData.data[(x*512*4)+(y+c)] = 255;
+					}
+					else
+					{
+						imgData.data[(x*512*4)+(y+c)] = 0;
+					}
+				}
+			}
+		}
+        ctx.putImageData(imgData, 0, 0);
+	}
+	
 
     // -----------------------------------------------------------------------------------------
     // controls
