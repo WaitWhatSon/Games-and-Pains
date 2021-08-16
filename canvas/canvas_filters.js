@@ -31,6 +31,11 @@ window.addEventListener("load", () => {
 		multiply_canvas_by_factor(value);
 	}
 
+	function grayscale_contrast_effect(value)
+	{
+		grayscale_image_filter(value);
+	}
+
 	// ----------------------------------
 	// utils
 
@@ -283,10 +288,22 @@ window.addEventListener("load", () => {
         ctx.putImageData(imgData, 0, 0);
 	}
 	
-	function apply_filter(kernel)
+	function grayscale_image_filter(value)
     {
-        console.log(kernel)
-        
+        var imgData = ctx.getImageData(0, 0, 512, 512);
+        var i;
+        for (i = 0; i < imgData.data.length; i += 4) {
+            gray = (imgData.data[i] * 0.2126 + imgData.data[i+1] * 0.7152 + imgData.data[i+2] * 0.0722)
+			imgData.data[i] = 	imgData.data[i]  *(100-value)/100 	+ gray*value/100;
+            imgData.data[i+1] = imgData.data[i+1]*(100-value)/100 	+ gray*value/100;
+            imgData.data[i+2] = imgData.data[i+2]*(100-value)/100 	+ gray*value/100;
+            imgData.data[i+3] = 255;
+        }
+        ctx.putImageData(imgData, 0, 0);
+    }
+
+	function apply_filter()
+    {   
         var imgData = ctx.getImageData(0, 0, 512, 512);
         // invert colors
         var i;
@@ -311,10 +328,10 @@ window.addEventListener("load", () => {
     const sepia_slider      = document.getElementById("sepia_slider"        );
 
 
-    blur_slider         .addEventListener("change", function(){apply_gaussian_blur(blur_slider.value)});
-    brightness_slider   .addEventListener("change", function(){apply_brightness_effect(brightness_slider.value)});
-    contrast_slider     .addEventListener("change", function(){apply_contrast_effect(contrast_slider.value)});
-    grayscale_slider    .addEventListener("change", function(){apply_filter(grayscale_slider.value)});
+    blur_slider         .addEventListener("change", function(){apply_gaussian_blur(			blur_slider.value		)});
+    brightness_slider   .addEventListener("change", function(){apply_brightness_effect(		brightness_slider.value	)});
+    contrast_slider     .addEventListener("change", function(){apply_contrast_effect(		contrast_slider.value	)});
+    grayscale_slider    .addEventListener("change", function(){grayscale_contrast_effect(	grayscale_slider.value	)});
     invert_slider       .addEventListener("change", function(){apply_filter(invert_slider.value)});
     saturate_slider     .addEventListener("change", function(){apply_filter(saturate_slider.value)});
     sepia_slider        .addEventListener("change", function(){apply_filter(sepia_slider.value)});
