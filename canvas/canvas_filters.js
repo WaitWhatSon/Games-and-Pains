@@ -31,9 +31,14 @@ window.addEventListener("load", () => {
 		multiply_canvas_by_factor(value);
 	}
 
-	function grayscale_contrast_effect(value)
+	function apply_grayscale_effect(value)
 	{
 		grayscale_image_filter(value);
+	}
+
+	function apply_invert_effect(value)
+	{
+		invert_image_filter(value);
 	}
 
 	// ----------------------------------
@@ -278,8 +283,7 @@ window.addEventListener("load", () => {
         contrast = (contrast/100) + 1;
 		var intercept = 128 * (1 - contrast);
 		// contrast apply
-        var i;
-        for (i = 0; i < imgData.data.length; i += 4) {
+        for (let i = 0; i < imgData.data.length; i += 4) {
             imgData.data[i] 	= imgData.data[i]	*contrast + intercept;
             imgData.data[i+1] 	= imgData.data[i+1]	*contrast + intercept;
             imgData.data[i+2] 	= imgData.data[i+2]	*contrast + intercept;
@@ -291,14 +295,29 @@ window.addEventListener("load", () => {
 	function grayscale_image_filter(value)
     {
         var imgData = ctx.getImageData(0, 0, 512, 512);
-        var i;
-        for (i = 0; i < imgData.data.length; i += 4) {
+        for (let i = 0; i < imgData.data.length; i += 4) {
             gray = (imgData.data[i] * 0.2126 + imgData.data[i+1] * 0.7152 + imgData.data[i+2] * 0.0722)
 			imgData.data[i] = 	imgData.data[i]  *(100-value)/100 	+ gray*value/100;
             imgData.data[i+1] = imgData.data[i+1]*(100-value)/100 	+ gray*value/100;
             imgData.data[i+2] = imgData.data[i+2]*(100-value)/100 	+ gray*value/100;
             imgData.data[i+3] = 255;
         }
+        ctx.putImageData(imgData, 0, 0);
+    }
+
+	function invert_image_filter(value)
+    {
+        var imgData = ctx.getImageData(0, 0, 512, 512);
+		factor = (value - 50) * 2 / 100;
+        for (let i = 0; i < imgData.data.length; i += 4) {
+            imgData.data[i] 	= 255*value/100 - imgData.data[i]   * factor;
+            imgData.data[i+1] 	= 225*value/100 - imgData.data[i+1] * factor;
+            imgData.data[i+2] 	= 255*value/100 - imgData.data[i+2] * factor;
+            imgData.data[i+3] 	= 255;
+        }
+		// if 100 -> 255 - val
+		// if 50 -> 255/2
+		// if 0 -> val
         ctx.putImageData(imgData, 0, 0);
     }
 
@@ -331,8 +350,8 @@ window.addEventListener("load", () => {
     blur_slider         .addEventListener("change", function(){apply_gaussian_blur(			blur_slider.value		)});
     brightness_slider   .addEventListener("change", function(){apply_brightness_effect(		brightness_slider.value	)});
     contrast_slider     .addEventListener("change", function(){apply_contrast_effect(		contrast_slider.value	)});
-    grayscale_slider    .addEventListener("change", function(){grayscale_contrast_effect(	grayscale_slider.value	)});
-    invert_slider       .addEventListener("change", function(){apply_filter(invert_slider.value)});
+    grayscale_slider    .addEventListener("change", function(){apply_grayscale_effect(		grayscale_slider.value	)});
+    invert_slider       .addEventListener("change", function(){apply_invert_effect(			invert_slider.value)});
     saturate_slider     .addEventListener("change", function(){apply_filter(saturate_slider.value)});
     sepia_slider        .addEventListener("change", function(){apply_filter(sepia_slider.value)});
 
