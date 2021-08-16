@@ -26,6 +26,11 @@ window.addEventListener("load", () => {
 		multiply_canvas_by_value(value/100);
 	}
 
+	function apply_contrast_effect(value)
+	{
+		multiply_canvas_by_factor(value);
+	}
+
 	// ----------------------------------
 	// utils
 
@@ -261,6 +266,22 @@ window.addEventListener("load", () => {
 		}
         ctx.putImageData(imgData, 0, 0);
 	}
+
+	function multiply_canvas_by_factor(contrast)
+	{   
+		var imgData = ctx.getImageData(0, 0, 512, 512);
+        contrast = (contrast/100) + 1;
+		var intercept = 128 * (1 - contrast);
+		// contrast apply
+        var i;
+        for (i = 0; i < imgData.data.length; i += 4) {
+            imgData.data[i] 	= imgData.data[i]	*contrast + intercept;
+            imgData.data[i+1] 	= imgData.data[i+1]	*contrast + intercept;
+            imgData.data[i+2] 	= imgData.data[i+2]	*contrast + intercept;
+            imgData.data[i+3] 	= 255;
+        }
+        ctx.putImageData(imgData, 0, 0);
+	}
 	
 	function apply_filter(kernel)
     {
@@ -292,7 +313,7 @@ window.addEventListener("load", () => {
 
     blur_slider         .addEventListener("change", function(){apply_gaussian_blur(blur_slider.value)});
     brightness_slider   .addEventListener("change", function(){apply_brightness_effect(brightness_slider.value)});
-    contrast_slider     .addEventListener("change", function(){apply_filter(contrast_slider.value)});
+    contrast_slider     .addEventListener("change", function(){apply_contrast_effect(contrast_slider.value)});
     grayscale_slider    .addEventListener("change", function(){apply_filter(grayscale_slider.value)});
     invert_slider       .addEventListener("change", function(){apply_filter(invert_slider.value)});
     saturate_slider     .addEventListener("change", function(){apply_filter(saturate_slider.value)});
