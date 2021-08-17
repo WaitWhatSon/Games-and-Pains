@@ -41,6 +41,11 @@ window.addEventListener("load", () => {
 		invert_image_filter(value);
 	}
 
+	function apply_saturation_effect(value)
+	{
+		change_saturation(value);
+	}
+
 	// ----------------------------------
 	// utils
 
@@ -321,6 +326,23 @@ window.addEventListener("load", () => {
         ctx.putImageData(imgData, 0, 0);
     }
 
+	function change_saturation(value)
+    {
+        var imgData = ctx.getImageData(0, 0, 512, 512);
+		for (let i = 0; i < imgData.data.length; i += 4) {
+			// convert to hsv
+			hsv = convertRGBtoHSV(imgData.data[i]/255, imgData.data[i+1]/255, imgData.data[i+2]/255);
+			hsv.s = Math.min(hsv.s + value/100, 1);
+			rgb = convertHSVtoRGB(hsv.h, hsv.s, hsv.v);
+
+            imgData.data[i] 	= 255 * rgb.r;
+            imgData.data[i+1] 	= 225 * rgb.g;
+            imgData.data[i+2] 	= 255 * rgb.b;
+            imgData.data[i+3] 	= 255;
+        }
+        ctx.putImageData(imgData, 0, 0);
+    }
+
 	function apply_filter()
     {   
         var imgData = ctx.getImageData(0, 0, 512, 512);
@@ -334,6 +356,89 @@ window.addEventListener("load", () => {
         }
         ctx.putImageData(imgData, 0, 0);
     }
+
+
+	// na podstawie:
+	// http://www.algorytm.org/modele-barw/transformacja-hsv-rgb.html
+	// HSV: H: 0.0 - 359.9, S, V:  0.0 - 1.0
+	// RGB: 0.0 - 1.0
+	function convertRGBtoHSV(r, g, b)
+	{
+		let hue, sat;
+		let i, f;
+		
+		let x = Math.min(Math.min(r, g), b);
+		let val = Math.max(Math.max(r, g), b);
+		if (x == val)
+		{
+			hue = 0; sat = 0;
+		}
+		else 
+		{
+			if(r == x)
+			{
+				f = g - b; i = 3;
+			}
+			else if(g == x)
+			{
+				f = b - r; i = 5;
+			}
+ 			else
+			{
+				f = r - g; i = 1;
+			}		
+ 			hue = ((i-f/(val-x))*60)%360;
+ 			sat = ((val-x)/val);
+		}
+
+		return { 'h': hue, 's': sat, 'v': val }
+	}
+
+	// HSV: H: 0.0 - 359.9, S, V:  0.0 - 1.0
+	// RGB: 0.0 - 1.0
+	function convertHSVtoRGB(hue, sat, val)
+	{
+		let r, g, b;
+		if(val==0) 
+		{
+			r = 0; g = 0; b = 0;
+		}
+		else
+		{
+			hue /= 60;
+			let i = Math.floor(hue);
+			let f = hue - i;
+			let p = val * (1 - sat);
+			let q = val * (1 - (sat*f));
+			let t = val * (1 - (sat*(1-f)));
+			if (i==0) 
+			{
+				r = val; g = t; b = p;
+			}
+			else if (i==1) 
+			{
+				r = q; g = val; b = p;
+			}
+			else if (i==2) 
+			{
+				r = p; g = val; b = t;
+			}
+			else if (i==3) 
+			{
+				r = p; g = q; b = val;
+			}
+			else if (i==4) 
+			{
+				r = t; g = p; b = val;
+			}
+			else if (i==5) 
+			{
+				r = val; g = p; b = q;
+			}
+		}
+		return { 'r': r, 'g': g, 'b': b }
+	}
+
 
     // -----------------------------------------------------------------------------------------
     // controls
@@ -351,8 +456,8 @@ window.addEventListener("load", () => {
     brightness_slider   .addEventListener("change", function(){apply_brightness_effect(		brightness_slider.value	)});
     contrast_slider     .addEventListener("change", function(){apply_contrast_effect(		contrast_slider.value	)});
     grayscale_slider    .addEventListener("change", function(){apply_grayscale_effect(		grayscale_slider.value	)});
-    invert_slider       .addEventListener("change", function(){apply_invert_effect(			invert_slider.value)});
-    saturate_slider     .addEventListener("change", function(){apply_filter(saturate_slider.value)});
+    invert_slider       .addEventListener("change", function(){apply_invert_effect(			invert_slider.value		)});
+    saturate_slider     .addEventListener("change", function(){apply_saturation_effect(		saturate_slider.value	)});
     sepia_slider        .addEventListener("change", function(){apply_filter(sepia_slider.value)});
 
 
