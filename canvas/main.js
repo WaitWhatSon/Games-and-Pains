@@ -38,6 +38,25 @@ window.addEventListener("load", () => {
     let brush_size = 10;
     brush_size_slider.value = brush_size;
 
+    let last_selected_toolbar = "basics_tool_bar";
+    let pinned_image = ctx.createImageData(512, 512);
+
+    // -------------------------------------------------------------------
+    // switch menu toolbar
+
+    function switch_toolbar(current_selected_toolbar)
+    {
+        document.getElementById(last_selected_toolbar).style.display = 'none';
+        document.getElementById(current_selected_toolbar).style.display = 'block';
+        last_selected_toolbar = current_selected_toolbar;
+    }
+
+    const basics_tool_bar_button    = document.getElementById("basics_tool_bar_button"   );
+    const filters_tool_bar_button   = document.getElementById("filters_tool_bar_button"  );
+    
+    basics_tool_bar_button  .addEventListener("click", function(){switch_toolbar("basics_tool_bar"    )});
+    filters_tool_bar_button .addEventListener("click", function(){switch_toolbar("filters_tool_bar"   )});
+
     // -------------------------------------------------------------------
     // basics functions
 
@@ -117,54 +136,68 @@ window.addEventListener("load", () => {
 
     // --------------------------------------------------------------------
     // finters functions
+
+    // --- pin image to process
+    function pin_image()
+    {
+        let original = ctx.getImageData(0, 0, 512, 512);
+        var dataCopy = new Uint8ClampedArray(original.data);
+        pinned_image.data.set(dataCopy);
+    }
+
+    function restore_pined_image()
+    {
+        ctx.putImageData(pinned_image, 0, 0);
+    }
     
     function apply_gaussian_blur(value)
     {
 		let sigma = [value/100, value/100, value/100, value/100];
 		let kernel = get_gaussian_kernel_in_channels(sigma, 4);
-		let imgData = ctx.getImageData(0, 0, 512, 512);
-        imgData = convolve_canvas_with_kernel(imgData, kernel);
+        let imgData = convolve_canvas_with_kernel(ctx, pinned_image, kernel);
         ctx.putImageData(imgData, 0, 0);
     }
 
 	function apply_brightness_effect(value)
 	{
-        let imgData = ctx.getImageData(0, 0, 512, 512);
-		imgData = multiply_canvas_by_value(imgData, value/100);
+		let imgData = multiply_canvas_by_value(ctx, pinned_image, value/100);
         ctx.putImageData(imgData, 0, 0);
 	}
 
 	function apply_contrast_effect(value)
 	{
-        let imgData = ctx.getImageData(0, 0, 512, 512);
-		imgData = multiply_canvas_by_factor(imgData, value);
+		let imgData = multiply_canvas_by_factor(ctx, pinned_image, value);
         ctx.putImageData(imgData, 0, 0);
 	}
 
 	function apply_grayscale_effect(value)
 	{
-        let imgData = ctx.getImageData(0, 0, 512, 512);
-		imgData = grayscale_image_filter(imgData, value);
+        let imgData = grayscale_image_filter(ctx, pinned_image, value);
         ctx.putImageData(imgData, 0, 0);
 	}
 
 	function apply_invert_effect(value)
 	{
-        let imgData = ctx.getImageData(0, 0, 512, 512);
-		imgData = invert_image_filter(imgData, value);
+        let imgData = invert_image_filter(ctx, pinned_image, value);
         ctx.putImageData(imgData, 0, 0);
 	}
 
 	function apply_saturation_effect(value)
 	{
-        let imgData = ctx.getImageData(0, 0, 512, 512);
-		imgData = change_saturation(imgData, value);
+        let imgData = change_saturation(ctx, pinned_image, value);
         ctx.putImageData(imgData, 0, 0);
 	}
 
 
-        // -----------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------
     // controls
+
+    const pin_image_button = document.getElementById("pin_image_button");
+    pin_image_button.addEventListener("click", function(){pin_image()});
+
+    const restore_pined_image_button = document.getElementById("restore_pined_image_button");
+    restore_pined_image_button.addEventListener("click", function(){restore_pined_image()});
+
 
     const blur_slider       = document.getElementById("blur_slider"         );
     const brightness_slider = document.getElementById("brightness_slider"   );
@@ -173,7 +206,6 @@ window.addEventListener("load", () => {
     const invert_slider     = document.getElementById("invert_slider"       );
     const saturate_slider   = document.getElementById("saturate_slider"     );
     const sepia_slider      = document.getElementById("sepia_slider"        );
-
 
     blur_slider         .addEventListener("change", function(){apply_gaussian_blur(			blur_slider.value		)});
     brightness_slider   .addEventListener("change", function(){apply_brightness_effect(		brightness_slider.value	)});

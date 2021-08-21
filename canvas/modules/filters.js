@@ -1,9 +1,9 @@
 // ------------------------------------------------------
 // CONVOLUTION
 
-function convolve_canvas_with_kernel(imgData, kernel)
+function convolve_canvas_with_kernel(ctx, imgData, kernel)
 {   
-    let tempData = imgData;
+	var tempData = ctx.createImageData(512, 512);
 	for(let x = 0; x < imgData.data.length/(512*4); x++)
 	{	
 		for(let y = 0; y < imgData.data.length/512; y+=4)
@@ -13,58 +13,58 @@ function convolve_canvas_with_kernel(imgData, kernel)
 			let new_pixel_value_b = 0;
 			let new_pixel_value_a = 0;
 			// pixel 1 // -1 -1
-			new_pixel_value_r += tempData.data[((x-1)*512*4)+((y-4)+0)] * kernel[0][0][0];
-			new_pixel_value_g += tempData.data[((x-1)*512*4)+((y-4)+1)] * kernel[1][0][0];
-			new_pixel_value_b += tempData.data[((x-1)*512*4)+((y-4)+2)] * kernel[2][0][0];
-			new_pixel_value_a += tempData.data[((x-1)*512*4)+((y-4)+3)] * kernel[3][0][0];
+			new_pixel_value_r += imgData.data[((x-1)*512*4)+((y-4)+0)] * kernel[0][0][0];
+			new_pixel_value_g += imgData.data[((x-1)*512*4)+((y-4)+1)] * kernel[1][0][0];
+			new_pixel_value_b += imgData.data[((x-1)*512*4)+((y-4)+2)] * kernel[2][0][0];
+			new_pixel_value_a += imgData.data[((x-1)*512*4)+((y-4)+3)] * kernel[3][0][0];
 			// pixel 2 // -1  0
-			new_pixel_value_r += tempData.data[((x-1)*512*4)+((y+0)+0)] * kernel[0][0][1];
-			new_pixel_value_g += tempData.data[((x-1)*512*4)+((y+0)+1)] * kernel[1][0][1];
-			new_pixel_value_b += tempData.data[((x-1)*512*4)+((y+0)+2)] * kernel[2][0][1];
-			new_pixel_value_a += tempData.data[((x-1)*512*4)+((y+0)+3)] * kernel[3][0][1];
+			new_pixel_value_r += imgData.data[((x-1)*512*4)+((y+0)+0)] * kernel[0][0][1];
+			new_pixel_value_g += imgData.data[((x-1)*512*4)+((y+0)+1)] * kernel[1][0][1];
+			new_pixel_value_b += imgData.data[((x-1)*512*4)+((y+0)+2)] * kernel[2][0][1];
+			new_pixel_value_a += imgData.data[((x-1)*512*4)+((y+0)+3)] * kernel[3][0][1];
 			// pixel 3 // -1  1
-			new_pixel_value_r += tempData.data[((x-1)*512*4)+((y+4)+0)] * kernel[0][0][2];
-			new_pixel_value_g += tempData.data[((x-1)*512*4)+((y+4)+1)] * kernel[1][0][2];
-			new_pixel_value_b += tempData.data[((x-1)*512*4)+((y+4)+2)] * kernel[2][0][2];
-			new_pixel_value_a += tempData.data[((x-1)*512*4)+((y+4)+3)] * kernel[3][0][2];
+			new_pixel_value_r += imgData.data[((x-1)*512*4)+((y+4)+0)] * kernel[0][0][2];
+			new_pixel_value_g += imgData.data[((x-1)*512*4)+((y+4)+1)] * kernel[1][0][2];
+			new_pixel_value_b += imgData.data[((x-1)*512*4)+((y+4)+2)] * kernel[2][0][2];
+			new_pixel_value_a += imgData.data[((x-1)*512*4)+((y+4)+3)] * kernel[3][0][2];
 			// pixel 4 //  0 -1
-			new_pixel_value_r += tempData.data[((x+0)*512*4)+((y-4)+0)] * kernel[0][1][0];
-			new_pixel_value_g += tempData.data[((x+0)*512*4)+((y-4)+1)] * kernel[1][1][0];
-			new_pixel_value_b += tempData.data[((x+0)*512*4)+((y-4)+2)] * kernel[2][1][0];
-			new_pixel_value_a += tempData.data[((x+0)*512*4)+((y-4)+3)] * kernel[3][1][0];
+			new_pixel_value_r += imgData.data[((x+0)*512*4)+((y-4)+0)] * kernel[0][1][0];
+			new_pixel_value_g += imgData.data[((x+0)*512*4)+((y-4)+1)] * kernel[1][1][0];
+			new_pixel_value_b += imgData.data[((x+0)*512*4)+((y-4)+2)] * kernel[2][1][0];
+			new_pixel_value_a += imgData.data[((x+0)*512*4)+((y-4)+3)] * kernel[3][1][0];
 			// pixel 5 //  0  0
-			new_pixel_value_r += tempData.data[((x+0)*512*4)+((y+0)+0)] * kernel[0][1][1];
-			new_pixel_value_g += tempData.data[((x+0)*512*4)+((y+0)+1)] * kernel[1][1][1];
-			new_pixel_value_b += tempData.data[((x+0)*512*4)+((y+0)+2)] * kernel[2][1][1];
-			new_pixel_value_a += tempData.data[((x+0)*512*4)+((y+0)+3)] * kernel[3][1][1];
+			new_pixel_value_r += imgData.data[((x+0)*512*4)+((y+0)+0)] * kernel[0][1][1];
+			new_pixel_value_g += imgData.data[((x+0)*512*4)+((y+0)+1)] * kernel[1][1][1];
+			new_pixel_value_b += imgData.data[((x+0)*512*4)+((y+0)+2)] * kernel[2][1][1];
+			new_pixel_value_a += imgData.data[((x+0)*512*4)+((y+0)+3)] * kernel[3][1][1];
 			// pixel 6 //  0  1
-			new_pixel_value_r += tempData.data[((x+0)*512*4)+((y+4)+0)] * kernel[0][1][2];
-			new_pixel_value_g += tempData.data[((x+0)*512*4)+((y+4)+1)] * kernel[1][1][2];
-			new_pixel_value_b += tempData.data[((x+0)*512*4)+((y+4)+2)] * kernel[2][1][2];
-			new_pixel_value_a += tempData.data[((x+0)*512*4)+((y+4)+3)] * kernel[3][1][2];
+			new_pixel_value_r += imgData.data[((x+0)*512*4)+((y+4)+0)] * kernel[0][1][2];
+			new_pixel_value_g += imgData.data[((x+0)*512*4)+((y+4)+1)] * kernel[1][1][2];
+			new_pixel_value_b += imgData.data[((x+0)*512*4)+((y+4)+2)] * kernel[2][1][2];
+			new_pixel_value_a += imgData.data[((x+0)*512*4)+((y+4)+3)] * kernel[3][1][2];
 			// pixel 7 //  1 -1
-			new_pixel_value_r += tempData.data[((x+1)*512*4)+((y-4)+0)] * kernel[0][2][0];
-			new_pixel_value_g += tempData.data[((x+1)*512*4)+((y-4)+1)] * kernel[1][2][0];
-			new_pixel_value_b += tempData.data[((x+1)*512*4)+((y-4)+2)] * kernel[2][2][0];
-			new_pixel_value_a += tempData.data[((x+1)*512*4)+((y-4)+3)] * kernel[3][2][0];
+			new_pixel_value_r += imgData.data[((x+1)*512*4)+((y-4)+0)] * kernel[0][2][0];
+			new_pixel_value_g += imgData.data[((x+1)*512*4)+((y-4)+1)] * kernel[1][2][0];
+			new_pixel_value_b += imgData.data[((x+1)*512*4)+((y-4)+2)] * kernel[2][2][0];
+			new_pixel_value_a += imgData.data[((x+1)*512*4)+((y-4)+3)] * kernel[3][2][0];
 			// pixel 8 //  1  0
-			new_pixel_value_r += tempData.data[((x+1)*512*4)+((y+0)+0)] * kernel[0][2][1];
-			new_pixel_value_g += tempData.data[((x+1)*512*4)+((y+0)+1)] * kernel[1][2][1];
-			new_pixel_value_b += tempData.data[((x+1)*512*4)+((y+0)+2)] * kernel[2][2][1];				
-			new_pixel_value_a += tempData.data[((x+1)*512*4)+((y+0)+3)] * kernel[3][2][1];
+			new_pixel_value_r += imgData.data[((x+1)*512*4)+((y+0)+0)] * kernel[0][2][1];
+			new_pixel_value_g += imgData.data[((x+1)*512*4)+((y+0)+1)] * kernel[1][2][1];
+			new_pixel_value_b += imgData.data[((x+1)*512*4)+((y+0)+2)] * kernel[2][2][1];				
+			new_pixel_value_a += imgData.data[((x+1)*512*4)+((y+0)+3)] * kernel[3][2][1];
 			// pixel 9 //  1  1
-			new_pixel_value_r += tempData.data[((x+1)*512*4)+((y+4)+0)] * kernel[0][2][2];
-			new_pixel_value_g += tempData.data[((x+1)*512*4)+((y+4)+1)] * kernel[1][2][2];
-			new_pixel_value_b += tempData.data[((x+1)*512*4)+((y+4)+2)] * kernel[2][2][2];
-			new_pixel_value_a += tempData.data[((x+1)*512*4)+((y+4)+3)] * kernel[3][2][2];
+			new_pixel_value_r += imgData.data[((x+1)*512*4)+((y+4)+0)] * kernel[0][2][2];
+			new_pixel_value_g += imgData.data[((x+1)*512*4)+((y+4)+1)] * kernel[1][2][2];
+			new_pixel_value_b += imgData.data[((x+1)*512*4)+((y+4)+2)] * kernel[2][2][2];
+			new_pixel_value_a += imgData.data[((x+1)*512*4)+((y+4)+3)] * kernel[3][2][2];
 			// set new values
-			imgData.data[(x*512*4)+(y+0)] = new_pixel_value_r;
-			imgData.data[(x*512*4)+(y+1)] = new_pixel_value_g;
-			imgData.data[(x*512*4)+(y+2)] = new_pixel_value_b;
-			imgData.data[(x*512*4)+(y+3)] = new_pixel_value_a;
+			tempData.data[(x*512*4)+(y+0)] = new_pixel_value_r;
+			tempData.data[(x*512*4)+(y+1)] = new_pixel_value_g;
+			tempData.data[(x*512*4)+(y+2)] = new_pixel_value_b;
+			tempData.data[(x*512*4)+(y+3)] = new_pixel_value_a;
 		}
 	}
-	return imgData;
+	return tempData;
 }
 
 // --------------------------------------------------------------
@@ -110,78 +110,81 @@ function get_gaussian_kernel(sigma)
 // -----------------------------------------------
 // BRIGHTNESS
 
-function multiply_canvas_by_value(imgData, value)
+function multiply_canvas_by_value(ctx, imgData, value)
 {   
-    for(let x = 0; x < imgData.data.length/(512*4); x++)
-	{	
-		for(let y = 0; y < imgData.data.length/512; y+=4)
-		{
-			imgData.data[(x*512*4)+(y+0)] = imgData.data[(x*512*4)+(y+0)] * value;
-			imgData.data[(x*512*4)+(y+1)] = imgData.data[(x*512*4)+(y+1)] * value;
-			imgData.data[(x*512*4)+(y+2)] = imgData.data[(x*512*4)+(y+2)] * value;
-		}
-	}
-    return imgData;
+	var tempData = ctx.createImageData(512, 512);
+    for (let i = 0; i < imgData.data.length; i += 4) 
+	{
+        tempData.data[i] 	= imgData.data[i]	* value;
+        tempData.data[i+1] 	= imgData.data[i+1]	* value;
+        tempData.data[i+2] 	= imgData.data[i+2]	* value;
+        tempData.data[i+3] 	= 255;
+    }
+    return tempData;
 }
 
 // ----------------------------------------------------------
 // CONTRAST
 
-function multiply_canvas_by_factor(imgData, contrast)
+function multiply_canvas_by_factor(ctx, imgData, contrast)
 {   
 	contrast = (contrast/100) + 1;
 	var intercept = 128 * (1 - contrast);
 	// contrast apply
+	var tempData = ctx.createImageData(512, 512);
     for (let i = 0; i < imgData.data.length; i += 4) 
 	{
-        imgData.data[i] 	= imgData.data[i]	*contrast + intercept;
-        imgData.data[i+1] 	= imgData.data[i+1]	*contrast + intercept;
-        imgData.data[i+2] 	= imgData.data[i+2]	*contrast + intercept;
-        imgData.data[i+3] 	= 255;
+        tempData.data[i] 	= imgData.data[i]	*contrast + intercept;
+        tempData.data[i+1] 	= imgData.data[i+1]	*contrast + intercept;
+        tempData.data[i+2] 	= imgData.data[i+2]	*contrast + intercept;
+        tempData.data[i+3] 	= 255;
     }
-    return imgData;
+    return tempData;
 }
 
 // -----------------------------------------------------------
 // GRAYSCALE
 	
-function grayscale_image_filter(imgData, value)
+function grayscale_image_filter(ctx, imgData, value)
 {
+	var tempData = ctx.createImageData(512, 512);
     for (let i = 0; i < imgData.data.length; i += 4) 
 	{
         let gray = (imgData.data[i] * 0.2126 + imgData.data[i+1] * 0.7152 + imgData.data[i+2] * 0.0722)
-		imgData.data[i]   = imgData.data[i]  *(100-value)/100 	+ gray*value/100;
-        imgData.data[i+1] = imgData.data[i+1]*(100-value)/100 	+ gray*value/100;
-        imgData.data[i+2] = imgData.data[i+2]*(100-value)/100 	+ gray*value/100;
-        imgData.data[i+3] = 255;
+		tempData.data[i]   = imgData.data[i]  *(100-value)/100 	+ gray*value/100;
+        tempData.data[i+1] = imgData.data[i+1]*(100-value)/100 	+ gray*value/100;
+        tempData.data[i+2] = imgData.data[i+2]*(100-value)/100 	+ gray*value/100;
+        tempData.data[i+3] = 255;
     }
-    return imgData;
+    return tempData;
 }
 
 // ------------------------------------------------------------
 // INVERT
 
-function invert_image_filter(imgData, value)
+function invert_image_filter(ctx, imgData, value)
 {
     let factor = (value - 50) * 2 / 100;
+	var tempData = ctx.createImageData(512, 512);
     for (let i = 0; i < imgData.data.length; i += 4) 
 	{
-        imgData.data[i] 	= 255*value/100 - imgData.data[i]   * factor;
-        imgData.data[i+1] 	= 225*value/100 - imgData.data[i+1] * factor;
-        imgData.data[i+2] 	= 255*value/100 - imgData.data[i+2] * factor;
-        imgData.data[i+3] 	= 255;
+        tempData.data[i] 	= 255*value/100 - imgData.data[i]   * factor;
+        tempData.data[i+1] 	= 225*value/100 - imgData.data[i+1] * factor;
+        tempData.data[i+2] 	= 255*value/100 - imgData.data[i+2] * factor;
+        tempData.data[i+3] 	= 255;
     }
 		// if 100 -> 255 - val
 		// if 50 -> 255/2
 		// if 0 -> val
-	return imgData;
+	return tempData;
 }
 
 // -----------------------------------------------------------
 // SATURATION
 
-function change_saturation(imgData, value)
+function change_saturation(ctx, imgData, value)
 {
+	var tempData = ctx.createImageData(512, 512);
     for (let i = 0; i < imgData.data.length; i += 4) 
 	{
 		// convert to hsv
@@ -189,12 +192,12 @@ function change_saturation(imgData, value)
 		hsv.s = Math.min(hsv.s + value/100, 1);
 		let rgb = convertHSVtoRGB(hsv.h, hsv.s, hsv.v);
 
-            imgData.data[i] 	= 255 * rgb.r;
-            imgData.data[i+1] 	= 225 * rgb.g;
-            imgData.data[i+2] 	= 255 * rgb.b;
-            imgData.data[i+3] 	= 255;
+            tempData.data[i] 	= 255 * rgb.r;
+            tempData.data[i+1] 	= 225 * rgb.g;
+            tempData.data[i+2] 	= 255 * rgb.b;
+            tempData.data[i+3] 	= 255;
     }
-    return imgData;
+    return tempData;
 }
 
 

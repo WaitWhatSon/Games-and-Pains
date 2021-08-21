@@ -11,6 +11,22 @@ body {
 .tool_bar {
     background-color: gray;
     padding: 5px;
+    height: 512px;
+    min-width: 300px;
+}
+
+.side_bar {
+    display: block;
+    background-color: gray;
+    padding: 5px;
+    width: 50px;
+    height: 512px;
+}
+
+.side_bar button {
+    background-color: gray;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .tool_bar_section {
