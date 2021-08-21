@@ -1,3 +1,5 @@
+import {} from './modules/filters.js'
+
 
 window.addEventListener("load", () => {
 
@@ -29,7 +31,7 @@ window.addEventListener("load", () => {
     brush_size_slider.value = brush_size;
 
     // -------------------------------------------------------------------
-    // functions
+    // basics functions
 
     function startPosition(e)
     {
@@ -69,7 +71,7 @@ window.addEventListener("load", () => {
 
     function putImageOnCanvas(image_path)
     {
-        image = new Image();
+        let image = new Image();
         image.src = image_path;
         image.onload = function(){
             ctx.drawImage(image, 0, 0);
