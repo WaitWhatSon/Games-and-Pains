@@ -18,9 +18,10 @@ window.addEventListener("load", () => {
     const canvas    = document.getElementById("myCanvas");
     const ctx       = canvas.getContext("2d");
 
-    const reset_image_button    = document.getElementById("clear_canvas");
-    const apple_image_button    = document.getElementById("apple_image" );
-    const lenna_image_button    = document.getElementById("lenna_image" );
+    const reset_image_button        = document.getElementById("clear_canvas");
+    const apple_image_button        = document.getElementById("apple_image" );
+    const lenna_image_button        = document.getElementById("lenna_image" );
+    const fingerprint_image_button  = document.getElementById("fingerprint_image");
 
     const color_button_black    = document.getElementById("color_button_black" );
     const color_button_white    = document.getElementById("color_button_white" );
@@ -52,11 +53,13 @@ window.addEventListener("load", () => {
         last_selected_toolbar = current_selected_toolbar;
     }
 
-    const basics_tool_bar_button    = document.getElementById("basics_tool_bar_button"   );
-    const filters_tool_bar_button   = document.getElementById("filters_tool_bar_button"  );
+    const basics_tool_bar_button     = document.getElementById("basics_tool_bar_button"   );
+    const filters_tool_bar_button    = document.getElementById("filters_tool_bar_button"  );
+    const biometrics_tool_bar_button = document.getElementById("biometrics_tool_bar_button"  );
     
-    basics_tool_bar_button  .addEventListener("click", function(){switch_toolbar("basics_tool_bar"    )});
-    filters_tool_bar_button .addEventListener("click", function(){switch_toolbar("filters_tool_bar"   )});
+    basics_tool_bar_button      .addEventListener("click", function(){switch_toolbar("basics_tool_bar"      )});
+    filters_tool_bar_button     .addEventListener("click", function(){switch_toolbar("filters_tool_bar"     )});
+    biometrics_tool_bar_button  .addEventListener("click", function(){switch_toolbar("biometrics_tool_bar"  )});
 
     // -------------------------------------------------------------------
     // basics functions
@@ -115,15 +118,19 @@ window.addEventListener("load", () => {
     }
 
     // -----------------------------------------------------------------------------------------
+    // images
+
+    reset_image_button      .addEventListener("click", resetImage);
+    apple_image_button      .addEventListener("click", function(){putImageOnCanvas("images/apple.png")});
+    lenna_image_button      .addEventListener("click", function(){putImageOnCanvas("images/lenna.png")});
+    fingerprint_image_button.addEventListener("click", function(){putImageOnCanvas("images/fingerprint.png")});
+
+    // -----------------------------------------------------------------------------------------
     // controls
 
     canvas.addEventListener("mousedown",  startPosition);
     canvas.addEventListener("mouseup",    finishPosition);
     canvas.addEventListener("mousemove",  draw);
-
-    reset_image_button.addEventListener("click", resetImage);
-    apple_image_button.addEventListener("click", function(){putImageOnCanvas("images/apple.png")});
-    lenna_image_button.addEventListener("click", function(){putImageOnCanvas("images/lenna.png")});
     
     color_button_black .addEventListener("click", function(){changeColor("#000000")});
     color_button_white .addEventListener("click", function(){changeColor("#ffffff")});
@@ -221,5 +228,18 @@ window.addEventListener("load", () => {
     saturate_slider     .addEventListener("change", function(){apply_saturation_effect(		saturate_slider.value	)});
     sepia_slider        .addEventListener("change", function(){apply_sepia_effect(          sepia_slider.value)});
 
+    // --------------------------------------------------------------------
+    // biometrics functions
 
+    function temp_apply()
+    {
+		console.log("ELO");
+    }
+
+	// -----------------------------------------------------------------------------------------
+    // controls
+
+    const temp_button = document.getElementById("temp_button");
+    temp_button.addEventListener("click", function(){temp_apply()});
+    
 })

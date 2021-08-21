@@ -17,8 +17,12 @@
             <canvas id="myCanvas" height="512" width="512"></canvas>
 
             <div id="side_bar" class="side_bar">
-                <button id="basics_tool_bar_button" title="basics"><span class="mdi mdi-duck mdi-24px"></span></button>
-                <button id="filters_tool_bar_button" title="filters"><span class="mdi mdi-broom mdi-24px"></span></button>
+                <button id="basics_tool_bar_button" title="basics">
+                    <span class="mdi mdi-duck mdi-24px"></span></button>
+                <button id="filters_tool_bar_button" title="filters">
+                    <span class="mdi mdi-broom mdi-24px"></span></button>
+                <button id="biometrics_tool_bar_button" title="biometrics">
+                    <span class="mdi mdi-fingerprint mdi-24px"></span></button>
             </div>
 
             <!-- BASICS -->
@@ -43,9 +47,10 @@
 
                 <fieldset class="tool_bar_section">
                     <legend>images</legend>
-                    <button id="clear_canvas"><i class="fa fa-trash fa-2x"  aria-hidden="true"></i></button>
-                    <button id="apple_image" ><i class="fa fa-apple fa-2x"  aria-hidden="true"></i></button>
-                    <button id="lenna_image"> <i class="fa fa-female fa-2x" aria-hidden="true"></i></button>
+                    <button id="clear_canvas">      <i class="fa fa-trash fa-2x"       aria-hidden="true"></i></button>
+                    <button id="apple_image" >      <i class="fa fa-apple fa-2x"       aria-hidden="true"></i></button>
+                    <button id="lenna_image">       <i class="fa fa-female fa-2x"      aria-hidden="true"></i></button>
+                    <button id="fingerprint_image"> <span class="mdi mdi-fingerprint mdi-24px"></span>        </button>
                 </fieldset>
 
                 <fieldset id="color_bar" class="tool_bar_section">
@@ -59,13 +64,11 @@
                     <input type="color"     id="custom_color_input"     class="color_format"    />
                 </fieldset>
 
-
             </div>
 
             <!-- FILTERS -->
             <div id="filters_tool_bar" class="tool_bar" style="display:none;">
 
-                
                 <span class="mdi mdi-broom mdi-24px"> filters</span>
 
                 <button id="pin_image_button">
@@ -80,8 +83,6 @@
                     </span>
                 </button>
                 
-
-
                 <fieldset>
                     <legend>Gaussian blur</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
@@ -127,11 +128,25 @@
                 <fieldset>
                     <legend>sepia</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <input type="range" id="sepia_slider"  min="0" max="100" value="100" oninput="this.nextElementSibling.value = this.value + '%'">
-                    <output>100%</output>
+                    <input type="range" id="sepia_slider"  min="0" max="100" value="0" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>0%</output>
                 </fieldset>
 
             </div>
+
+            <!-- BIOMETRICS -->
+            <div id="biometrics_tool_bar" class="tool_bar" style="display:none;">
+
+                <span class="mdi mdi-fingerprint mdi-24px"> basics</span>
+
+                <fieldset>
+                    <legend>temp</legend>
+                    <span class="mdi mdi-brush mdi-24px"></span>
+                    <button id="temp_button">TEMP BUTTON</button>
+                </fieldset>
+
+            </div>
+
 
         </div>
 
