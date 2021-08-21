@@ -1,4 +1,12 @@
-import {} from './modules/filters.js'
+import { 
+        get_gaussian_kernel_in_channels,
+		convolve_canvas_with_kernel,
+		multiply_canvas_by_value,
+		multiply_canvas_by_factor,
+		grayscale_image_filter,
+		invert_image_filter,
+		change_saturation,
+} from './modules/filters.js'
 
 
 window.addEventListener("load", () => {
@@ -106,5 +114,74 @@ window.addEventListener("load", () => {
     color_input_custom .addEventListener("change", function(){changeColor(color_input_custom.value)});
     
     brush_size_slider.addEventListener("change", changeBrushSize);
+
+    // --------------------------------------------------------------------
+    // finters functions
+    
+    function apply_gaussian_blur(value)
+    {
+		let sigma = [value/100, value/100, value/100, value/100];
+		let kernel = get_gaussian_kernel_in_channels(sigma, 4);
+		let imgData = ctx.getImageData(0, 0, 512, 512);
+        imgData = convolve_canvas_with_kernel(imgData, kernel);
+        ctx.putImageData(imgData, 0, 0);
+    }
+
+	function apply_brightness_effect(value)
+	{
+        let imgData = ctx.getImageData(0, 0, 512, 512);
+		imgData = multiply_canvas_by_value(imgData, value/100);
+        ctx.putImageData(imgData, 0, 0);
+	}
+
+	function apply_contrast_effect(value)
+	{
+        let imgData = ctx.getImageData(0, 0, 512, 512);
+		imgData = multiply_canvas_by_factor(imgData, value);
+        ctx.putImageData(imgData, 0, 0);
+	}
+
+	function apply_grayscale_effect(value)
+	{
+        let imgData = ctx.getImageData(0, 0, 512, 512);
+		imgData = grayscale_image_filter(imgData, value);
+        ctx.putImageData(imgData, 0, 0);
+	}
+
+	function apply_invert_effect(value)
+	{
+        let imgData = ctx.getImageData(0, 0, 512, 512);
+		imgData = invert_image_filter(imgData, value);
+        ctx.putImageData(imgData, 0, 0);
+	}
+
+	function apply_saturation_effect(value)
+	{
+        let imgData = ctx.getImageData(0, 0, 512, 512);
+		imgData = change_saturation(imgData, value);
+        ctx.putImageData(imgData, 0, 0);
+	}
+
+
+        // -----------------------------------------------------------------------------------------
+    // controls
+
+    const blur_slider       = document.getElementById("blur_slider"         );
+    const brightness_slider = document.getElementById("brightness_slider"   );
+    const contrast_slider   = document.getElementById("contrast_slider"     );
+    const grayscale_slider  = document.getElementById("grayscale_slider"    );
+    const invert_slider     = document.getElementById("invert_slider"       );
+    const saturate_slider   = document.getElementById("saturate_slider"     );
+    const sepia_slider      = document.getElementById("sepia_slider"        );
+
+
+    blur_slider         .addEventListener("change", function(){apply_gaussian_blur(			blur_slider.value		)});
+    brightness_slider   .addEventListener("change", function(){apply_brightness_effect(		brightness_slider.value	)});
+    contrast_slider     .addEventListener("change", function(){apply_contrast_effect(		contrast_slider.value	)});
+    grayscale_slider    .addEventListener("change", function(){apply_grayscale_effect(		grayscale_slider.value	)});
+    invert_slider       .addEventListener("change", function(){apply_invert_effect(			invert_slider.value		)});
+    saturate_slider     .addEventListener("change", function(){apply_saturation_effect(		saturate_slider.value	)});
+    sepia_slider        .addEventListener("change", function(){apply_filter(sepia_slider.value)});
+
 
 })

@@ -2,6 +2,12 @@ body {
     margin: 10px;
 }
 
+#myCanvas {
+    width: 512px; 
+    height: 512px; 
+    border: 1px solid black;
+}
+
 .tool_bar {
     background-color: gray;
     padding: 5px;
