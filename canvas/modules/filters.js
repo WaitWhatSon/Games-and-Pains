@@ -192,10 +192,34 @@ function change_saturation(ctx, imgData, value)
 		hsv.s = Math.min(hsv.s + value/100, 1);
 		let rgb = convertHSVtoRGB(hsv.h, hsv.s, hsv.v);
 
-            tempData.data[i] 	= 255 * rgb.r;
-            tempData.data[i+1] 	= 225 * rgb.g;
-            tempData.data[i+2] 	= 255 * rgb.b;
-            tempData.data[i+3] 	= 255;
+        tempData.data[i] 	= 255 * rgb.r;
+        tempData.data[i+1] 	= 225 * rgb.g;
+        tempData.data[i+2] 	= 255 * rgb.b;
+        tempData.data[i+3] 	= 255;
+    }
+    return tempData;
+}
+
+// -----------------------------------------------------------
+// SEPIA
+	
+// na podstawie:
+// https://www.geeksforgeeks.org/image-procesing-java-set-6-colored-image-sepia-image-conversion/
+function sepia_filter(ctx, imgData, value)
+{
+	var tempData = ctx.createImageData(512, 512);
+    for (let i = 0; i < imgData.data.length; i += 4) 
+	{
+		let r = imgData.data[i];
+		let g = imgData.data[i+1];
+		let b = imgData.data[i+2];
+		let new_red_value 	= 0.393*r + 0.769*g + 0.189*b;
+   		let new_green_value = 0.349*r + 0.686*g + 0.168*b;
+   		let new_blue_value 	= 0.272*r + 0.534*g + 0.131*b;
+		tempData.data[i]   = imgData.data[i]  *(100-value)/100 	+ new_red_value	 *value/100;
+        tempData.data[i+1] = imgData.data[i+1]*(100-value)/100 	+ new_green_value*value/100;
+        tempData.data[i+2] = imgData.data[i+2]*(100-value)/100 	+ new_blue_value *value/100;
+        tempData.data[i+3] = 255;
     }
     return tempData;
 }
@@ -259,5 +283,5 @@ export {
 	grayscale_image_filter,
 	invert_image_filter,
 	change_saturation,
-
+	sepia_filter,
 }

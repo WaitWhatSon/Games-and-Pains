@@ -6,6 +6,7 @@ import {
 		grayscale_image_filter,
 		invert_image_filter,
 		change_saturation,
+        sepia_filter,
 } from './modules/filters.js'
 
 
@@ -188,6 +189,11 @@ window.addEventListener("load", () => {
         ctx.putImageData(imgData, 0, 0);
 	}
 
+    function apply_sepia_effect(value)
+	{
+        let imgData = sepia_filter(ctx, pinned_image, value);
+        ctx.putImageData(imgData, 0, 0);
+	}
 
     // -----------------------------------------------------------------------------------------
     // controls
@@ -213,7 +219,7 @@ window.addEventListener("load", () => {
     grayscale_slider    .addEventListener("change", function(){apply_grayscale_effect(		grayscale_slider.value	)});
     invert_slider       .addEventListener("change", function(){apply_invert_effect(			invert_slider.value		)});
     saturate_slider     .addEventListener("change", function(){apply_saturation_effect(		saturate_slider.value	)});
-    sepia_slider        .addEventListener("change", function(){apply_filter(sepia_slider.value)});
+    sepia_slider        .addEventListener("change", function(){apply_sepia_effect(          sepia_slider.value)});
 
 
 })
