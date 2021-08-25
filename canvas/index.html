@@ -86,7 +86,7 @@
                 <fieldset>
                     <legend>Gaussian blur</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <input type="range" id="blur_slider"  min="50" max="100" value="0" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <input type="range" id="blur_slider"  min="1" max="100" value="50" oninput="this.nextElementSibling.value = this.value + '%'">
                     <output>50%</output>
                 </fieldset>
 
@@ -121,8 +121,8 @@
                 <fieldset>
                     <legend>saturate</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <input type="range" id="saturate_slider"  min="0" max="100" value="100" oninput="this.nextElementSibling.value = this.value + '%'">
-                    <output>100%</output>
+                    <input type="range" id="saturate_slider"  min="0" max="100" value="0" oninput="this.nextElementSibling.value = this.value + '%'">
+                    <output>0%</output>
                 </fieldset>
 
                 <fieldset>
@@ -148,43 +148,34 @@
                 <fieldset>
                     <legend>convert to mono-grayscale</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <button id="temp_button">CONVERT</button>
+                    <button id="fingerprint_grayscale_button">CONVERT</button>
                 </fieldset>
 
                 <fieldset>
                     <legend>histogram normalization</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <button id="temp_button">NORMALIZE</button>
+                    <button id="histogram_normalization_button">NORMALIZE (grayscale)</button>
+                    <button id="rgb_histogram_normalization_button">NORMALIZE (RGB)</button>
                 </fieldset>
 
                 <fieldset>
                     <legend>binarization</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <button id="temp_button">tak a co</button>
+                    <button id="binarization_button">TODO</button>
                 </fieldset>
 
                 <fieldset>
                     <legend>thinning</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <button id="temp_button">KMM</button>
-                    <button id="temp_button">K3M</button>
+                    <button id="thinning_KMM_button">KMM</button>
+                    <button id="thinning_K3M_button">K3M</button>
                 </fieldset>
 
                 <fieldset>
                     <legend>looking for minutiae</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
-                    <button id="temp_button">SEARCH</button>
+                    <button id="minutiae_searching_button">SEARCH</button>
                 </fieldset>
-
-
-
-                <!--
-                    zmiana na odcienie szarości
-                    normalizacja histogramu
-                    binaryzacja
-                    ścienianie
-                    szukanie minucji
-                -->
 
             </div>
 
