@@ -9,6 +9,12 @@ import {
         sepia_filter,
 } from './modules/filters.js'
 
+import {
+    get_grayscale_histogram,
+    get_rgba_histogram,
+    convert_to_grayscale,
+} from './modules/biometrics.js'
+
 
 window.addEventListener("load", () => {
 
@@ -143,7 +149,7 @@ window.addEventListener("load", () => {
     brush_size_slider.addEventListener("change", changeBrushSize);
 
     // --------------------------------------------------------------------
-    // finters functions
+    // filters functions
 
     // --- pin image to process
     function pin_image()
@@ -234,6 +240,11 @@ window.addEventListener("load", () => {
     function temp_apply()
     {
 		console.log("ELO");
+        let temp = get_grayscale_histogram(ctx.getImageData(0, 0, 512, 512));
+        console.log(temp);
+        
+        let temp2 = get_rgba_histogram(ctx.getImageData(0, 0, 512, 512));
+        console.log(temp2);
     }
 
 	// -----------------------------------------------------------------------------------------
