@@ -44,34 +44,20 @@ function get_cumulative_histogram(histogram)
     return cumulative_histogram;
 }
 
-
-// ----------------------------------------
-// GRAYSCALE
-function convert_to_grayscale(ctx, imgData)
-{
-	var tempData = ctx.createImageData(512, 512);
-    for (let i = 0; i < imgData.data.length; i += 4) 
-	{
-        let gray = (imgData.data[i] * 0.2126 + imgData.data[i+1] * 0.7152 + imgData.data[i+2] * 0.0722)
-		tempData.data[i]   = gray;
-        tempData.data[i+1] = gray;
-        tempData.data[i+2] = gray;
-        tempData.data[i+3] = 255;
-    }
-    return tempData;
-}
-
+// ------------------------------------------------
+// HISTOGRAM NORMALIZATION
 function normalize_image_histogram(ctx, imgData)
 {
+    imgData = convert_to_grayscale(ctx, imgData);
     let histogram = get_grayscale_histogram(imgData);
     let cumulative_histogram = get_cumulative_histogram(histogram);
-    var tempData = ctx.createImageData(512, 512);
+    let tempData = ctx.createImageData(512, 512);
     for (let i = 0; i < imgData.data.length; i += 4) 
 	{
-        tempData.data[i]   = cumulative_histogram[Math.floor(imgData.data[i])];
-        tempData.data[i+1] = cumulative_histogram[Math.floor(imgData.data[i])];
-        tempData.data[i+2] = cumulative_histogram[Math.floor(imgData.data[i])];
-        tempData.data[i+3] = 255;
+        tempData.data[i]   = cumulative_histogram[imgData.data[i]];
+        tempData.data[i+1] = cumulative_histogram[imgData.data[i+1]];
+        tempData.data[i+2] = cumulative_histogram[imgData.data[i+2]];
+        tempData.data[i+3] = imgData.data[i+3];
     }   
     return tempData;
 }
@@ -82,7 +68,7 @@ function normalize_rgb_image_histogram(ctx, imgData)
     let cumulative_histogram_r = get_cumulative_histogram(histogram.r_histogram);
     let cumulative_histogram_g = get_cumulative_histogram(histogram.g_histogram);
     let cumulative_histogram_b = get_cumulative_histogram(histogram.b_histogram);
-    var tempData = ctx.createImageData(512, 512);
+    let tempData = ctx.createImageData(512, 512);
     for (let i = 0; i < imgData.data.length; i += 4) 
 	{
         tempData.data[i]   = cumulative_histogram_r[Math.floor(imgData.data[i])];
@@ -90,6 +76,73 @@ function normalize_rgb_image_histogram(ctx, imgData)
         tempData.data[i+2] = cumulative_histogram_b[Math.floor(imgData.data[i+2])];
         tempData.data[i+3] = 255;
     }   
+    return tempData;
+}
+
+// ----------------------------------------
+// GRAYSCALE
+function convert_to_grayscale(ctx, imgData)
+{
+	let tempData = ctx.createImageData(512, 512);
+    for (let i = 0; i < imgData.data.length; i += 4) 
+	{
+        let gray = Math.floor(imgData.data[i] * 0.2126 + imgData.data[i+1] * 0.7152 + imgData.data[i+2] * 0.0722)
+		tempData.data[i]   = gray;
+        tempData.data[i+1] = gray;
+        tempData.data[i+2] = gray;
+        tempData.data[i+3] = imgData.data[i+3];
+    }
+    return tempData;
+}
+
+// -----------------------------------------------
+// BINARIZATION
+function otsu_binarization(ctx, imgData)
+{
+    let grayscaleData = convert_to_grayscale(ctx, imgData);
+    let histogram = get_grayscale_histogram(grayscaleData);
+    let histSum = histogram.reduce((prev, next) => prev + next, 0);
+    let sum = 0;
+    for (let i = 0; i < 256; i++)
+    {
+        sum += i * histogram[i];
+    }
+    let sumB = 0;
+    let varMax = 0;
+    let back = 0;
+    let threshold = 0;
+
+    for (let i = 0; i < 256; i++)
+	{
+		back += histogram[i];
+		if (back == 0)
+        {
+            continue;
+        }
+		let fore = histSum - back;
+		if (fore == 0)
+        {
+            break;
+        }
+		sumB += i * histogram[i];
+
+		let backMean = sumB / back;
+		let foreMean = (sum - sumB) / fore;
+
+		let varBetween = back * fore * (backMean - foreMean) * (backMean - foreMean);
+
+		if (varBetween > varMax)
+		{
+			varMax = varBetween;
+			threshold = i;
+		}
+	}
+
+    let tempData = ctx.createImageData(512, 512);
+    for (let i = 0; i < imgData.data.length; i++) 
+	{
+        tempData.data[i] = imgData.data[i] > threshold ? 255 : 0;
+    }
     return tempData;
 }
 
@@ -110,4 +163,5 @@ export {
     get_cumulative_histogram,
     normalize_image_histogram,
     normalize_rgb_image_histogram,
+    otsu_binarization,
 }

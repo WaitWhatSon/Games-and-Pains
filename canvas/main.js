@@ -15,6 +15,7 @@ import {
     convert_to_grayscale,
     normalize_image_histogram,
     normalize_rgb_image_histogram,
+    otsu_binarization,
 } from './modules/biometrics.js'
 
 
@@ -234,7 +235,7 @@ window.addEventListener("load", () => {
     grayscale_slider    .addEventListener("change", function(){apply_grayscale_effect(		grayscale_slider.value	)});
     invert_slider       .addEventListener("change", function(){apply_invert_effect(			invert_slider.value		)});
     saturate_slider     .addEventListener("change", function(){apply_saturation_effect(		saturate_slider.value	)});
-    sepia_slider        .addEventListener("change", function(){apply_sepia_effect(          sepia_slider.value)});
+    sepia_slider        .addEventListener("change", function(){apply_sepia_effect(          sepia_slider.value      )});
 
     // --------------------------------------------------------------------
     // biometrics functions
@@ -270,9 +271,11 @@ window.addEventListener("load", () => {
         ctx.putImageData(data, 0, 0);
     }
     
-    function temp_binarization()
+    function otsu_binarization_apply()
     {
-        console.log("temp_binarization")
+        let original = ctx.getImageData(0, 0, 512, 512);
+        let data = otsu_binarization(ctx, original);
+        ctx.putImageData(data, 0, 0);
     }
 
     function KMM_thinning()
@@ -293,21 +296,22 @@ window.addEventListener("load", () => {
 	// -----------------------------------------------------------------------------------------
     // controls
 
-    const temp_button = document.getElementById("temp_button");
-    const fingerprint_grayscale_button = document.getElementById("fingerprint_grayscale_button");
-    const histogram_normalization_button = document.getElementById("histogram_normalization_button");
-    const rgb_histogram_normalization_button = document.getElementById("rgb_histogram_normalization_button");
-    const binarization_button = document.getElementById("binarization_button");
-    const thinning_KMM_button = document.getElementById("thinning_KMM_button");
-    const thinning_K3M_button = document.getElementById("thinning_K3M_button");
-    const minutiae_searching_button = document.getElementById("minutiae_searching_button");
+    const temp_button                           = document.getElementById("temp_button"                         );
+    const fingerprint_grayscale_button          = document.getElementById("fingerprint_grayscale_button"        );
+    const histogram_normalization_button        = document.getElementById("histogram_normalization_button"      );
+    const rgb_histogram_normalization_button    = document.getElementById("rgb_histogram_normalization_button"  );
+    const otsu_binarization_button              = document.getElementById("otsu_binarization"                   );
+    const thinning_KMM_button                   = document.getElementById("thinning_KMM_button"                 );
+    const thinning_K3M_button                   = document.getElementById("thinning_K3M_button"                 );
+    const minutiae_searching_button             = document.getElementById("minutiae_searching_button"           );
 
-    temp_button.addEventListener("click", function(){temp_apply()});
-    fingerprint_grayscale_button.addEventListener("click", function(){fingerprint_grayscale()});
-    histogram_normalization_button.addEventListener("click", function(){histogram_normalization()});
-    rgb_histogram_normalization_button.addEventListener("click", function(){rgb_histogram_normalization()});
-    binarization_button.addEventListener("click", function(){temp_binarization()});
-    thinning_KMM_button.addEventListener("click", function(){KMM_thinning()});
-    thinning_K3M_button.addEventListener("click", function(){K3M_thinning()});
-    minutiae_searching_button.addEventListener("click", function(){minutiae_apply()});
+    temp_button                         .addEventListener("click", function(){temp_apply()                  });
+    fingerprint_grayscale_button        .addEventListener("click", function(){fingerprint_grayscale()       });
+    histogram_normalization_button      .addEventListener("click", function(){histogram_normalization()     });
+    rgb_histogram_normalization_button  .addEventListener("click", function(){rgb_histogram_normalization() });
+    otsu_binarization_button            .addEventListener("click", function(){otsu_binarization_apply()     });
+    thinning_KMM_button                 .addEventListener("click", function(){KMM_thinning()                });
+    thinning_K3M_button                 .addEventListener("click", function(){K3M_thinning()                });
+    minutiae_searching_button           .addEventListener("click", function(){minutiae_apply()              });
+
 })
