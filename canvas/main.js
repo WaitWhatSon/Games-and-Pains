@@ -15,7 +15,9 @@ import {
     convert_to_grayscale,
     normalize_image_histogram,
     normalize_rgb_image_histogram,
-    otsu_binarization,
+    otsu_thresholding,
+    niblack_thresholding,
+    sauvola_thresholding,
 } from './modules/biometrics.js'
 
 
@@ -271,13 +273,27 @@ window.addEventListener("load", () => {
         ctx.putImageData(data, 0, 0);
     }
     
-    function otsu_binarization_apply()
+    function otsu_thresholding_apply()
     {
         let original = ctx.getImageData(0, 0, 512, 512);
-        let data = otsu_binarization(ctx, original);
+        let data = otsu_thresholding(ctx, original);
         ctx.putImageData(data, 0, 0);
     }
 
+    function niblack_thresholding_apply()
+    {
+        let original = ctx.getImageData(0, 0, 512, 512);
+        let data = niblack_thresholding(ctx, original);
+        ctx.putImageData(data, 0, 0);
+    }
+    
+    function sauvola_thresholding_apply()
+    {
+        let original = ctx.getImageData(0, 0, 512, 512);
+        let data = sauvola_thresholding(ctx, original);
+        ctx.putImageData(data, 0, 0);
+    }
+    
     function KMM_thinning()
     {
         console.log("KMM_thinning")
@@ -300,7 +316,9 @@ window.addEventListener("load", () => {
     const fingerprint_grayscale_button          = document.getElementById("fingerprint_grayscale_button"        );
     const histogram_normalization_button        = document.getElementById("histogram_normalization_button"      );
     const rgb_histogram_normalization_button    = document.getElementById("rgb_histogram_normalization_button"  );
-    const otsu_binarization_button              = document.getElementById("otsu_binarization"                   );
+    const otsu_thresholding_button              = document.getElementById("otsu_thresholding"                   );
+    const niblack_thresholding_button           = document.getElementById("niblack_thresholding"                );
+    const sauvola_thresholding_button           = document.getElementById("sauvola_thresholding"                );
     const thinning_KMM_button                   = document.getElementById("thinning_KMM_button"                 );
     const thinning_K3M_button                   = document.getElementById("thinning_K3M_button"                 );
     const minutiae_searching_button             = document.getElementById("minutiae_searching_button"           );
@@ -309,7 +327,9 @@ window.addEventListener("load", () => {
     fingerprint_grayscale_button        .addEventListener("click", function(){fingerprint_grayscale()       });
     histogram_normalization_button      .addEventListener("click", function(){histogram_normalization()     });
     rgb_histogram_normalization_button  .addEventListener("click", function(){rgb_histogram_normalization() });
-    otsu_binarization_button            .addEventListener("click", function(){otsu_binarization_apply()     });
+    otsu_thresholding_button            .addEventListener("click", function(){otsu_thresholding_apply()     });
+    niblack_thresholding_button         .addEventListener("click", function(){niblack_thresholding_apply()  });
+    sauvola_thresholding_button         .addEventListener("click", function(){sauvola_thresholding_apply()  });
     thinning_KMM_button                 .addEventListener("click", function(){KMM_thinning()                });
     thinning_K3M_button                 .addEventListener("click", function(){K3M_thinning()                });
     minutiae_searching_button           .addEventListener("click", function(){minutiae_apply()              });

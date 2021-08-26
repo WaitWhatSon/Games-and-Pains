@@ -97,7 +97,7 @@ function convert_to_grayscale(ctx, imgData)
 
 // -----------------------------------------------
 // BINARIZATION
-function otsu_binarization(ctx, imgData)
+function otsu_thresholding(ctx, imgData)
 {
     let grayscaleData = convert_to_grayscale(ctx, imgData);
     let histogram = get_grayscale_histogram(grayscaleData);
@@ -146,6 +146,26 @@ function otsu_binarization(ctx, imgData)
     return tempData;
 }
 
+function niblack_thresholding(ctx, imgData)
+{
+    let tempData = ctx.createImageData(512, 512);
+    for (let i = 0; i < imgData.data.length; i++) 
+	{
+        tempData.data[i] = imgData.data[i] > 100 ? 255 : 0;
+    }
+    return tempData;
+}
+
+function sauvola_thresholding(ctx, imgData)
+{
+    let tempData = ctx.createImageData(512, 512);
+    for (let i = 0; i < imgData.data.length; i++) 
+	{
+        tempData.data[i] = imgData.data[i] > 100 ? 255 : 0;
+    }
+    return tempData;
+}
+
 
 /*
                     zmiana na odcienie szarości
@@ -163,5 +183,7 @@ export {
     get_cumulative_histogram,
     normalize_image_histogram,
     normalize_rgb_image_histogram,
-    otsu_binarization,
+    otsu_thresholding,
+    niblack_thresholding,
+    sauvola_thresholding,
 }
