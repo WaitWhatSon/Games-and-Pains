@@ -283,7 +283,7 @@ window.addEventListener("load", () => {
     function niblack_thresholding_apply()
     {
         let original = ctx.getImageData(0, 0, 512, 512);
-        let data = niblack_thresholding(ctx, original);
+        let data = niblack_thresholding(ctx, original, 9);
         ctx.putImageData(data, 0, 0);
     }
     

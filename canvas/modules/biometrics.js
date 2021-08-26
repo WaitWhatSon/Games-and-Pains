@@ -139,20 +139,48 @@ function otsu_thresholding(ctx, imgData)
 	}
 
     let tempData = ctx.createImageData(512, 512);
-    for (let i = 0; i < imgData.data.length; i++) 
+    for (let i = 0; i < grayscaleData.data.length; i++) 
 	{
-        tempData.data[i] = imgData.data[i] > threshold ? 255 : 0;
+        tempData.data[i] = grayscaleData.data[i] > threshold ? 255 : 0;
     }
     return tempData;
 }
 
-function niblack_thresholding(ctx, imgData)
+function niblack_thresholding(ctx, imgData, winSize)
 {
-    let tempData = ctx.createImageData(512, 512);
-    for (let i = 0; i < imgData.data.length; i++) 
-	{
-        tempData.data[i] = imgData.data[i] > 100 ? 255 : 0;
-    }
+    let grayscaleData = convert_to_grayscale(ctx, imgData);
+    // loop with window of size 3
+    // image x y // window j k
+    var tempData = ctx.createImageData(512, 512);
+	for(let x = 0; x < imgData.data.length/(512*4); x++)
+	{	
+		for(let y = 0; y < imgData.data.length/512; y+=4)
+		{
+			let window = [];
+            for (let j = -(winSize-1)/2; j <= (winSize-1)/2; j++)
+            {
+                for (let k = -(winSize-1)/2; k <= (winSize-1)/2; k++)
+                {                                 //    X (rząd)        Y (kolumna)
+                    window.push(grayscaleData.data[ ( (x+j) * 512*4 ) + ( y + (4*k) ) ]);
+                }                
+            }
+            let sum = window.reduce((acc, val) => acc + val, 0)
+            let mean = sum / (winSize * winSize);
+            let variance = 0;
+            window.forEach(value => {
+                variance += ((value - mean) * (value - mean));
+            });
+            variance /= (winSize * winSize);
+            let sigma = Math.sqrt(variance);
+            let k = -0.2;
+            let threshold = mean + k * sigma;
+			// set new values
+			tempData.data[(x*512*4)+(y+0)] = grayscaleData.data[(x*512*4)+(y+0)]   >= threshold ? 255 : 0;
+			tempData.data[(x*512*4)+(y+1)] = grayscaleData.data[(x*512*4)+(y+0)+1] >= threshold ? 255 : 0;
+			tempData.data[(x*512*4)+(y+2)] = grayscaleData.data[(x*512*4)+(y+0)+2] >= threshold ? 255 : 0;
+			tempData.data[(x*512*4)+(y+3)] = 255;
+		}
+	}
     return tempData;
 }
 
