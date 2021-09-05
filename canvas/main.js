@@ -334,4 +334,6 @@ window.addEventListener("load", () => {
     thinning_K3M_button                 .addEventListener("click", function(){K3M_thinning()                });
     minutiae_searching_button           .addEventListener("click", function(){minutiae_apply()              });
 
+    // TODO: window size slider
+
 })
