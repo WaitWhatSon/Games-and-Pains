@@ -18,6 +18,7 @@ import {
     otsu_thresholding,
     niblack_thresholding,
     sauvola_thresholding,
+    threshold_thresholding,
 } from './modules/biometrics.js'
 
 
@@ -290,7 +291,15 @@ window.addEventListener("load", () => {
     function sauvola_thresholding_apply()
     {
         let original = ctx.getImageData(0, 0, 512, 512);
-        let data = sauvola_thresholding(ctx, original);
+        let data = sauvola_thresholding(ctx, original, 9);
+        ctx.putImageData(data, 0, 0);
+    }
+
+    function threshold_thresholding_apply()
+    {
+        let threshold_value = 100;
+        let original = ctx.getImageData(0, 0, 512, 512);
+        let data = threshold_thresholding(ctx, original, threshold_value);
         ctx.putImageData(data, 0, 0);
     }
     
@@ -319,6 +328,7 @@ window.addEventListener("load", () => {
     const otsu_thresholding_button              = document.getElementById("otsu_thresholding"                   );
     const niblack_thresholding_button           = document.getElementById("niblack_thresholding"                );
     const sauvola_thresholding_button           = document.getElementById("sauvola_thresholding"                );
+    const threshold_thresholding_button         = document.getElementById("threshold_thresholding"              );
     const thinning_KMM_button                   = document.getElementById("thinning_KMM_button"                 );
     const thinning_K3M_button                   = document.getElementById("thinning_K3M_button"                 );
     const minutiae_searching_button             = document.getElementById("minutiae_searching_button"           );
@@ -330,6 +340,7 @@ window.addEventListener("load", () => {
     otsu_thresholding_button            .addEventListener("click", function(){otsu_thresholding_apply()     });
     niblack_thresholding_button         .addEventListener("click", function(){niblack_thresholding_apply()  });
     sauvola_thresholding_button         .addEventListener("click", function(){sauvola_thresholding_apply()  });
+    threshold_thresholding_button       .addEventListener("click", function(){threshold_thresholding_apply()});
     thinning_KMM_button                 .addEventListener("click", function(){KMM_thinning()                });
     thinning_K3M_button                 .addEventListener("click", function(){K3M_thinning()                });
     minutiae_searching_button           .addEventListener("click", function(){minutiae_apply()              });
