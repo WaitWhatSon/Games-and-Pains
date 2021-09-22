@@ -211,7 +211,7 @@ function sauvola_thresholding(ctx, imgData, winSize)
             variance /= (winSize * winSize);
             let sigma = Math.sqrt(variance);
             let k = 0.5;
-            let div = 2;
+            let div = 128;
             let threshold = mean * (1 + k * (sigma / div - 1));
 			// set new values
 			tempData.data[(x*512*4)+(y+0)] = grayscaleData.data[(x*512*4)+(y+0)+0] >= threshold ? 255 : 0;

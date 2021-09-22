@@ -291,7 +291,7 @@ window.addEventListener("load", () => {
     function sauvola_thresholding_apply()
     {
         let original = ctx.getImageData(0, 0, 512, 512);
-        let data = sauvola_thresholding(ctx, original, 9);
+        let data = sauvola_thresholding(ctx, original, 15);
         ctx.putImageData(data, 0, 0);
     }
 
