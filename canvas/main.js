@@ -21,6 +21,10 @@ import {
     threshold_thresholding,
 } from './modules/biometrics.js'
 
+import {
+    K3M,
+} from './modules/K3M.js'
+
 
 window.addEventListener("load", () => {
 
@@ -311,6 +315,9 @@ window.addEventListener("load", () => {
     function K3M_thinning()
     {
         console.log("K3M_thinning")
+        let original = ctx.getImageData(0, 0, 512, 512);
+        let data = K3M(ctx, original, 15);
+        ctx.putImageData(data, 0, 0);
     }
 
     function minutiae_apply()
