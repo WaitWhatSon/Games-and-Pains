@@ -1,3 +1,5 @@
+const BORDER = 100;
+
 let N = [[32,64,128], [16,0,1], [8,4,2]];
 const A0 = [3,6,7,12,14,15,24,28,30,31,48,56,60,62,63,96,112,120,124,
       126,127,129,131,135,143,159,191,192,193,195,199,207,223,224,
@@ -27,7 +29,7 @@ function phase(imgData, W)
 		for(let y = 0; y < imgData.data.length/512; y+=4)
 		{
 			let pixelB = B.data[((x)*512*4)+(y)];
-			if(pixelB == 100) // pixel is marked
+			if(pixelB == BORDER) // pixel is marked
 			{
 				let weight = 0;
 				for(let i = -1; i<=1; i++)
@@ -83,7 +85,7 @@ function border(imgData, ctx, A0)
 				}
 				if(A0.includes(weight))
 				{ // mark as border
-					B.data[((x)*512*4)+(y)+0] = 100; 
+					B.data[((x)*512*4)+(y)+0] = BORDER; 
 					B.data[((x)*512*4)+(y)+1] = 255;
 					B.data[((x)*512*4)+(y)+2] = 255;
 					B.data[((x)*512*4)+(y)+3] = 255;

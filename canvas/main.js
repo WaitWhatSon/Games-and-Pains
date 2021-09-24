@@ -22,6 +22,10 @@ import {
 } from './modules/biometrics.js'
 
 import {
+    KMM,
+} from './modules/KMM.js'
+
+import {
     K3M,
 } from './modules/K3M.js'
 
@@ -310,13 +314,16 @@ window.addEventListener("load", () => {
     function KMM_thinning()
     {
         console.log("KMM_thinning")
+        let original = ctx.getImageData(0, 0, 512, 512);
+        let data = KMM(ctx, original);
+        ctx.putImageData(data, 0, 0);
     }
 
     function K3M_thinning()
     {
         console.log("K3M_thinning")
         let original = ctx.getImageData(0, 0, 512, 512);
-        let data = K3M(ctx, original, 15);
+        let data = K3M(ctx, original);
         ctx.putImageData(data, 0, 0);
     }
 
