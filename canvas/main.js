@@ -37,6 +37,8 @@ window.addEventListener("load", () => {
 
     const canvas    = document.getElementById("myCanvas");
     const ctx       = canvas.getContext("2d");
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const reset_image_button        = document.getElementById("clear_canvas");
     const apple_image_button        = document.getElementById("apple_image" );
@@ -118,6 +120,8 @@ window.addEventListener("load", () => {
 
     function resetImage() {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     function putImageOnCanvas(image_path)

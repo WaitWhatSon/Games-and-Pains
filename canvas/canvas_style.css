@@ -1,11 +1,29 @@
 body {
-    margin: 10px;
+    background-color: rgb(178, 235, 227);
+    background-image: linear-gradient(rgb(178, 235, 227), rgb(91, 224, 207));
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.program_window {
+    background-color: rgb(128, 128, 128);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    float: left;
+    border-radius: 10px;
+    border: 2px solid black;
+    box-shadow: 10px 10px 10px;
 }
 
 #myCanvas {
     width: 512px; 
     height: 512px; 
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 .tool_bar {

@@ -11,10 +11,14 @@
     </head>
 
     <body>
+        <div class="program_window">
 
         <div style="display: flex">
 
-            <canvas id="myCanvas" height="512" width="512"></canvas>
+            <div>
+                <canvas id="myCanvas" height="512" width="512"></canvas>
+                <p style="margin:0;">canvas v 1.0 | 2021</p>
+            </div>
 
             <div id="side_bar" class="side_bar">
                 <button id="basics_tool_bar_button" title="basics">
@@ -35,13 +39,13 @@
                     <span class="mdi mdi-brush mdi-24px"></span>
                     <input type="range" id="brush_size_slider"  min="1" max="20"list="tickmarks"/>
                     <datalist id="tickmarks">
-                        <option value="1"/>     <option value="2"/>
-                        <option value="3"/>     <option value="4"/>     <option value="5"/>
-                        <option value="6"/>     <option value="7"/>     <option value="8"/>
-                        <option value="9"/>     <option value="10"/>    <option value="11"/>
-                        <option value="12"/>    <option value="13"/>    <option value="14"/>
-                        <option value="15"/>    <option value="16"/>    <option value="17"/>
-                        <option value="18"/>    <option value="19"/>    <option value="20"/>
+                        <option value="1">     <option value="2">
+                        <option value="3">     <option value="4">     <option value="5">
+                        <option value="6">     <option value="7">     <option value="8">
+                        <option value="9">     <option value="10">    <option value="11">
+                        <option value="12">    <option value="13">    <option value="14">
+                        <option value="15">    <option value="16">    <option value="17">
+                        <option value="18">    <option value="19">    <option value="20">
                     </datalist>
                 </fieldset>
 
@@ -155,6 +159,8 @@
                     <legend>histogram normalization</legend>
                     <span class="mdi mdi-brush mdi-24px"></span>
                     <button id="histogram_normalization_button">NORMALIZE (grayscale)</button>
+                    <br>
+                    <span class="mdi mdi-brush mdi-24px"></span>
                     <button id="rgb_histogram_normalization_button">NORMALIZE (RGB)</button>
                 </fieldset>
 
@@ -185,6 +191,8 @@
 
 
         </div>
+
+    </div>
 
     </body>
 
