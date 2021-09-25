@@ -20,3 +20,11 @@ ______________
 
 # CANVAS
 * in progress
+______________
+# PBINGO
+* JS small bingo 
+* na uczelnianą nudę
+* [README.md](./pbingo/README.md) project details
+* go to [PBINGO](https://waitwhatson.github.io/pbingo/index.html)
+### Project:
+* [WaitWhatSon/pbingo](https://github.com/WaitWhatSon/pbingo)
