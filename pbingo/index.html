@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Cambay' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+	<link rel="icon" href="baby.svg">
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="bingoscript.js"></script>
+    <title>PBingo</title>
+</head>
+
+<body onload="newPlay()">
+
+	<section>
+		<script type="text/javascript" src="backgroundscript.js"></script>
+	</section>
+
+	<div id="container">
+        <div id="header">
+            <h1>Your BINGO Card</h1>
+			<div id="header_text" style="display:none;">
+				<h2>BINGO!
+					<img src="baby.svg" alt=":D" style="width:50px;height:50px;">
+				</h2>
+			</div>
+        </div>
+	    
+        <div id="content">
+		    <table id="bingotable">
+			    <tr>
+				    <td class="undone" id="square0" onclick="markDoneUndone('square0')"> &nbsp;</td>
+				    <td class="undone" id="square1" onclick="markDoneUndone('square1')"> &nbsp;</td>
+				    <td class="undone" id="square2" onclick="markDoneUndone('square2')"> &nbsp;</td>
+			    </tr>
+			    <tr>
+				    <td class="undone" id="square3" onclick="markDoneUndone('square3')"> &nbsp;</td>
+				    <td class="undone" id="square4" onclick="markDoneUndone('square4')"> &nbsp;</td>
+				    <td class="undone" id="square5" onclick="markDoneUndone('square5')"> &nbsp;</td>
+			    </tr>
+                <tr>
+				    <td class="undone" id="square6" onclick="markDoneUndone('square6')">&nbsp;</td>
+				    <td class="undone" id="square7" onclick="markDoneUndone('square7')">&nbsp;</td>
+				    <td class="undone" id="square8" onclick="markDoneUndone('square8')">&nbsp;</td>
+			    </tr>
+		</table>
+	</div>
+	
+<h1><a href="#" onclick="anotherCard()">Click here</a> to create a new card</h1>
+
+</body>
+
+</html>
+
+
+
+<!-- based on: -->
+<!-- https://codepen.io/koriwade/pen/BoOqGM-->
