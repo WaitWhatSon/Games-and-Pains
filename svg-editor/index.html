@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<head>
+    <title>svg editor</title>
+    <link rel="icon" type="image/svg" href="../images/favicon.svg" />
+    <script type="module" src="main.js"></script>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+    
+<body>
+
+</body>
+
+    <span class="toolbar">
+
+        <fieldset>
+            <legend>COLORS</legend>
+        
+            <label for="stroke">stroke: </label>
+            <input type="color" name="stroke" id="stroke" value="#000000"/>
+
+            <label for="fill">fill: </label>
+            <input type="color" name="fill" id="fill" value="#00000000"/>
+
+        </fieldset>
+
+
+        <br>
+
+        <fieldset>
+            <legend>PRIMITIVES</legend>
+            <button id="line">LINE</button>
+            <button id="rectangle">RECTANGLE</button>
+            <button id="circle">CIRCLE</button>
+        </fieldset>
+
+        <fieldset id="line_fieldset">
+            <legend>LINE</legend>
+                <fieldset>
+                    <legend>START POINT</legend>
+
+                    <label for="x1">x1: </label>
+                    <input name="x1" id="x1" type="number" value="0">
+
+                    <label for="y1">y1: </label>
+                    <input name="y1" id="y1" type="number" value="0">
+                </fieldset>
+
+                <fieldset>
+                    <legend>END POINT</legend>
+
+                    <label for="x2">x2: </label>
+                    <input name="x2" id="x2" type="number" value="0">
+
+                    <label for="y2">y2: </label>
+                    <input name="y2" id="y2" type="number" value="0">
+                </fieldset>
+
+                <button id="create_line">CREATE LINE</button>
+
+        </fieldset>
+        
+
+        <fieldset id="rectangle_fieldset" style="display: none;">
+            <legend>RECTANGLE</legend>
+            <fieldset>
+                <legend>START POINT</legend>
+
+                <label for="x">x: </label>
+                <input name="x" id="x" type="number" value="0">
+
+                <label for="y">y: </label>
+                <input name="y" id="y" type="number" value="0">
+            </fieldset>
+
+            <fieldset>
+                <legend>WIDTH/HEIGHT</legend>
+
+                <label for="width">w: </label>       
+                <input type="number" name="width" id="width" value="0" min="0">
+
+                <label for="height">h: </label>
+                <input type="number" name="height" id="height" value="0" min="0">
+            </fieldset>
+
+            <button id="create_rectangle">CREATE RECTANGLE</button>
+
+        </fieldset>
+        
+    
+        <fieldset id="circle_fieldset" style="display: none;">
+            <legend>CIRCLE</legend>
+
+            <fieldset>
+                <legend>CENTER POINT</legend>
+
+                <label for="cx">cx: </label>
+                <input name="cx" id="cx" type="number" value="0">
+
+                <label for="cy">cy: </label>
+                <input name="cy" id="cy" type="number" value="0">
+            </fieldset>
+
+            <fieldset>
+                <legend>RADIUS</legend>
+
+                <label for="radius">r: </label>
+                <input type="number" name="radius" id="r" value="0" min="0">
+            </fieldset>
+
+            <button id="create_circle">CREATE CIRCLE</button>
+
+        </fieldset>
+
+
+        <br>
+
+        <fieldset>
+            <legend>SELECT</legend>
+            <button id="select">SELECT</button>
+        </fieldset>
+
+        <fieldset id="select_fieldset" style="display: none;">
+            <legend>EDIT SELECTED</legend>
+
+            <div id="edit_line" style="display: none;">
+                <fieldset>
+                    <legend>START POINT</legend>
+
+                    <label for="x1">x1: </label>
+                    <input name="x1" id="x1_edit" type="number" value="0">
+
+                    <label for="y1">y1: </label>
+                    <input name="y1" id="y1_edit" type="number" value="0">
+                </fieldset>
+
+                <fieldset>
+                    <legend>END POINT</legend>
+
+                    <label for="x2">x2: </label>
+                    <input name="x2" id="x2_edit" type="number" value="0">
+
+                    <label for="y2">y2: </label>
+                    <input name="y2" id="y2_edit" type="number" value="0">
+                </fieldset>
+            </div>
+
+            <div id="edit_rectangle" style="display: none;">
+                <fieldset>
+                    <legend>START POINT</legend>
+    
+                    <label for="x">x: </label>
+                    <input name="x" id="x_edit" type="number" value="0">
+    
+                    <label for="y">y: </label>
+                    <input name="y" id="y_edit" type="number" value="0">
+                </fieldset>
+    
+                <fieldset>
+                    <legend>WIDTH/HEIGHT</legend>
+    
+                    <label for="width">w: </label>       
+                    <input type="number" name="width" id="width_edit" value="0" min="0">
+    
+                    <label for="height">h: </label>
+                    <input type="number" name="height" id="height_edit" value="0" min="0">
+                </fieldset>
+            </div>
+
+            <div id="edit_circle" style="display: none;">
+                <fieldset>
+                    <legend>CENTER POINT</legend>
+    
+                    <label for="cx">cx: </label>
+                    <input name="cx" id="cx_edit" type="number" value="0">
+    
+                    <label for="cy">cy: </label>
+                    <input name="cy" id="cy_edit" type="number" value="0">
+                </fieldset>
+    
+                <fieldset>
+                    <legend>RADIUS</legend>
+    
+                    <label for="radius">r: </label>
+                    <input type="number" name="radius" id="r_edit" value="0" min="0">
+                </fieldset>
+            </div>
+
+            <button id="unselect">UNSELECT</button>
+
+        </fieldset>
+
+        <div id="unselect_fieldset"></div>
+
+
+        <br>
+
+        <fieldset>
+            <legend>FILE</legend>
+            <button id="save_svg">SAVE</button>
+            <br>
+            <input name="load_svg" type="file" id="load_svg">
+        </fieldset>
+
+    </span>
+
+
+
+    <span class="shapeslist">
+        <fieldset>
+            <legend>SHAPES LIST</legend>            
+            <ul id="shapeslist"></ul>
+        </fieldset>
+    </span>
+
+
+
+    <div id="canvas_div">
+        <svg id="board" width="512" height="512"></svg>
+    </div>
+
+
+
+</html>

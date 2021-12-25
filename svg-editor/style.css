@@ -1,0 +1,104 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.toolbar {
+    background-color:lightgray;
+    height: 100vh;
+    float: left;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.shapeslist {
+    background-color:lightgray;
+    height: 100vh;
+    float: right;
+    overflow-y: auto;
+    min-width: 10vw;
+    padding: 5px;
+}
+
+.shape {
+    background-color:lightgray;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#canvas_div {
+    background-color: aliceblue;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+canvas {
+    border: 1px solid #000000;
+    margin: auto auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+input[type="number"] {
+    width:45px;
+}
+
+#board {
+    border: 5px solid #000;
+    margin: auto auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+svg {
+    border: 2px solid #000;
+}
+
+.deletebutton {
+    margin: 0, auto;
+ }
+
+.deletebutton:hover {
+    background-color: coral;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style-type: none;
+    margin: 0px;
+    padding: 5px;
+    text-align: center;
+}
+
+li:hover {
+    background-color :deepskyblue;
+}
+
+.textdiv {
+    font-weight: bold;
+}
+
+button {
+    background-color: antiquewhite;
+    border-radius: 3px;
+}
+
+button:hover {
+    background-color :deepskyblue;
+}
+
+legend {
+    font-weight: bold;
+}

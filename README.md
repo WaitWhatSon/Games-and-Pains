@@ -28,3 +28,8 @@ ______________
 * go to [PBINGO](https://waitwhatson.github.io/pbingo/index.html)
 ### Project:
 * [WaitWhatSon/pbingo](https://github.com/WaitWhatSon/pbingo)
+______________
+# SVG-EDITOR
+* Computer Graphics course (BUT) first project
+* prosty edytor do linii, prostokątów i kółek
+* pierwsze zadanie z grafiki komputerowej na PB
