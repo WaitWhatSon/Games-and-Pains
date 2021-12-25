@@ -1,58 +1,73 @@
-@font-face {
-    font-family: 'Pricedown';
-    src: url('/fonts/pricedown.ttf') format('truetype');
-}
-
 body {
-    margin: 10px;
+    margin: 0px;
+    padding: 0px;
+
     text-shadow: 4px 4px 4px #aaa;
 }
 
-ul {
-    padding: 0;
-    list-style-type: none;
-}
-
-li {
+.outer_box {
+    align-items: center;
+    text-align: center;
     margin: 10px;
 }
 
-h1 {
-    margin: auto; 
-    text-align:center;
-}
-
-h3 {
-    font-family: 'Comic Sans MS', comicsans;
-}
-
-@supports (-webkit-text-stroke: 1px black)
-{
-
-    .gta {
-        font-family: 'Pricedown', pricedown;
-        -webkit-text-stroke: 1px black;
-        -webkit-text-fill-color: white;
-    }
-}
-
-.link_image_button {
-    position: relative;
-    text-align: center;
+.image_button_box {
+    width: fit-content;
+    margin: auto auto;
     justify-content: center;
-    display: flex;
+    position: relative;
 }
 
-.link_image_button img {
+.image_button_box_img{
+    margin: 10px;
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+@supports (-webkit-text-stroke: 1px black){
+    .link_box {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size:50px;
+        text-decoration: none;
+            
+        font-family: 'Pricedown', pricedown;
+    }
+}
+
+.info_table {
+    width: 750px;
+    margin: auto auto;
+}
+
+.info_table ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.info_table li {
+    margin: 10px;
+}
+
+.info_table h1 {
+    margin: auto; 
+    text-align:center;
+}
+
+.info_table h3 {
+    font-family: 'Comic Sans MS', comicsans;
+}
+
+@supports (-webkit-text-stroke: 1px black){
+    .info_table legend {
+        font-family: 'Pricedown', pricedown;
+        -webkit-text-stroke: 1px black;
+        -webkit-text-fill-color: white;
+
+        font-size: larger;
+    }
 }
 
 .grid-container {
@@ -61,7 +76,6 @@ h3 {
 }
 
 .grid-container-row {
-    /* add */
     color: black;
     display: flex;
     justify-content: center;
