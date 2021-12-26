@@ -95,7 +95,7 @@ legend {
     font-size: larger;
 }
 
-header h1 {
+header h1 span{
     font-family: 'Comic Sans MS', comicsans;
     font-size: 25px;
 }
