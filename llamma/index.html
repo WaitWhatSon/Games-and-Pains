@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		<meta charset="utf-8">
+		<title>grafika</title>
+		<link href="style.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<script src="lib/three.js"></script>
+		<script src="scripts/controls.js" type="module"></script>
+		<script src="scripts/cross.js" type="module"></script>
+		<script src="scripts/llama.js" type="module"></script>
+	</head>
+	<body>
+
+		<!-- COLOR PICKER -->
+
+		<div id="color_div_id">
+
+			<h1>COLOR CONVERTER</h1>
+
+			<div class="colors_grid_container">
+
+				<div>
+					<object type="image/svg+xml" id="rgbllama" data="images/rgbllama.svg" height="200px" style="margin-top: -50px;"></object>
+				</div>
+
+				<div>
+					RGB
+					<div>R <input id= "Rrange" type="range" min="0" max="255" step="1" value="255"/>
+						<input id= "Rnumber" type="number" min="0" max="255" step="1" value="255"/></div>
+					<div>G <input id= "Grange" type="range" min="0" max="255" step="1" value="255"/>
+						<input id= "Gnumber" type="number" min="0" max="255" step="1" value="255"/></div>
+					<div>B <input id= "Brange" type="range" min="0" max="255" step="1" value="255"/>
+						<input id= "Bnumber" type="number" min="0" max="255" step="1" value="255"/></div>
+				</div>
+
+				<div>
+					COLOR
+					<div id="color_display" style="width: 100px; height: 100px;
+					background-color: #ffffff; border: solid black 3px;"></div>
+				</div>
+
+				<div>
+					CMYK
+					<div>C <input type="range" id= "Crange" type="range" min="0" max="1" step="0.01" value="0"/>
+						<input type="number" id= "Cnumber" type="range" min="0" max="1" step="0.01" value="0"/></div>
+					<div>M <input type="range" id= "Mrange" type="range" min="0" max="1" step="0.01" value="0"/>
+						<input type="number" id= "Mnumber" type="range" min="0" max="1" step="0.01" value="0"/></div>
+					<div>Y <input type="range" id= "Yrange" type="range" min="0" max="1" step="0.01" value="0"/>
+						<input type="number" id= "Ynumber" type="range" min="0" max="1" step="0.01" value="0"/></div>
+					<div>K <input type="range" id= "Krange" type="range" min="0" max="1" step="0.01" value="0"/>
+						<input type="number" id= "Knumber" type="range" min="0" max="1" step="0.01" value="0"/></div>
+				</div>
+
+				<div>
+					<object type="image/svg+xml" id="cmykllama" data="images/cmykllama.svg" height="200px" style="margin-top: -50px;"></object>
+				</div>
+
+			</div>
+
+
+		</div>
+
+
+		<!-- CUBE -->
+		
+		<div id="color_div_id">
+			<h1>RGB CUBE</h1>
+
+			<div class="grid_container" id="cube_div_id">
+
+				<button id="top_cube_button" class="control_button_horizontal" style="grid-column-start: 1; 
+				grid-column-end: 3; grid-row-start: 1; grid-row-end: 1; background-color: red">
+				<span class="material-icons">expand_less</span></button>
+				
+				<div id = "cube_canvases" style="grid-column-start: 4; grid-column-end: 4; grid-row-start: 1; 
+				grid-row-end: 4;">
+					<div id="cube_cross_section">
+						<canvas id="cube_canvas_cross" class="canvas_cross"></canvas>
+						<div>
+							<div id="cube_buttons">
+								axes:
+								<button id="XY">G(R)</button>
+								<button id="XZ">B(R)</button>
+								<button id="YZ">B(G)</button>
+							</div>
+							<div id="cube_sliders">
+								<div>R: <input id= "Rcube" type="range" min="0" max="255" step="1" value="255"/></div>
+								<div>G: <input id= "Gcube" type="range" min="0" max="255" step="1" value="255"/></div>
+								<div>B: <input id= "Bcube" type="range" min="0" max="255" step="1" value="255"/></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<button id="left_cube_button" class="control_button_vertical" style="grid-column-start: 1; 
+				grid-column-end: 1; grid-row-start: 2; grid-row-end: 2; background-color: green">
+				<span class="material-icons">chevron_left</span></button>
+
+				<div id="cube_render_element" style="margin: auto; grid-column-start: 2; 
+				grid-column-end: 2; grid-row-start: 2; grid-row-end: 2;">
+					<script src="scripts/cube_script.js" type="module"></script>
+				</div>
+
+				<button id="right_cube_button" class="control_button_vertical" style="grid-column-start: 3; 
+				grid-column-end: 3; grid-row-start: 2; grid-row-end: 2; background-color: yellow">
+				<span class="material-icons">chevron_right</span></button>
+
+				<button id="bottom_cube_button" class="control_button_horizontal" style="grid-column-start: 1; 
+				grid-column-end: 3; grid-row-start: 3; grid-row-end: 3; background-color: blue">
+				<span class="material-icons">expand_more</span></button>
+
+			</div>
+		</div>
+
+
+		<!-- CONE -->
+		
+		<div id="color_div_id">
+			<h1>HSV CONE</h1>
+
+			<div class="grid_container" id="cone_div_id">
+
+				<button id="top_cone_button" class="control_button_horizontal" style="grid-column-start: 1; 
+				grid-column-end: 3; grid-row-start: 1; grid-row-end: 1; background-color: red">
+				<span class="material-icons">expand_less</span></button>
+				
+				<div id = "cone_canvases" style="grid-column-start: 4; grid-column-end: 4; grid-row-start: 1; 
+				grid-row-end: 4;">
+					<div id="cone_cross_section">
+						<div>
+							<canvas id="cone_canvas_cross"></canvas>
+							<object type="image/svg+xml" id="hsvllama" data="images/cmykllama.svg" 
+									height="200px" style="position: absolute; bottom: 0; right: 0;"></object>
+						</div>
+						<div>
+							<!-- <div id="cone_buttons">
+								axes:
+								<button id="XY">G(R)</button>
+								<button id="XZ">B(R)</button>
+								<button id="YZ">B(G)</button>
+							</div> -->
+							<div id="cone_sliders">
+								<div style="padding: 10px;">hue angle: </div>
+								<div style="padding: 10px;">H: <input id= "Hcone" type="range" min="0" max="359" step="1" value="0"/></div>
+								<div id="Hval">0&deg</div>
+								<!-- <div>S: <input id= "Scone" type="range" min="0" max="255" step="1" value="255"/></div>
+								<div>V: <input id= "Vcone" type="range" min="0" max="255" step="1" value="255"/></div> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<button id="left_cone_button" class="control_button_vertical" style="grid-column-start: 1; 
+				grid-column-end: 1; grid-row-start: 2; grid-row-end: 2; background-color: green">
+				<span class="material-icons">
+				chevron_left</span></button>
+
+				<div id="cone_render_element" style="margin: auto; grid-column-start: 2; 
+				grid-column-end: 2; grid-row-start: 2; grid-row-end: 2;">
+					<script src="scripts/cone_script.js" type="module"></script>
+				</div>
+
+				<button id="right_cone_button" class="control_button_vertical" style="grid-column-start: 3; 
+				grid-column-end: 3; grid-row-start: 2; grid-row-end: 2; background-color: yellow">
+				<span class="material-icons">chevron_right</span></button>
+
+				<button id="bottom_cone_button" class="control_button_horizontal" style="grid-column-start: 1; 
+				grid-column-end: 3; grid-row-start: 3; grid-row-end: 3; background-color: blue">
+				<span class="material-icons">expand_more</span></button>
+
+			</div>
+		</div>
+
+	</body>
+</html>
+

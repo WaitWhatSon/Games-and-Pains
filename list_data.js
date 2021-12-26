@@ -71,7 +71,30 @@ const list_data = [
             "</h3></li>"+
             "</ul>"
         ]
-    }
+    },
+
+    {
+        id: 3,
+        image_button: {
+            name: "LLAMMA",
+            image_src: "images/llamma_banner.svg",
+            href: "llamma/index.html"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>colors converter</h3></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>with funny llamas</h3></li>"+
+            "</ul>"
+        ]
+    },
 
 ]
 

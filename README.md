@@ -30,5 +30,12 @@ ______________
 * prosty edytor do linii, prostokątów i kółek
 * pierwsze zadanie z grafiki komputerowej na PB
 ______________
+# LLAMMA
+* Computer Graphics course (BUT) project
+* konwerter kolorów
+* zawiera kolorowe lamy
+* zadanie z grafiki komputerowej na PB
+
+______________
 # CANVAS
 * in progress
