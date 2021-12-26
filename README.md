@@ -17,10 +17,6 @@ _______________
 ### Sounds:
 * [freesound](https://freesound.org) library
 ______________
-
-# CANVAS
-* in progress
-______________
 # PBINGO
 * JS small bingo 
 * na uczelnianą nudę
@@ -33,3 +29,6 @@ ______________
 * Computer Graphics course (BUT) first project
 * prosty edytor do linii, prostokątów i kółek
 * pierwsze zadanie z grafiki komputerowej na PB
+______________
+# CANVAS
+* in progress

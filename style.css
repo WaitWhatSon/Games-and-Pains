@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'Pricedown';
+    src: url('/fonts/pricedown.ttf') format('truetype');
+}
+
 body {
     margin: 0px;
     padding: 0px;
@@ -32,6 +37,10 @@ body {
         transform: translate(-50%, -50%);
         font-size:50px;
         text-decoration: none;
+
+        width: 750px;
+        height: 200px;
+        line-height: 200px;
             
         font-family: 'Pricedown', pricedown;
     }
@@ -84,4 +93,13 @@ body {
 
 legend {
     font-size: larger;
+}
+
+header h1 {
+    font-family: 'Comic Sans MS', comicsans;
+    font-size: 25px;
+}
+
+header a {
+    font-size: 30px;
 }
