@@ -1,0 +1,317 @@
+<html>
+
+<head>
+    <title>cellU</title>
+    <link rel="icon" type="image/svg" href="./favicon.svg" />
+</head>
+
+<body>
+    <div class="center">
+        <div class="container">
+            <canvas id="canvas"></canvas>
+            <div class="buttons">
+                <button id="button_random"> INIT RANDOM </button>
+                <button id="button_next"> NEXT STEP </button>
+                <button id="button_start"> START </button>
+                <button id="button_clear"> CLEAR </button>
+
+                neighbours for dead cell to be alive:
+                <div class="min_max">
+                    <button id="button_min"> MIN: </button>
+                    <button id="button_max"> MAX: </button>
+                </div>
+
+                neighbours for alive cell to stay alive:
+                <div class="min_max">
+                    <button id="button_min_alive"> MIN: </button>
+                    <button id="button_max_alive"> MAX: </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+    
+<style>
+    html, body {
+        margin: 0;
+    }
+
+    .center {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+    }
+
+    @media all and (orientation:landscape) {
+        canvas {
+            width: 50vh; 
+            height: 50vh;
+        }
+
+        button {
+            width: 50vh;
+            height: 5vh;
+        }
+
+        #button_min, #button_max, #button_min_alive, #button_max_alive {
+            width: 25vh;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+     
+    @media all and (orientation:portrait) {
+        canvas {
+            width: 70vw; 
+            height: 70vw;
+            display: block;
+        }
+
+        button {
+            width: 70vw;
+            height: 8vw;
+        }
+
+        #button_min, #button_max, #button_min_alive, #button_max_alive {
+            width: 35vw;
+        }
+    }
+
+    button {
+        display: block;
+        
+        font-size: larger;
+        font-weight: bolder;
+    }
+
+    .min_max {
+        display: flex;
+    }
+</style>
+
+<script>
+    
+    class CustomCanvas
+    {
+        constructor(id, width, height)
+        {
+            this.canvas = document.getElementById(id);
+            this.context = this.canvas.getContext("2d");
+
+            this.canvas.width = width;
+            this.canvas.height = height;
+
+            this.canvas.style.imageRendering = "pixelated";
+
+            this.canvas.addEventListener("click", (evt)=>{this.drawPixelWithMouse(evt)});
+            this.canvas.addEventListener("touchend", (evt)=>{this.drawPixelWithMouse(evt)});
+        }
+
+        initWhite()
+        {
+            this.context.fillStyle = "white";
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        initColor(color)
+        {
+            this.context.fillStyle = color;
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        drawSinglePixel(x, y, color)
+        {
+            this.context.fillStyle = color;
+            this.context.fillRect(Math.floor(x), Math.floor(y), 1, 1);
+        }
+
+        getMousePosition(evt)
+        {
+            let rect = this.canvas.getBoundingClientRect();
+            let scaleX = this.canvas.width / rect.width;
+            let scaleY = this.canvas.height / rect.height;
+        
+            return {
+                x: (evt.clientX - rect.left) * scaleX,
+                y: (evt.clientY - rect.top) * scaleY
+            }
+        }
+
+        drawPixelWithMouse(evt)
+        {
+            let coordinates = this.getMousePosition(evt);
+            this.drawSinglePixel(coordinates.x, coordinates.y, "black");
+        }
+    }
+
+    class CelularAutomata extends CustomCanvas
+    {
+        constructor(id, width, height, min, max, min_alive, max_alive)
+        {
+            super(id, width, height);
+            this.min = min%9;
+            this.max = max%9;
+            this.min_alive = min_alive%9;
+            this.max_alive = max_alive%9;
+        }
+
+        changeMin(min)  { this.min = min; }
+        getMin()        { return this.min; }
+        changeMax(max)  { this.max = max; }
+        getMax()        { return this.max; }
+
+        changeMin_alive(min)    { this.min_alive = min; }
+        getMin_alive()          { return this.min_alive; }
+        changeMax_alive(max)    { this.max_alive = max; }
+        getMax_alive()          { return this.max_alive; }
+
+        nextStep()
+        {
+            let imgData = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+            let data = imgData.data;
+            let tempData = this.context.createImageData(this.canvas.width, this.canvas.height);
+
+            for(let i = 0; i < data.length; i++)
+            {
+                tempData.data[i] = 240;
+            }
+
+            for(let y = 1; y < this.canvas.height-1; y++)
+            {
+                for(let x = 1; x < this.canvas.width-1; x++)
+                {
+                    let value = 240;
+
+                    if(data[(y*this.canvas.width*4) + (4*x)] === 0) //alive
+                    {
+                        let neighbours = 0;
+                        for(let yy = -1; yy < 2; yy++)
+                        {
+                            for(let xx = -1; xx < 2; xx++)
+                            {
+                                if(data[(y+yy)*this.canvas.width*4 + (x+xx)*4] === 0 && !(yy===0 && xx===0))
+                                {
+                                    neighbours++;
+                                }
+                            }
+                        }
+                        if((neighbours >= this.min_alive && neighbours <= this.max_alive))
+                        {
+                            value = 0;
+                        }
+                    }
+                    else //dead
+                    {
+                        let neighbours = 0;
+                        for(let yy = -1; yy < 2; yy++)
+                        {
+                            for(let xx = -1; xx < 2; xx++)
+                            {
+                                if(data[(y+yy)*this.canvas.width*4 + (x+xx)*4] === 0 && !(yy===0 && xx===0))
+                                {
+                                    neighbours++;
+                                }
+                            }
+                        }
+                        if((neighbours >= this.min && neighbours <= this.max))
+                        {
+                            value = 0;
+                        }
+                    }
+
+                    tempData.data[(y*this.canvas.width*4) + (4*x+0)] = value;
+                    tempData.data[(y*this.canvas.width*4) + (4*x+1)] = value;
+                    tempData.data[(y*this.canvas.width*4) + (4*x+2)] = value;
+                };
+            };
+
+            this.context.putImageData(tempData, 0, 0);
+        }
+
+        generateSeed()
+        {
+            for(let x = Math.floor((this.canvas.width)*0.4); x <= Math.floor((this.canvas.width-1)*0.6); x++)
+            {
+                for(let y = Math.floor((this.canvas.height)*0.4); y <= Math.floor((this.canvas.height-1)*0.6); y++)
+                {
+                    if(Math.random() < 0.3)
+                    {
+                        this.drawSinglePixel(x, y, "black");
+                    }
+                }
+            }
+        }
+    }
+
+    let canvas = new CelularAutomata("canvas", 50, 50, 3, 3, 2, 3);
+    canvas.initColor("#f0f0f0");
+
+    document.getElementById("button_random").addEventListener("click", ()=>{canvas.generateSeed()});
+    document.getElementById("button_clear").addEventListener("click", ()=>{canvas.initColor("#f0f0f0")});
+    document.getElementById("button_next").addEventListener("click", ()=>{canvas.nextStep()});
+    
+    let interval = null;
+    const button_start = document.getElementById("button_start")
+    button_start.addEventListener("click", ()=>{
+        if(interval == null)
+        {
+            interval = setInterval(()=>{canvas.nextStep()}, 500);
+            button_start.innerHTML = "STOP";
+        }
+        else
+        {
+            clearInterval(interval);
+            button_start.innerHTML = "START";
+            interval = null;
+        }
+        
+    });
+    
+    const button_min = document.getElementById("button_min");
+    button_min.innerHTML = "MIN: " + canvas.getMin();
+    const button_max = document.getElementById("button_max");
+    button_max.innerHTML = "MAX: " + canvas.getMax();
+
+    button_min.addEventListener("click", ()=>{
+        let next =  canvas.getMin() < canvas.getMax() ? canvas.getMin()+1 : 0;
+        canvas.changeMin(next);
+        button_min.innerHTML = "MIN: " + next; 
+    });
+
+    button_max.addEventListener("click", ()=>{
+        let next =  canvas.getMax() < 8 ? canvas.getMax()+1 : canvas.getMin();
+        canvas.changeMax(next);
+        button_max.innerHTML = "MAX: " + next;
+    });
+
+    const button_min_alive = document.getElementById("button_min_alive");
+    button_min_alive.innerHTML = "MIN: " + canvas.getMin_alive();
+    const button_max_alive = document.getElementById("button_max_alive");
+    button_max_alive.innerHTML = "MAX: " + canvas.getMax_alive();
+
+    button_min_alive.addEventListener("click", ()=>{
+        let next =  canvas.getMin_alive() < canvas.getMax_alive() ?
+                        canvas.getMin_alive()+1 : 0;
+        canvas.changeMin_alive(next);
+        button_min_alive.innerHTML = "MIN: " + next; 
+    });
+
+    button_max_alive.addEventListener("click", ()=>{
+        let next =  canvas.getMax_alive() < 8 ? 
+                        canvas.getMax_alive()+1 : canvas.getMin_alive();
+        canvas.changeMax_alive(next);
+        button_max_alive.innerHTML = "MAX: " + next;
+    });
+
+</script>
+    
+</html>

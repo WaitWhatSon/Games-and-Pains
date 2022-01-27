@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="main.js" type="module"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+</head>
+
+<body>
+    <div id="container">
+
+        <div id="header">
+            <button id="on_off_toolbox">
+                <h1>CANVAS 2.0</h1>
+            </button>
+            <button id="on_off_histogram">
+                <h1>HISTOGRAM</h1>
+            </button>
+            <button id="on_off_binarization">
+                <h1>BINARIZATION</h1>
+            </button>
+            <button id="on_off_morphology">
+                <h1>MORPHOLOGY</h1>
+            </button>
+        </div>
+        
+
+        <div id="sidebar">
+            <div id="sidebar-content">
+
+                <div id="tools_box" style="display: none">
+
+                    <br>
+
+                    <div>
+                        <fieldset>
+                            <legend>SELECT IMAGE</legend>
+                            <input id="file_input" type="file" accept="image/png, image/jpeg"/>
+                            <br><br>
+                            <button id="lena" title="Lenna image 512x512 px" style="width: 32%;"><i class="fa fa-female fa-2x" aria-hidden="true"></i></button>
+                            <button id="apple" title="apple image 512x512 px - salt and pepper example" style="width: 32%;"><i class="fa fa-apple fa-2x" aria-hidden="true"></i></button>
+                            <button id="teapot" title="teapot image 256x256 px" style="width: 32%;"><i class="fa fa-coffee fa-2x" aria-hidden="true"></i></button>
+                        </fieldset>
+                    </div>
+
+                    <div>
+                        <fieldset>
+                            <legend>RESIZE CANVAS</legend>
+                            <button id="resize" title="match canvas with window size" style="width: 100%;">RESIZE</button>
+                        </fieldset>
+                    </div>
+                    
+                    <div>
+                        <fieldset>
+                            <legend>ADD/SUBTRACT</legend>
+                            <fieldset>
+                                <div>value:</div>
+                                <input id="a_s_range" type="range" max="255" min="0" step="1" value="1">
+                                <input id="a_s_number" type="number" max="255" min="0" step="1" value="1">
+                                <br><br>
+                                <button id="add" style="width: 49%;">ADD</button>
+                                <button id="subtract" style="width: 49%;">SUB</button>
+                            </fieldset>
+                        </fieldset>
+                        <fieldset>
+                            <legend>MULTIPLY/DIVIDE</legend>
+                            <fieldset>
+                                <div>value:</div>
+                                <input id="m_d_range" type="range" max="5" min="0" step="1" value="1">
+                                <input id="m_d_number" type="number" max="5" min="0" step="1" value="1">
+                                <br><br>
+                                <button id="multiply" style="width: 49%;">MULTIPLY</button>
+                                <button id="divide" style="width: 49%;">DIVIDE</button>
+                            </fieldset>
+                        </fieldset>
+                    </div>
+        
+                    <div>
+                        <fieldset>
+                            <legend>BRIGHTNESS/SATURATION</legend>
+                            <fieldset>
+                                <div>value:</div>
+                                <input type="range" id="brightness_range"  min="0.5" max="2" step="0.1" value="1">
+                                <input type="number" id="brightness_number"  min="0.5" max="2" step="0.1" value="1">
+                                <br><br>
+                                <button id="brightness" style="width: 100%;">BRIGHTNESS</button>    
+                            </fieldset>
+                            <fieldset>
+                                <div>value:</div>
+                                <input type="range" id="saturation_range"  min="0" max="2" step="0.1" value="1">
+                                <input type="number" id="saturation_number"  min="0" max="2" step="0.1" value="1">
+                                <br><br>
+                                <button id="saturation" style="width: 100%;">SATURATION</button>
+                            </fieldset>
+                        </fieldset>
+        
+                        <fieldset>
+                            <legend>GRAYSCALE</legend>
+                            <fieldset>
+                                <div>value:</div>
+                                <input type="range" id="grayscale_range"  min="0" max="100" step="1" value="100">
+                                <input type="number" id="grayscale_number"  min="0" max="100" step="1" value="100">%
+                                
+                                <div>type:</div>
+                                <div class="row">
+
+                                    <div class="column">
+                                        
+                                        <div title="averaging method">
+                                            <input id="grayscale1" type='radio' name='foo' checked>
+                                            <label for="grayscale1">AVG</label>
+                                        </div>
+            
+                                        <div title="correcting for human eye" >
+                                            <input id="grayscale2" type='radio' name='foo'>
+                                            <label for="grayscale2">EYE</label>
+                                        </div>
+
+                                        <div title="desaturation method">
+                                            <input id="grayscale3" type='radio' name='foo'>
+                                            <label for="grayscale3">DES</label>
+                                        </div>
+            
+                                    </div>
+
+                                    <div class="column">
+                                        
+                                        <div title="decomposition with max value">
+                                            <input id="grayscale4" type='radio' name='foo'>
+                                            <label for="grayscale4">MAX</label>
+                                        </div>
+            
+                                        <div title="decomposition with min value">
+                                            <input id="grayscale5" type='radio' name='foo'>
+                                            <label for="grayscale5">MIN</label>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="column">
+                                        
+                                        <div title="single channel RED value">
+                                            <input id="grayscale6" type='radio' name='foo'>
+                                            <label for="grayscale6">CHR</label>
+                                        </div>
+            
+            
+                                        <div title="single channel GREEN value">
+                                            <input id="grayscale7" type='radio' name='foo'>
+                                            <label for="grayscale7">CHG</label>
+                                        </div>
+            
+            
+                                        <div title="single channel BLUE value">
+                                            <input id="grayscale8" type='radio' name='foo'>
+                                            <label for="grayscale8">CHB</label>
+                                        </div>
+            
+                                    </div>
+                                </div>
+
+                                <button id="grayscale_button" title="apply grayscale" style="width: 100%;">APPLY SELECTED</button>
+
+                                <!-- <br><br> -->
+                                <!-- <a href="https://tannerhelland.com/2011/10/01/grayscale-image-algorithm-vb6.html">grayscale algorithms</a> -->
+                            </fieldset>
+                        </fieldset>
+        
+                        <fieldset>
+                            <legend>MASK</legend>
+                            <fieldset>
+                                <label for="mask_size">mask size: </label>
+                                <input id="mask_size" type="number" min="3" max="9" step="2" value="3">
+                                <br><br>
+                                <div id="mask_div"></div>
+                                <br>
+
+                                <button id="normalize_mask">NORMALIZE MASK</button>
+                                <button id="mask">APPLY MASK</button>
+                            </fieldset>
+                        </fieldset>
+        
+                        <fieldset>
+                            <legend>FILTERS</legend>
+
+                            <fieldset>
+                                <button id="smoothing" style="width: 100%;">SMOOTHING</button>
+                            </fieldset>
+
+                            <fieldset>
+                                <button id="median" style="width: 100%;">MEDIAN</button>
+                            </fieldset>
+                            
+                            <fieldset>
+                                <input id="sobel_edges" type='radio' name='sobel_type' checked>
+                                <label for="sobel_edges">edges</label>
+                                <input id="sobel_horizontal" type='radio' name='sobel_type'>
+                                <label for="sobel_horizontal">horizontal</label>
+                                <input id="sobel_vertical" type='radio' name='sobel_type'>
+                                <label for="sobel_vertical">vertical</label>
+                                <br>
+                                <button id="sobel" style="width: 100%;">SOBEL</button>    
+                            </fieldset>
+
+                            <fieldset>
+                                <button id="sharpening" style="width: 100%;">SHARPENING</button>
+                            </fieldset>
+                            
+                            <fieldset>
+                                <button id="blur" style="width: 100%;">BLUR</button>
+                            </fieldset>
+                            
+                        </fieldset>
+        
+                    </div>
+                    
+                </div>
+
+
+                <div id="histogram_box" style="display: none">
+
+                    <br>
+                    <fieldset>
+                        <legend>HISTOGRAM</legend>
+
+                        <div id="histogram_image">
+                            <fieldset>
+                                <legend>red channel</legend>
+                                <svg id="histogram_svg_R" width="256" height="100"></svg>
+                            </fieldset>
+                            <fieldset>
+                                <legend>green channel</legend>
+                                <svg id="histogram_svg_G" width="256" height="100"></svg>
+                            </fieldset>
+                            <fieldset>
+                                <legend>blue channel</legend>
+                                <svg id="histogram_svg_B" width="256" height="100"></svg>
+                            </fieldset>
+                        </div>
+
+                    </fieldset>
+                    <br>
+                    <fieldset>
+                        <fieldset>
+                            <input id="stretching_all" type='radio' name='stretching' checked>
+                            <label for="stretching_all">all</label>
+                            <input id="stretching_r" type='radio' name='stretching'>
+                            <label for="stretching_r">red</label>
+                            <input id="stretching_g" type='radio' name='stretching'>
+                            <label for="stretching_g">green</label>
+                            <input id="stretching_b" type='radio' name='stretching'>
+                            <label for="stretching_b">blue</label>
+                            <br>
+                            <label for="stretching_tolerance">tolerance: </label>
+                            <input id="stretching_tolerance" type='range' min=0 max=50 value=0>
+                            <br>
+                            <button id="histogram_stretching" style="width: 100%;">HISTOGRAM STRETCHING</button>
+                        </fieldset>
+                        <fieldset>
+                            <input id="equalization_all" type='radio' name='equalization' checked>
+                            <label for="equalization_all">all</label>
+                            <input id="equalization_r" type='radio' name='equalization'>
+                            <label for="equalization_r">red</label>
+                            <input id="equalization_g" type='radio' name='equalization'>
+                            <label for="equalization_g">green</label>
+                            <input id="equalization_b" type='radio' name='equalization'>
+                            <label for="equalization_b">blue</label>
+                            <br>
+                            <button id="histogram_equalization" style="width: 100%;">HISTOGRAM EQUALIZATION</button>
+                        </fieldset>
+                    </fieldset>
+                    
+                </div>
+
+                <div id="binarization_box" style="display: none">
+
+                    <br>
+                    <fieldset>
+                        <legend>BINARIZATION</legend>
+                        <button id="grayscale_binarization" style="width: 49%;">GRAYSCALE</button>
+                        <button id="undo_binarization" style="width: 49%;">UNDO BINARIZATION</button>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend>GLOBAL METHODS</legend>
+
+                        <fieldset>
+                            <span> &nbsp</span>
+                            <input id="threshold_range" style="width: 100%;" type="range" min=0 max=255
+                                    onchange="{this.previousSibling.textContent = parseInt(this.value);}">
+                            <button id="threshold_button" style="width: 100%;">APPLY THRESHOLD</button>
+                        </fieldset>
+
+                        <fieldset>
+                            <span> %&nbsp</span>
+                            <input id="percent_black_range" style="width: 100%;" type="range" min=0 max=100
+                                    onchange="{this.previousSibling.textContent = parseInt(this.value);}">
+                            <button id="percent_black_button" style="width: 100%;">PERCENT BLACK SELECTION</button>
+                        </fieldset>
+                        
+                        <fieldset>
+                            <legend></legend>
+                            <button id="mean_iterative_button" style="width: 100%;">MEAN ITERATIVE SELECTION</button>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend></legend>
+                            <button id="entropy_button" style="width: 100%;">ENTROPY SELECTION</button>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend></legend>
+                            <button id="minimum_button" style="width: 100%;">MINIMUM ERROR</button>
+                        </fieldset>
+                        
+                        <fieldset>
+                            <legend></legend>
+                            <button id="fuzzy_minimum_button" style="width: 100%;">FUZZY MINIMUM ERROR</button>
+                        </fieldset>
+
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>LAST VALUES:</legend>
+                        <div>
+                            <span style="float: left">method</span>
+                            <span style="float: right">r channel / g channel / b channel</span>
+                        </div>
+                        <br>
+                        <hr>
+                        <div>
+                            <span style="float: left">selected threshold:</span>
+                            <span style="float: right" id="selected_value">...</span>
+                        </div>
+                        <br>
+                        <div>
+                            <span style="float: left">percent black selected threshold:</span>
+                            <span style="float: right" id="percent_black_value">...</span>
+                        </div>
+                        <br>
+                        <div>
+                            <span style="float: left">mean iterative selection threshold:</span>
+                            <span style="float: right" id="mean_iterative_value">...</span>
+                        </div>
+                        <br>
+                        <div>
+                            <span style="float: left">entropy selection threshold:</span>
+                            <span style="float: right" id="entropy_value">...</span>
+                        </div>
+                        <br>
+                        <div>
+                            <span style="float: left">minimum error threshold:</span>
+                            <span style="float: right" id="minimum_error_value">...</span>
+                        </div>
+                        <br>
+                        <div>
+                            <span style="float: left">fuzzy minimum error threshold:</span>
+                            <span style="float: right" id="fuzzy_value">...</span>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+
+                        <legend>LOCAL METHODS</legend>
+
+                        <div>
+                            <label for="binarization_window_range">window size: </label>
+                            <input id="binarization_window_range" type="range" min=3 max=13 step=2 value="5"
+                                    onchange="{this.nextSibling.textContent = parseInt(this.value);}"
+                                    style="width: 70%;">
+                            <span></span>
+                        </div>
+                        
+                        <fieldset>
+                            <legend></legend>
+                            <button id="niblack_button" style="width: 100%;">NIBLACK</button>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend></legend>
+                            <button id="sauvola_button" style="width: 100%;">SAUVOLA</button>
+                        </fieldset>
+
+                    </fieldset>
+                    
+                </div>
+
+                <div id="morphology_box">
+
+                    <br>
+                    <fieldset>
+                        <legend>PREPROCESSING</legend>
+                        <button id="morphology_grayscale" style="width: 45%;">GRAYSCALE</button>
+                        <button id="morphology_binarization" style="width: 53%;">BINARIZATION</button>
+                        <br><br>
+                        <button id="morphology_undo" style="width: 100%;">UNDO</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>MORPHOLOGY</legend>
+                        <button id="dilation_button" style="width: 100%;">DILATION ⊕</button>
+                    </fieldset>
+                        
+                    <fieldset>
+                        <button id="erosion_button" style="width: 100%;">EROSION ⊖</button>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <button id="opening_button" style="width: 100%;">OPENING ⊖⊕</button>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <button id="closing_button" style="width: 100%;">CLOSING ⊕⊖</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <button id="hit_or_miss_button" style="width: 100%;">HIT-OR-MISS</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <button id="hit_or_miss_thinning_button" style="width: 100%;">HIT-OR-MISS THINNING</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <button id="hit_or_miss_thickening_button" style="width: 100%;">HIT-OR-MISS THICKENING</button>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>STRUCTURING ELEMENT</legend>
+                        <div id="structuring_element_box">
+                            <div id="structuring_element_div">
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_0"
+                                            value = 0>0</button>
+                                </div>
+                                
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_1"
+                                            value = 1>1</button>
+                                </div>
+
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_2"
+                                            value = 0>0</button>
+                                </div>
+
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_3"
+                                            value = 1>1</button>
+                                </div>
+
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_4"
+                                            value = 1>1</button>
+                                </div>
+
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_5"
+                                            value = 1>1</button>
+                                </div>
+
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_6"
+                                            value = 0>0</button>
+                                </div>
+
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_7"
+                                            value = 1>1</button>
+                                </div>
+
+                                <div class="structuring_element_element">
+                                    <button class="structuring_element_button" 
+                                            id="s_e_8"
+                                            value = 0>0</button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>SKELETONIZATION</legend>
+                        <button id="K3M_button" style="width: 100%;">K3M</button>
+                    </fieldset>
+                    
+                </div>
+
+            </div>
+        </div>
+
+        <div id="content">
+            <div id="main-content">
+                
+                <div id="canvas_box">
+                    <canvas id="canvas"></canvas>
+                </div>
+
+            </div>
+        </div>
+        
+    </div>
+    
+</body>
+
+</html>

@@ -1,0 +1,163 @@
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+html {
+	height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body {
+	margin: 0 !important;
+    padding: 0 !important;
+	height: 100%;
+    
+    background-color: antiquewhite;
+}
+
+#container {
+	height: 100%;
+}
+
+#sidebar {
+	display: inline-block;
+    position: absolute;
+	vertical-align: top;
+	height: 100%;
+    width: auto;
+	overflow: auto;
+    margin: 0;
+    padding: 0;
+
+    background-color: rgb(245, 246, 247);
+}
+
+#content {
+    display: flex;
+	height: 100%;
+    width: 100%;
+	overflow: auto;
+    align-items: center;
+    justify-content: center;
+    
+    background-color: rgb(200, 210, 226);
+}
+
+
+
+#canvas_box {
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto
+}
+
+#tools_box, #histogram_box, #binarization_box, #morphology_box {
+    padding: 10px;
+    border: solid 1px rgb(218, 219, 220);
+}
+
+canvas {
+    /* border: solid 3px black; */
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: white;
+    box-shadow: 5px 5px 5px black;
+
+    image-rendering: pixelated;
+}
+
+
+fieldset {
+    border: 1px solid rgb(218, 219, 220);
+}
+
+
+#header {
+    position: absolute;
+    z-index: 1;
+}
+
+#header button {
+    display: inline;
+    float: left;
+}
+
+#header h1 {
+    font-size: medium;
+    display: inline;
+}
+
+
+
+/* Create three equal columns that floats next to each other */
+.column {
+    float: left;
+    width: auto;
+    padding: 10px;
+}
+  
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+#mask_div input {
+    max-width: 40px;
+}
+
+
+
+
+.histogram_image {
+    background-color: antiquewhite;
+    margin: 0px;
+    padding: 0px;
+}
+
+.histogram_bin {
+    display: inline;
+    background-color: blue;
+    width: 10px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#histogram_svg_R, #histogram_svg_G, #histogram_svg_B {
+    border-bottom: 1px solid #000;
+    border-left: 1px solid #000;
+}
+
+
+#structuring_element_box {
+    align-items: center;
+    width: 100%;
+    position: relative;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+#structuring_element_div {
+    margin-left: auto;
+    margin-right: auto;
+    display: grid;
+    grid-template-columns: min-content min-content min-content;
+}
+
+.structuring_element_element {
+    text-align: center;
+    align-items: center;
+}
+
+
+.structuring_element_element button{
+    min-width: 30px;
+    min-height: 30px;
+}

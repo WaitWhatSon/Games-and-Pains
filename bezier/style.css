@@ -1,0 +1,114 @@
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family: Consolas, monaco, monospace; 
+    color: rgb(210, 216, 213);
+
+    background-color: rgb(34, 36, 35);
+}
+
+#canvas_box {
+    width: 100%;
+    height: 100%;
+}
+
+#grid {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+#toolbox {
+    position: fixed;
+    bottom: 4vw;
+    right: 4vw;
+    width: 92vw;
+    border: 3px solid #3f3f3f;
+
+    background-color: rgb(23, 24, 24);
+}
+
+#minimalize {
+    float: right;
+}
+
+.draggable {
+    cursor: move;
+}
+
+#minimalizable {
+    display: grid;
+    grid-template-columns: 20% 20% auto;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+#points_list {
+    height: 100px;
+    overflow-y: scroll;
+    border: 3px solid #3f3f3f;
+    background-color: rgb(23, 24, 24);
+    margin: 10px;
+}
+
+#config_list {
+    margin: 10px;
+}
+
+#logs_list {
+    height: 100px;
+    overflow-y: scroll;
+    border: 3px solid #3f3f3f;
+    background-color: rgb(23, 24, 24);
+    margin: 10px;
+}
+
+input {
+    width: 75px;
+    border: 3px solid rgb(23, 24, 24);
+    color: azure;
+    background: transparent;
+}
+
+input:hover {
+    border: 3px solid #3f3f3f;
+    color: azure;
+    background: transparent;
+}
+
+input:active {
+    border: 3px solid #3f3f3f;
+    color: azure;
+    background: #3f3f3f;
+}
+
+button {
+    border: 3px solid rgb(23, 24, 24);
+    color: azure;
+    background: transparent;
+}
+
+button:hover {
+    border: 3px solid #3f3f3f;
+    color: azure;
+    background: transparent;
+}
+
+button:active {
+    border: 3px solid #3f3f3f;
+    color: azure;
+    background: #3f3f3f;
+}

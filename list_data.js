@@ -96,6 +96,29 @@ const list_data = [
         ]
     },
 
+    {
+        id: 4,
+        image_button: {
+            name: "cellU",
+            image_src: "images/cellu_banner.svg",
+            href: "cellU/index.html"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3> </h3></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>cellular automaton</h3></li>"+
+            "</ul>"
+        ]
+    },
+
 ]
 
 export default list_data;

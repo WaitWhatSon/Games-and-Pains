@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="main.js" type="module"></script>
+</head>
+
+<body>
+
+    <div id="svg_box">
+        <svg id="svg"></svg>
+    </div>
+
+
+    
+    <div id="toolbox">
+        <div>
+            <button id="minimalize" style="align-items: right;">---</button>
+            <!-- <div style="text-align: center;" style="align-items: left;">TOOLBOX</div> -->
+        </div>
+        
+        <br>
+
+        <div id="minimalizable">
+            <div>
+                <div style="text-align: center;">TRANSFORM</div>
+                <div id="transformations_list">
+                    <fieldset class="transformation_fieldset">
+                        <legend>TRANSLATE</legend>
+                        <label for="translate_x">x: </label>
+                        <input name="translate_x" id="translate_x" type="number" value=0>
+                        <br>
+                        <label for="translate_y">y: </label>
+                        <input name="translate_y" id="translate_y" type="number" value=0>
+
+                        <button class="transformation_do" id="translation_do">DO</button>
+                    </fieldset>
+
+                    <fieldset class="transformation_fieldset">
+                        <legend>ROTATE</legend>
+                        <label for="rotate_angle">angle: </label>
+                        <input name="rotate_angle" id="rotate_angle" type="number" value=0>
+                        <br>
+                        <label for="rotate_x">x: </label>
+                        <input name="rotate_x" id="rotate_x" type="number" value=0>
+                        <br>
+                        <label for="rotate_y">y: </label>
+                        <input name="rotate_y" id="rotate_y" type="number" value=0>
+
+                        <br>
+                        <button id="rotation_show_point">SHOW POINT</button>
+                        
+                        <button class="transformation_do" id="rotation_do">DO</button>
+                    </fieldset>
+
+                    <fieldset class="transformation_fieldset">
+                        <legend>SCALE</legend>
+                        <label for="scale_size">scale: </label>
+                        <input name="scale_size" id="scale_size" type="number" value=1>
+                        <br>
+                        <label for="scale_x">x: </label>
+                        <input name="scale_x" id="scale_x" type="number" value=0>
+                        <br>
+                        <label for="scale_y">y: </label>
+                        <input name="scale_y" id="scale_y" type="number" value=0>
+
+                        <br>
+                        <button id="scale_show_point">SHOW POINT</button>
+                        
+                        <button class="transformation_do" id="scale_do">DO</button>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div>
+                <div style="text-align: center;">LOAD/SAVE</div>
+                <div id="serialize_deserialize_list">
+                    <fieldset>
+                        <legend>LOAD FILE</legend>
+                        <input id="load_file" name="load_file" type="file" accept=".svg" style="width:auto;">
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend>SAVE FILE</legend>
+                        <input id="file_name" type="text" style="width: auto;">
+                        <br>
+                        <button id="save_image">save current</button>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div>
+                <div style="text-align: center;">TOOLS</div>
+                <div id="tools_list">
+                    FILL COLOR:
+                    <input id="fill_color" type="color" style="width: 90%">
+                    <br>
+                    STROKE COLOR:
+                    <input id="stroke_color" type="color" style="width: 90%">
+                    <br>
+                    <button id="select_button" style="width: 90%">SELECT</button>
+                    <br>
+                    <button id="unselect_button" style="width: 90%">UNSELECT</button>
+                    <br>
+                    <button id="draw_button" style="width: 90%">DRAW</button>
+                    <br>
+                    <button id="scale_points_button" style="width: 90%">SCALE POINTS</button>
+                    <br>
+                    <button id="rotate_points_button" style="width: 90%">ROTATE POINTS</button>
+                    <br>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+
+
+</html>
