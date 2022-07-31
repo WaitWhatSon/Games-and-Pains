@@ -54,13 +54,28 @@ window.onload = function() {
     document.addEventListener("touchstart", change_octopus);
     
     ontouchmove = function(e){
-        on_move(e);
+        on_touch_move(e);
     }
 
 }
 
 function on_move(e){
     angle = Math.round(Math.atan(e.clientX/e.clientY) * 4 * 180 / Math.PI);
+    angle = 0.01*angle + 0.99*last_angle;
+    last_angle = angle;
+
+    if(document.getElementById("octopus_happy").style.display == "block")
+    {
+        change_happy(angle)
+    }
+    else
+    {
+        change_angry(angle)
+    }
+}
+
+function on_touch_move(e){
+    angle = Math.round(Math.atan(e.touches[0].clientX/e.touches[0].clientY) * 4 * 180 / Math.PI);
     angle = 0.01*angle + 0.99*last_angle;
     last_angle = angle;
 
