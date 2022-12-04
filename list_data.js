@@ -71,30 +71,30 @@ const list_data = [
         ]
     },
 
-    {
-        id: 3,
-        image_button: {
-            name: "SVG-EDITOR",
-            image_src: "images/svg_editor_banner.svg",
-            href: "svg-editor/index.html"
-        },
-        info_table: [
-            "<h3>Development:</h3>"+
-            "<ul>"+
-            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
-            "</ul>",
+    // {
+    //     id: 3,
+    //     image_button: {
+    //         name: "SVG-EDITOR",
+    //         image_src: "images/svg_editor_banner.svg",
+    //         href: "svg-editor/index.html"
+    //     },
+    //     info_table: [
+    //         "<h3>Development:</h3>"+
+    //         "<ul>"+
+    //         "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+    //         "</ul>",
 
-            "<span class='mdi mdi-duck'></span>",
+    //         "<span class='mdi mdi-duck'></span>",
 
-            "<ul>"+
-            "<li><h3>simple svg editor "+
-            "<span class='mdi mdi-vector-line'></span>"+
-            "<span class='mdi mdi-vector-square'></span>"+
-            "<span class='mdi mdi-vector-circle'></span>"+
-            "</h3></li>"+
-            "</ul>"
-        ]
-    },
+    //         "<ul>"+
+    //         "<li><h3>simple svg editor "+
+    //         "<span class='mdi mdi-vector-line'></span>"+
+    //         "<span class='mdi mdi-vector-square'></span>"+
+    //         "<span class='mdi mdi-vector-circle'></span>"+
+    //         "</h3></li>"+
+    //         "</ul>"
+    //     ]
+    // },
 
     {
         id: 4,
