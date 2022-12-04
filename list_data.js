@@ -29,6 +29,29 @@ const list_data = [
     {
         id: 1,
         image_button: {
+            name: "Czarek 2.0",
+            image_src: "images/czarek_banner.svg",
+            href: "https://waitwhatson.github.io/Czarek_2.0/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "<li><a href='https://github.com/ciastkocizjem'>ciastkocizjem</a></li>"+
+            "</ul>",
+
+            "<span class='mdi mdi-robot'></span>",
+
+            "<h3>Project:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon/Czarek_2.0'>github.com/WaitWhatSon/Czarek_2.0</a></li>"+
+            "</ul>"
+        ]
+    },
+
+    {
+        id: 2,
+        image_button: {
             name: "BINGO",
             image_src: "images/pbingo_banner.svg",
             href: "pbingo/index.html"
@@ -49,7 +72,7 @@ const list_data = [
     },
 
     {
-        id: 2,
+        id: 3,
         image_button: {
             name: "SVG-EDITOR",
             image_src: "images/svg_editor_banner.svg",
@@ -74,7 +97,7 @@ const list_data = [
     },
 
     {
-        id: 3,
+        id: 4,
         image_button: {
             name: "LLAMMA",
             image_src: "images/llamma_banner.svg",
@@ -97,7 +120,7 @@ const list_data = [
     },
 
     {
-        id: 4,
+        id: 5,
         image_button: {
             name: "cellU",
             image_src: "images/cellu_banner.svg",
