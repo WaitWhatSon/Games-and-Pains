@@ -5,7 +5,7 @@ const list_data = [
         image_button: {
             name: "<span class='mdi mdi-duck'></span> RANDOM DUCKS",
             image_src: "images/random_duck_banner.svg",
-            href: "random-duck/index.html"
+            href: "https://waitwhatson.github.io/random_ducks/"
         },
         info_table: [
             "<h3>Development:</h3>"+
