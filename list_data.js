@@ -142,6 +142,32 @@ const list_data = [
         ]
     },
 
+    {
+        id: 6,
+        image_button: {
+            name: "canvas 3.0",
+            image_src: "images/canvas3_banner.svg",
+            href: "https://waitwhatson.github.io/canvas_3.0/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<span class='mdi mdi-format-paint'></span>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>project version: 3.0</h3></li>"+
+            "</ul>"
+        ]
+    },
+
+
+
+
 ]
 
 export default list_data;
