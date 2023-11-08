@@ -133,7 +133,7 @@ const list_data = [
             "</ul>",
 
             "<ul>"+
-            "<li><h3> </h3></li>"+
+            "<span class='mdi mdi-matrix'></span>"+
             "</ul>",
 
             "<ul>"+
@@ -162,6 +162,53 @@ const list_data = [
             "<ul>"+
             "<li><h3>project version: 3.0</h3></li>"+
             "</ul>"
+        ]
+    },
+
+    {
+        id: 7,
+        image_button: {
+            name: "bezier",
+            image_src: "images/bezier_banner.svg",
+            href: "https://waitwhatson.github.io/bezier/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3> </h3></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<span class='mdi mdi-pen'></span>"+
+            "</ul>"
+        ]
+    },
+
+    {
+        id: 8,
+        image_button: {
+            name: "ASCIIcam",
+            image_src: "images/asciicam_banner.svg",
+            href: "https://waitwhatson.github.io/ASCIIcam/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<span class='mdi mdi-camera'></span>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>¯\\_(ツ)_/¯</h3></li>"+
+            "</ul>"
+
         ]
     },
 
