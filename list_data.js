@@ -62,7 +62,7 @@ const list_data = [
             "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
             "</ul>",
 
-            "<span class='mdi mdi-duck'></span>",
+            "<span class='mdi mdi-duck'>🇵🇱</span>",
 
             "<h3>Project:</h3>"+
             "<ul>"+
@@ -71,30 +71,52 @@ const list_data = [
         ]
     },
 
-    // {
-    //     id: 3,
-    //     image_button: {
-    //         name: "SVG-EDITOR",
-    //         image_src: "images/svg_editor_banner.svg",
-    //         href: "svg-editor/index.html"
-    //     },
-    //     info_table: [
-    //         "<h3>Development:</h3>"+
-    //         "<ul>"+
-    //         "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
-    //         "</ul>",
+    {
+        id: 2.5,
+        image_button: {
+            name: "BINGO (malarstwo edition)",
+            image_src: "images/pbingo_malarstwo_banner.svg",
+            href: "https://waitwhatson.github.io/pbingo/malarstwo/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
 
-    //         "<span class='mdi mdi-duck'></span>",
+            "<span class='mdi mdi-duck'>🇵🇱</span>",
 
-    //         "<ul>"+
-    //         "<li><h3>simple svg editor "+
-    //         "<span class='mdi mdi-vector-line'></span>"+
-    //         "<span class='mdi mdi-vector-square'></span>"+
-    //         "<span class='mdi mdi-vector-circle'></span>"+
-    //         "</h3></li>"+
-    //         "</ul>"
-    //     ]
-    // },
+            "<h3>Project:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon/pbingo'>github.com/WaitWhatSon/pbingo</a></li>"+
+            "</ul>"
+        ]
+    },
+
+    {
+        id: 3,
+        image_button: {
+            name: "SVG-EDITOR",
+            image_src: "images/svg_editor_banner.svg",
+            href: "svg-editor/index.html"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<span class='mdi mdi-duck'></span>",
+
+            "<ul>"+
+            "<li><h3>simple svg editor "+
+            "<span class='mdi mdi-vector-line'></span>"+
+            "<span class='mdi mdi-vector-square'></span>"+
+            "<span class='mdi mdi-vector-circle'></span>"+
+            "</h3></li>"+
+            "</ul>"
+        ]
+    },
 
     {
         id: 4,
@@ -170,7 +192,7 @@ const list_data = [
         image_button: {
             name: "bezier",
             image_src: "images/bezier_banner.svg",
-            href: "https://waitwhatson.github.io/bezier/"
+            href: "https://waitwhatson.github.io/Games-and-Pains/bezier/"
         },
         info_table: [
             "<h3>Development:</h3>"+
@@ -193,7 +215,7 @@ const list_data = [
         image_button: {
             name: "ASCIIcam",
             image_src: "images/asciicam_banner.svg",
-            href: "https://waitwhatson.github.io/ASCIIcam/"
+            href: "https://waitwhatson.github.io/Games-and-Pains/ASCIIcam/"
         },
         info_table: [
             "<h3>Development:</h3>"+
@@ -203,6 +225,30 @@ const list_data = [
 
             "<ul>"+
             "<span class='mdi mdi-camera'></span>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>¯\\_(ツ)_/¯</h3></li>"+
+            "</ul>"
+
+        ]
+    },
+
+    {
+        id: 9,
+        image_button: {
+            name: "Drawing grid",
+            image_src: "images/drawing_grid_banner.svg",
+            href: "https://waitwhatson.github.io/drawing_grid/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<span class='mdi mdi-duck'></span>"+
             "</ul>",
 
             "<ul>"+
