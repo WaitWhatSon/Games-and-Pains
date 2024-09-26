@@ -119,6 +119,28 @@ const list_data = [
     },
 
     {
+        id: 3,
+        image_button: {
+            name: "SVG-EDITOR 2.0",
+            image_src: "images/svg_editor_2.0_banner.svg",
+            href: "svg-editor_2.0/index.html"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<span class='mdi mdi-duck'></span>",
+
+            "<ul>"+
+            "<li><h3>svg shapes editor for fun"+
+            "</h3></li>"+
+            "</ul>"
+        ]
+    },
+
+    {
         id: 4,
         image_button: {
             name: "LLAMMA",
