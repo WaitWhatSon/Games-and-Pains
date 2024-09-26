@@ -54,7 +54,7 @@ const list_data = [
         image_button: {
             name: "BINGO",
             image_src: "images/pbingo_banner.svg",
-            href: "pbingo/index.html"
+            href: "https://waitwhatson.github.io/pbingo/index.html"
         },
         info_table: [
             "<h3>Development:</h3>"+
@@ -223,11 +223,11 @@ const list_data = [
             "</ul>",
 
             "<ul>"+
-            "<li><h3> </h3></li>"+
+            "<span class='mdi mdi-pen'></span>"+
             "</ul>",
 
             "<ul>"+
-            "<span class='mdi mdi-pen'></span>"+
+            "<li><h3>bezier curves for fun</li></h3>"+
             "</ul>"
         ]
     },
@@ -274,14 +274,111 @@ const list_data = [
             "</ul>",
 
             "<ul>"+
-            "<li><h3>¯\\_(ツ)_/¯</h3></li>"+
+            "<li><h3>online drawing grid tool</h3></li>"+
+            "</ul>"
+
+        ]
+    },
+
+    {
+        id: 10,
+        image_button: {
+            name: "Wisielec (Hangman game)",
+            image_src: "images/wisielec_banner.svg",
+            href: "https://waitwhatson.github.io/one-html-projects/wisielec"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<span class='mdi mdi-duck'>🇵🇱</span>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>very old project xD</h3></li>"+
+            "</ul>"
+
+        ]
+    },
+
+    {
+        id: 11,
+        image_button: {
+            name: "Is WI down?",
+            image_src: "images/iswidown_banner.svg",
+            href: "https://waitwhatson.github.io/is_wi_down/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<span class='mdi mdi-duck'>🇵🇱</span>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>XD</h3></li>"+
+            "</ul>"
+
+        ]
+    },
+
+    {
+        id: 12,
+        image_button: {
+            name: "howmuchtilltuesdayend?",
+            image_src: "images/howmuchtilltuesdayend_banner.svg",
+            href: "https://waitwhatson.github.io/howmuchtilltuesdayend/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "</ul>",
+
+            "<ul>"+
+            "<span class='mdi mdi-clock'>🇵🇱</span>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>till the end of tuesday counter (PL)</h3></li>"+
             "</ul>"
 
         ]
     },
 
 
+    {
+        id: 13,
+        image_button: {
+            name: "scanner",
+            image_src: "images/kao_barcode_banner.svg",
+            href: "https://waitwhatson.github.io/kao/#/"
+        },
+        info_table: [
+            "<h3>Development:</h3>"+
+            "<ul>"+
+            "<li><a href='https://github.com/WaitWhatSon'>WaitWhatSon</a></li>"+
+            "<li><a href='https://github.com/cholibka'>cholibka</a></li>"+
+            "<li><a href='https://github.com/jzaprzalka'>jzaprzalka</a></li>"+
+            "</ul>",
 
+            "<ul>"+
+            "<span class='mdi mdi-heart'></span>"+
+            "</ul>",
+
+            "<ul>"+
+            "<li><h3>KAO a food barcode scanner</h3>"+
+            "<h3>an uni project in colab with mates</h3></li>"+
+            "</ul>"
+
+        ]
+    },
 
 ]
 
