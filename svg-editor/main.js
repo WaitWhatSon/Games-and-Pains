@@ -1,5 +1,5 @@
-import {initButtons} from "./buttons/_init.js"
-import {initMouse} from "./mouse/_init.js"
+import {initButtons} from "./buttons/b_init.js"
+import {initMouse} from "./mouse/m_init.js"
 import {initSave} from "./file/save.js"
 import {initLoad} from "./file/load.js"
 
